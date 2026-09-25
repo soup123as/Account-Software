@@ -1,0 +1,142 @@
+openapi: 3.1.0
+info:
+  title: Global Accounting Platform API
+  version: 0.1.0
+  description: |
+    REST API for the Global Accounting Platform.
+
+    **Phase 0** exposes health endpoints only. Every future endpoint requires
+    authentication (Supabase access token, Phase 1), tenant resolution
+    (Phase 2) and permission checks (Phase 3) unless explicitly documented as
+    public.
+
+    Monetary amounts are always decimal **strings** (max 4 decimal places),
+    never JSON numbers.
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development
+tags:
+  - name: Health
+    description: Liveness and readiness probes (public)
+paths:
+  /health:
+    get:
+      tags: [Health]
+      operationId: getLiveness
+      summary: Liveness probe
+      description: Returns 200 while the process can serve requests. Does not touch dependencies.
+      security: []
+      responses:
+        '200':
+          description: Process is alive
+          headers:
+            x-request-id: { $ref: '#/components/headers/RequestId' }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success: { type: boolean, const: true }
+                  data: { $ref: '#/components/schemas/LivenessReport' }
+  /health/ready:
+    get:
+      tags: [Health]
+      operationId: getReadiness
+      summary: Readiness probe
+      description: Checks configured dependencies (database, Redis). Returns 503 if any is down.
+      security: []
+      responses:
+        '200':
+          description: All configured dependencies are reachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success: { type: boolean, const: true }
+                  data: { $ref: '#/components/schemas/ReadinessReport' }
+        '503':
+          description: One or more dependencies are unavailable
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                success: false
+                error:
+                  code: SERVICE_UNAVAILABLE
+                  message: One or more dependencies are unavailable.
+                  details: [{ path: database, message: down }]
+                  requestId: 8d48af2f-e0df-4a26-adb7-49a3f771338a
+components:
+  headers:
+    RequestId:
+      description: Correlation ID. Echoed if the client sent a safe value (8–128 chars of `[A-Za-z0-9._-]`), otherwise generated.
+      schema: { type: string }
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase access token (Phase 1).
+  schemas:
+    LivenessReport:
+      type: object
+      required: [status, service, version, environment, uptimeSeconds, timestamp]
+      properties:
+        status: { type: string, const: ok }
+        service: { type: string, example: '@gap/api' }
+        version: { type: string, example: 0.1.0 }
+        environment: { type: string, enum: [development, test, production] }
+        uptimeSeconds: { type: integer, minimum: 0 }
+        timestamp: { type: string, format: date-time }
+    ReadinessReport:
+      type: object
+      required: [status, checks, timestamp]
+      properties:
+        status: { type: string, enum: [ok, degraded, down] }
+        checks:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [up, down, not_configured]
+        timestamp: { type: string, format: date-time }
+    ErrorCode:
+      type: string
+      enum:
+        - INTERNAL_ERROR
+        - VALIDATION_ERROR
+        - AUTHENTICATION_REQUIRED
+        - FORBIDDEN
+        - NOT_FOUND
+        - CONFLICT
+        - RATE_LIMITED
+        - TENANT_ACCESS_DENIED
+        - ACCOUNTING_ERROR
+        - TAX_RULE_ERROR
+        - DOCUMENT_ERROR
+        - PAYMENT_ERROR
+        - SERVICE_UNAVAILABLE
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, const: false }
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { $ref: '#/components/schemas/ErrorCode' }
+            message: { type: string, description: Human-readable, safe to display. }
+            details:
+              type: array
+              items:
+                type: object
+                required: [message]
+                properties:
+                  path: { type: string, example: lines.0.amount }
+                  message: { type: string }
+            requestId: { type: string }
+security:
+  - bearerAuth: []

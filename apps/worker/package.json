@@ -1,0 +1,27 @@
+{
+  "name": "@gap/worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Background job worker (BullMQ) for the Global Accounting Platform.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json && node --watch-path=dist dist/main.js",
+    "start": "node dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf dist coverage"
+  },
+  "dependencies": {
+    "@gap/logger": "workspace:*",
+    "@gap/shared": "workspace:*",
+    "bullmq": "^5.58.0",
+    "ioredis": "^5.8.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.11",
+    "pino": "^9.9.0"
+  }
+}

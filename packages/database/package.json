@@ -1,0 +1,45 @@
+{
+  "name": "@gap/database",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Prisma schema, migrations, seed runner, client factory and tenant-context bridge for PostgreSQL / Supabase.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "prisma"
+  ],
+  "prisma": {
+    "schema": "prisma/schema.prisma",
+    "seed": "node --experimental-strip-types prisma/seed/index.ts"
+  },
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.build.json",
+    "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf dist coverage",
+    "db:generate": "prisma generate",
+    "db:validate": "dotenv -e ../../.env -- prisma validate && prisma format --check",
+    "db:migrate:dev": "dotenv -e ../../.env -- prisma migrate dev",
+    "db:migrate:deploy": "dotenv -e ../../.env -- prisma migrate deploy",
+    "db:migrate:status": "dotenv -e ../../.env -- prisma migrate status",
+    "db:check-drift": "dotenv -e ../../.env -- sh -c 'prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --shadow-database-url \"$SHADOW_DATABASE_URL\" --exit-code'",
+    "db:seed": "dotenv -e ../../.env -- prisma db seed"
+  },
+  "dependencies": {
+    "@prisma/client": "~6.19.0"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^10.0.0",
+    "prisma": "~6.19.0",
+    "vitest": "^4.1.11"
+  }
+}

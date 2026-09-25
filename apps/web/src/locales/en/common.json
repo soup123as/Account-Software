@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "Global Accounting Platform",
+    "skipToContent": "Skip to main content",
+    "primaryNavigation": "Primary navigation"
+  },
+  "nav": {
+    "systemStatus": "System status"
+  },
+  "systemStatus": {
+    "title": "System status",
+    "description": "Connectivity between this web application and the platform API.",
+    "api": "API",
+    "checking": "Checking…",
+    "operational": "Operational",
+    "unreachable": "Unreachable",
+    "version": "Version",
+    "environment": "Environment",
+    "lastChecked": "Last checked",
+    "retry": "Check again",
+    "unreachableHelp": "The API could not be reached. Confirm the API is running and VITE_API_URL is correct.",
+    "phaseNotice": "Foundation build (Phase 0). Business modules are introduced in later phases."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist.",
+    "backHome": "Back to system status"
+  },
+  "errors": {
+    "unexpected": "Something went wrong.",
+    "reload": "Reload"
+  }
+}

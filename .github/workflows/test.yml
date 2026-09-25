@@ -1,0 +1,108 @@
+name: Integration & E2E
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  TURBO_TELEMETRY_DISABLED: '1'
+  DATABASE_URL: postgresql://gap:gap_ci_password@localhost:5432/gap_test
+  DIRECT_DATABASE_URL: postgresql://gap:gap_ci_password@localhost:5432/gap_test
+  SHADOW_DATABASE_URL: postgresql://gap:gap_ci_password@localhost:5432/gap_shadow
+  REDIS_HOST: localhost
+  REDIS_PORT: '6379'
+
+jobs:
+  integration:
+    name: Database, migrations & worker integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: gap
+          POSTGRES_PASSWORD: gap_ci_password
+          POSTGRES_DB: gap_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U gap -d gap_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace packages
+        run: pnpm turbo run build --filter=./packages/*
+
+      - name: Create shadow database
+        run: PGPASSWORD=gap_ci_password psql -h localhost -U gap -d gap_test -c 'CREATE DATABASE gap_shadow'
+
+      - name: Apply migrations (production path)
+        run: pnpm --filter @gap/database exec prisma migrate deploy
+
+      - name: Verify migrations match schema (no drift)
+        run: pnpm --filter @gap/database exec prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --shadow-database-url "$SHADOW_DATABASE_URL" --exit-code
+
+      - name: Verify migration status
+        run: pnpm --filter @gap/database exec prisma migrate status
+
+      - name: Integration tests
+        run: pnpm test:integration
+
+  e2e:
+    name: End-to-end (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+        env:
+          # The E2E API listens on 3100 (tests/e2e/playwright.config.ts).
+          VITE_API_URL: http://localhost:3100/api/v1
+
+      - name: Install Playwright browser
+        run: pnpm --filter @gap/tests exec playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/playwright-report
+          retention-days: 7

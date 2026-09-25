@@ -1,0 +1,90 @@
+name: Deploy
+
+# Manual only. Each target environment is a GitHub Environment holding its own
+# secrets (DATABASE_URL, DIRECT_DATABASE_URL, ...) with required reviewers.
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options: [staging, production]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Verify & build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DIRECT_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ inputs.environment }}-${{ github.sha }}
+          path: |
+            apps/web/dist
+            apps/api/dist
+            apps/worker/dist
+          retention-days: 14
+
+  migrate:
+    name: Apply database migrations
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_DATABASE_URL: ${{ secrets.DIRECT_DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$DIRECT_DATABASE_URL" ]; then
+            echo "::error::DATABASE_URL / DIRECT_DATABASE_URL secrets are not configured for '${{ inputs.environment }}'."
+            exit 1
+          fi
+          pnpm --filter @gap/database exec prisma migrate deploy
+
+  release:
+    name: Release to hosting
+    needs: migrate
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      # TODO(Phase 20): hosting targets (Vercel for apps/web, Node hosting for
+      # apps/api and apps/worker) are not provisioned yet. This job fails
+      # deliberately so a run is never mistaken for a completed deployment.
+      - run: |
+          echo "::error::Hosting targets are not configured yet (Phase 20). Build artifacts and migrations completed; nothing was released."
+          exit 1

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Placeholder values let `prisma validate` resolve env() references. No
+  # database is contacted in this workflow (see test.yml for integration tests).
+  DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+  DIRECT_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+  TURBO_TELEMETRY_DISABLED: '1'
+
+jobs:
+  verify:
+    name: Lint, typecheck, unit test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Prisma validate
+        run: |
+          pnpm --filter @gap/database exec prisma validate
+          pnpm --filter @gap/database exec prisma format --check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Security tests
+        run: pnpm test:security
