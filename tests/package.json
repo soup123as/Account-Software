@@ -1,0 +1,23 @@
+{
+  "name": "@gap/tests",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Cross-cutting integration, security and end-to-end test suites.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test:integration": "vitest run --project integration",
+    "test:security": "vitest run --project security",
+    "test:e2e": "playwright test -c e2e/playwright.config.ts"
+  },
+  "devDependencies": {
+    "@gap/database": "workspace:*",
+    "@gap/logger": "workspace:*",
+    "@gap/shared": "workspace:*",
+    "@playwright/test": "1.56.1",
+    "bullmq": "^5.58.0",
+    "ioredis": "^5.8.0",
+    "vitest": "^4.1.11"
+  }
+}

@@ -1,0 +1,39 @@
+# Local development dependencies. Usage (from repo root):
+#   docker compose -f infrastructure/docker/docker-compose.yml up -d
+# Credentials here are for local, throwaway containers only.
+name: global-accounting-platform
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: gap
+      POSTGRES_PASSWORD: gap_local_dev
+      POSTGRES_DB: gap_dev
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres-init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U gap -d gap_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
+  redis-data:
