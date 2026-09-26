@@ -36,3 +36,6 @@ infrastructure/docker/data/
 
 # Supabase local
 supabase/.temp/
+
+# Local Redis snapshots
+*.rdb
