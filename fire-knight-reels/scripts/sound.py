@@ -170,12 +170,9 @@ put(clank() * 0.5 + 0, F(3), 0.18, 0.4)  # lamp relay
 put(thud(70, 40, 0.35), F(3), 0.45)
 put(clank(), F(7), 0.14, 0.4)
 put(thud(60, 36, 0.6), F(4), 0.75)  # 100-TONNE
-put(thud(55, 34, 0.5), F(7), 0.5)  # DUMPER.
 put(whoosh(0.45, 600, 9000, 0.7), F(26), 0.35, -0.3)  # sweep line
-put(thud(62, 38, 0.5), F(37), 0.5)  # FIRE PLAN?
-put(thud(58, 36, 0.5), F(42), 0.55)  # SIRF
-put(boom(1.8), F(46), 0.85)  # OPERATOR?
-put(thud(64, 36, 0.7, 0.4), F(46), 0.6)
+put(boom(1.8), F(44), 0.85)  # SIRF OPERATOR?
+put(thud(64, 36, 0.7, 0.4), F(44), 0.6)
 
 # ---------------- scene 2 (starts f90) ----------------
 S2 = 90
@@ -183,12 +180,9 @@ rt = t_(4.2)
 rumble = band(rng.standard_normal(len(rt)), 25, 140) * (1 + 0.35 * np.sin(2 * np.pi * 7.5 * rt))
 rumble = norm(rumble + 0.4 * np.sin(2 * np.pi * 34 * rt)) * adsr(len(rt), 0.4, 0.6)
 put(rumble, F(S2) - 0.1, 0.35)
-put(thud(60, 36, 0.6), F(S2 + 3), 0.7)  # RAAT
-put(thud(55, 34, 0.5), F(S2 + 6), 0.5)  # 2 BAJE.
-for k in range(8):
-    put(tick(2600, 0.04), F(S2 + 14 + k * 5), 0.12, 0.2)
+put(thud(60, 36, 0.6), F(S2 + 3), 0.7)  # RAAT 2 BAJE.
 put(whoosh(1.4, 120, 2500, 0.85), F(S2 + 50), 0.4)  # push-in
-put(thud(60, 36, 0.5), F(S2 + 62), 0.55)  # HEAT BADH
+put(thud(60, 36, 0.5), F(S2 + 68), 0.55)  # HEAT BADH
 put(beep(1320, 0.06), F(S2 + 82), 0.12, 0.3)  # reticle
 sw = t_(0.75)
 put(np.sin(2 * np.pi * np.cumsum(500 + 2200 * (sw / 0.75)) / SR) * adsr(len(sw), 0.05, 0.2), F(S2 + 88), 0.07, 0.2)  # scan
@@ -219,13 +213,16 @@ S4 = 330
 put(tick(1800, 0.05), F(S4 + 4), 0.12)
 for k in range(3):
     put(tick(2400, 0.035), F(S4 + 14 + k * 4), 0.09, 0.2)
-put(beep(880), F(S4 + 22), 0.2)  # detection double beep
-put(beep(1320), F(S4 + 22) + 0.13, 0.2)
+put(beep(880), F(S4 + 20), 0.2)  # detection double beep
+put(beep(1320), F(S4 + 20) + 0.13, 0.2)
 for k in range(6):
-    put(beep(740 if k % 2 == 0 else 980, 0.16), F(S4 + 44) + k * 0.22, 0.11, 0.25)  # alarm
-put(hiss(2.4), F(S4 + 72), 0.22)  # discharge (conceptual)
-put(thud(50, 32, 0.8, 0.0), F(S4 + 72), 0.45)
-put(thud(56, 34, 0.7, 0.1), F(S4 + 88), 0.4)  # the line
+    put(beep(740 if k % 2 == 0 else 980, 0.16), F(S4 + 38) + k * 0.22, 0.11, 0.25)  # alarm
+put(hiss(1.6), F(S4 + 60), 0.22)  # discharge (conceptual)
+put(thud(50, 32, 0.8, 0.0), F(S4 + 60), 0.45)
+put(thud(56, 34, 0.7, 0.1), F(S4 + 108), 0.45)  # ONE PERSON.
+put(whoosh(0.9, 150, 4000, 0.8), F(S4 + 80), 0.35)  # product rises
+mt2 = t_(1.4)
+put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.4) ** 1.5 * adsr(len(mt2), 0.01, 0.3), F(S4 + 86), 0.12)  # steel swell
 
 # ---------------- scene 5 (starts f480) ----------------
 S5 = 480
@@ -233,12 +230,17 @@ put(whoosh(1.4, 100, 3000, 0.25), F(S5) - 0.05, 0.4)  # pull back
 mt = t_(1.6)
 metal = sum(np.sin(2 * np.pi * f * mt) * g for f, g in [(147, 1), (220.5, 0.5), (293, 0.35), (441, 0.15)])
 put(norm(metal) * (mt / 1.6) ** 2 * adsr(len(mt), 0.01, 0.15), F(S5 + 14), 0.16)  # metallic swell
-put(boom(3.0), F(S5 + 40), 0.9)  # logo
-put(thud(52, 30, 1.2, 0.2), F(S5 + 40), 0.5)
+put(boom(3.0), F(S5 + 30), 0.9)  # logo
+put(thud(52, 30, 1.2, 0.2), F(S5 + 30), 0.5)
 et = t_(2.8)
 tone = (np.sin(2 * np.pi * 73.4 * et) + 0.5 * np.sin(2 * np.pi * 110 * et) + 0.25 * np.sin(2 * np.pi * 146.8 * et)) * adsr(len(et), 0.3, 1.8)
-put(norm(tone), F(S5 + 40), 0.3)
-put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(S5 + 64), 0.04, 0.3)  # shimmer on the line
+put(norm(tone), F(S5 + 30), 0.3)
+put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(S5 + 42), 0.05, 0.3)  # sheen on the emblem
+
+# soft key clicks under the typed DM Sans lines
+for fr, n in [(36, 9), (90 + 58, 13), (90 + 76, 8), (210 + 18, 19), (330 + 90, 20)]:
+    for k in range(0, n, 2):
+        put(tick(1900 + 300 * rng.random(), 0.03), F(fr + k * 1.05), 0.05, 0.3 * (rng.random() - 0.5))
 
 # ---------------- out ----------------
 mix = np.stack([L, R], axis=1)

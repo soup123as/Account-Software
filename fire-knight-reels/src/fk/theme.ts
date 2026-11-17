@@ -1,25 +1,45 @@
 import { Easing, interpolate } from "remotion";
 
-/** The Fire Knight brand palette (Control Room look). */
+/**
+ * The Fire Knight brand palette (v3, from thefireknight.in + brand brief).
+ * Background is black. Text is white / #fafafa. The only accent is gold #f0b242.
+ * Steel greys are for drawing machines and products only, never for text blocks.
+ */
 export const C = {
-  black: "#0B0B0C",
+  black: "#000000",
+  bg: "#080808", // site primary
+  panel: "#0E0F10",
   steel: "#1C1F22",
   steel2: "#272B30",
-  line: "#3A4047",
-  ash: "#8A9097",
-  white: "#F4F4F2",
-  paper: "#F1EFEA",
-  ink: "#141414",
-  ember: "#FF5A1F",
-  heat: "#FFB13D",
-  ok: "#1F9D55",
+  line: "#2A2D33",
+  ash: "#9C9CA4", // site accent silver (labels, muted text)
+  silver: "#C8CCD6",
+  white: "#FFFFFF",
+  fa: "#FAFAFA",
+  gold: "#F0B242", // brand accent: key words, heat, alerts
+  goldL: "#F7D58F", // tint of gold for the heat core only
+  // legacy aliases used by the machine illustrations
+  ember: "#F0B242",
+  heat: "#F7D58F",
+  ok: "#FAFAFA",
+  paper: "#FAFAFA",
+  ink: "#080808",
 } as const;
 
 export const FONT = {
-  slam: "FK Slam", // Big Shoulders Bold - headlines
-  sans: "FK Sans", // Inter 500-800 - lines
-  mono: "FK Mono", // JetBrains Mono - HUD, labels
+  sans: "FK DM Sans", // primary: DM Sans 400-700
+  display: "FK Anton", // secondary: Anton, caps hits only
+  slam: "FK Anton",
+  mono: "FK DM Sans",
 } as const;
+
+/** Type scale (1080 wide). Display/lead jump is always >= 2.2x. */
+export const TYPE = {
+  display: 120, // Anton caps, 1 line ideally, max 2; never above 132
+  lead: 52, // DM Sans 600, the main sentence voice
+  support: 40, // DM Sans 500, #fafafa @ 75%
+  label: 24, // DM Sans 600 caps, tracking .18em, silver
+};
 
 /** Reel format. */
 export const W = 1080;

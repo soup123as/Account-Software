@@ -7,8 +7,8 @@ import { S2Night } from "./scenes/S2Night";
 import { S3Operator } from "./scenes/S3Operator";
 import { S4System } from "./scenes/S4System";
 import { S5Hero } from "./scenes/S5Hero";
-import { C, SCENES, STARTS, ip, prog } from "./fk/theme";
-import { Grain, Header, SafeGuide, Vignette } from "./fk/ui";
+import { C, SCENES, ip } from "./fk/theme";
+import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
 export type AkelaProps = {
   showSafe: boolean;
@@ -26,7 +26,7 @@ const HeatFlash: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 540px 1050px, rgba(255,246,224,${a}) 0%, rgba(255,177,61,${a * 0.9}) 18%, rgba(255,90,31,${a * 0.75}) 42%, rgba(11,11,12,${a * 0.6}) 85%)`,
+        background: `radial-gradient(circle at 540px 1050px, rgba(255,250,236,${a}) 0%, rgba(247,213,143,${a * 0.9}) 18%, rgba(240,178,66,${a * 0.7}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
       }}
     />
   );
@@ -40,7 +40,7 @@ const Bloom: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(ellipse 600px 500px at 540px 960px, rgba(255,177,61,${a * 0.18}) 0%, rgba(11,11,12,${a * 0.55}) 100%)`,
+        background: `radial-gradient(ellipse 600px 500px at 540px 960px, rgba(240,178,66,${a * 0.14}) 0%, rgba(0,0,0,${a * 0.6}) 100%)`,
       }}
     />
   );
@@ -54,17 +54,10 @@ const MistWash: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(ellipse 900px 700px at 540px 1000px, rgba(244,244,242,${a * 0.5}) 0%, rgba(11,11,12,${a * 0.4}) 100%)`,
+        background: `radial-gradient(ellipse 900px 700px at 540px 1000px, rgba(250,250,250,${a * 0.35}) 0%, rgba(0,0,0,${a * 0.5}) 100%)`,
       }}
     />
   );
-};
-
-const Chrome: React.FC = () => {
-  const f = useCurrentFrame();
-  const scene = f < STARTS.night ? 1 : f < STARTS.operator ? 2 : f < STARTS.system ? 3 : f < STARTS.hero ? 4 : 5;
-  const opacity = prog(f, 2, 10) * (1 - prog(f, STARTS.hero + 6, STARTS.hero + 22));
-  return <Header scene={scene} opacity={opacity} />;
 };
 
 export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio }) => (
@@ -96,9 +89,8 @@ export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio }
       </TransitionSeries.Sequence>
     </TransitionSeries>
 
-    <Chrome />
     <Vignette strength={0.7} />
-    <Grain opacity={0.07} />
+    <Grain opacity={0.05} />
     {showSafe && <SafeGuide />}
     {audio && <Audio src={staticFile("audio/akela-mix.wav")} />}
   </AbsoluteFill>

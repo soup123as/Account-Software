@@ -27,7 +27,8 @@ const s1 = scene(S1Hook);
 const s2 = scene(S2Night);
 const s3 = scene(S3Operator);
 const s4 = scene(S4System);
-const s5 = scene(() => <S5Hero />);
+const S5Only: React.FC = () => <S5Hero />;
+const s5 = scene(S5Only);
 
 export const RemotionRoot: React.FC = () => (
   <>

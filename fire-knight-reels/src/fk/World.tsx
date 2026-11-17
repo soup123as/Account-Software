@@ -297,27 +297,6 @@ export const World: React.FC<WorldProps> = ({
         </svg>
       </Layer>
 
-      {/* foreground rocks (fast parallax, defocused) */}
-      <Layer cam={cam} d={1.6} style={{ filter: "blur(7px)", opacity: 1 - crush }}>
-        <svg width={1080} height={1920} style={{ position: "absolute", overflow: "visible" }}>
-          {Array.from({ length: 5 }, (_, i) => {
-            const period = 2800;
-            const x = ((i * 610 - scroll * 1.6) % period + period) % period - 500;
-            const y = 1800 + rand(i * 11) * 60;
-            const s = 0.7 + rand(i * 13) * 0.6;
-            const pts = [
-              [0, 200], [20, 70], [90, 24], [170, 0], [250, 38], [300, 20], [360, 90], [390, 200],
-            ].map(([px, py]) => `${(x + px * s).toFixed(0)},${(y + py * s * 0.8).toFixed(0)}`).join(" ");
-            return (
-              <g key={i}>
-                <polygon points={pts} fill="#08090A" />
-                <polyline points={pts.split(" ").slice(1, 6).join(" ")} fill="none" stroke="#2A2E33" strokeWidth={4} />
-              </g>
-            );
-          })}
-        </svg>
-      </Layer>
-
       {/* floodlight shaft from a tower, high left: industrial key light */}
       <AbsoluteFill
         style={{

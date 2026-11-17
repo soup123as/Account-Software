@@ -1,9 +1,9 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { C, E, FONT, SAFE, ip, noise1, prog, rand } from "../fk/theme";
-import { Mono, RevealLine, Slam } from "../fk/ui";
+import { C, E, FONT, SAFE, TYPE, ip, noise1, prog, rand } from "../fk/theme";
+import { Display, Stack, TypeOn } from "../fk/ui";
 
-const PANEL = { x: SAFE.x0, y: 680, w: 820, h: 520 };
+const PANEL = { x: SAFE.x0, y: 640, w: 820, h: 540 };
 const SHOT0 = 12; // first shot starts
 const SHOT = 26; // frames per shot
 
@@ -122,17 +122,17 @@ const Extinguisher: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s 
     <rect x={80} y={212} width={26} height={40} rx={5} fill="#1A1C1E" transform="rotate(-8 92 220)" />
     {/* body */}
     <rect x={-58} y={0} width={116} height={300} rx={46} fill="url(#extG)" />
-    <rect x={-58} y={92} width={116} height={78} fill="#F1EFEA" opacity={0.9} />
-    <rect x={-44} y={108} width={88} height={8} rx={3} fill="#77736C" />
-    <rect x={-44} y={126} width={60} height={6} rx={3} fill="#9A958D" />
-    <rect x={-44} y={142} width={72} height={6} rx={3} fill="#9A958D" />
+    <rect x={-58} y={92} width={116} height={78} fill={C.gold} opacity={0.92} />
+    <rect x={-44} y={108} width={88} height={8} rx={3} fill="#2A2210" />
+    <rect x={-44} y={126} width={60} height={6} rx={3} fill="#5C4718" />
+    <rect x={-44} y={142} width={72} height={6} rx={3} fill="#5C4718" />
     <path d="M-40 14 Q-46 150 -40 286" stroke="#FFFFFF" strokeOpacity={0.28} strokeWidth={8} fill="none" />
     {/* neck + valve */}
     <rect x={-22} y={-22} width={44} height={26} rx={4} fill="#3A4047" />
     <rect x={-34} y={-48} width={68} height={28} rx={6} fill="#5A616A" />
     {/* gauge */}
-    <circle cx={-46} cy={-34} r={18} fill="#F1EFEA" stroke="#3A4047" strokeWidth={4} />
-    <path d="M-46 -34 L-38 -44" stroke={C.ok} strokeWidth={3} />
+    <circle cx={-46} cy={-34} r={18} fill="#FAFAFA" stroke="#3A4047" strokeWidth={4} />
+    <path d="M-46 -34 L-38 -44" stroke="#1C1F22" strokeWidth={3} />
     {/* lever + handle */}
     <path d="M-30 -52 L60 -70 L64 -60 L-24 -42 Z" fill="#7A8189" />
     <path d="M-30 -38 L56 -36 L56 -28 L-30 -30 Z" fill="#4A5058" />
@@ -239,22 +239,22 @@ export const S3Operator: React.FC = () => {
     );
   });
 
-  const secs = 21 + Math.floor(f / 4);
-  const clock = `02:0${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")} AM`;
   const shake = idx === 3 ? noise1(f * 2, 9) * 2 : 0;
 
   return (
-    <AbsoluteFill style={{ background: `radial-gradient(ellipse 700px 600px at 540px 940px, #1B1E22 0%, ${C.black} 75%)` }}>
+    <AbsoluteFill style={{ background: `radial-gradient(ellipse 700px 600px at 540px 960px, #15171A 0%, ${C.black} 72%)` }}>
       <svg width={0} height={0} style={{ position: "absolute" }}>
         <defs>
           <radialGradient id="dialG" cx="0.5" cy="0.4" r="0.7">
             <stop offset="0" stopColor="#1E2226" />
             <stop offset="1" stopColor="#0C0D0F" />
           </radialGradient>
+          {/* brushed-steel extinguisher body */}
           <linearGradient id="extG" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#B83A10" />
-            <stop offset="0.35" stopColor={C.ember} />
-            <stop offset="1" stopColor="#7A260A" />
+            <stop offset="0" stopColor="#5A6068" />
+            <stop offset="0.3" stopColor="#C8CCD6" />
+            <stop offset="0.55" stopColor="#8D939C" />
+            <stop offset="1" stopColor="#3A3F46" />
           </linearGradient>
           <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="10" />
@@ -265,21 +265,12 @@ export const S3Operator: React.FC = () => {
         </defs>
       </svg>
 
-      {/* headline */}
-      <div style={{ position: "absolute", left: SAFE.x0, top: 388 }}>
-        <Slam at={2} size={156}>
-          Ek operator.
-        </Slam>
-        <div style={{ height: 14 }} />
-        <RevealLine
-          words={[{ w: "Chaar", c: C.ember }, "zimmedariyaan."]}
-          start={22}
-          stagger={4}
-          style={{ fontFamily: FONT.sans, fontWeight: 700, fontSize: 64, color: C.white }}
-        />
-      </div>
+      <Stack top={360}>
+        <Display words={["EK", "OPERATOR."]} at={2} />
+        <TypeOn words={[{ w: "Chaar", c: C.gold }, "zimmedariyaan."]} at={18} color={C.fa} />
+      </Stack>
 
-      {/* macro panel */}
+      {/* macro shots: no card chrome, just a soft rounded window */}
       <div
         style={{
           position: "absolute",
@@ -287,14 +278,13 @@ export const S3Operator: React.FC = () => {
           top: PANEL.y,
           width: PANEL.w,
           height: PANEL.h,
-          borderRadius: 26,
+          borderRadius: 28,
           overflow: "hidden",
-          background: "#0F1113",
-          border: `1.5px solid ${C.line}`,
+          background: "#0A0B0C",
           opacity: panelIn,
-          scale: `${(0.94 + 0.06 * panelIn) * (1 + zoomOut * 0.35)}`,
+          scale: `${(0.96 + 0.04 * panelIn) * (1 + zoomOut * 0.35)}`,
           translate: `${shake}px ${shake * 0.6}px`,
-          filter: zoomOut > 0 ? `brightness(${1 + zoomOut * 0.8})` : undefined,
+          filter: zoomOut > 0 ? `brightness(${1 + zoomOut * 0.6})` : undefined,
         }}
       >
         {shots}
@@ -302,22 +292,17 @@ export const S3Operator: React.FC = () => {
           style={{
             position: "absolute",
             inset: 0,
-            background: "radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.6) 100%)",
+            background: "radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.65) 100%)",
           }}
         />
-        <div style={{ position: "absolute", left: 22, top: 18 }}>
-          <Mono style={{ fontSize: 19, color: C.ash }}>
-            <span style={{ color: C.ember }}>●</span> {clock}
-          </Mono>
-        </div>
       </div>
 
-      {/* task label */}
-      <div style={{ position: "absolute", left: SAFE.x0, top: 1226, height: 64, width: 820, overflow: "hidden" }}>
+      {/* one task line at a time + a hairline 4-step progress */}
+      <div style={{ position: "absolute", left: SAFE.x0, top: PANEL.y + PANEL.h + 34, height: 60, width: 820, overflow: "hidden" }}>
         {[0, 1, 2, 3].map((i) => {
           const a = SHOT0 + i * SHOT;
-          const inP = prog(f, a + 3, a + 9, E.out);
-          const outP = i < 3 ? prog(f, a + SHOT - 1, a + SHOT + 3, E.in) : 0;
+          const inP = prog(f, a + 1, a + 7, E.out);
+          const outP = i < 3 ? prog(f, a + SHOT - 3, a + SHOT + 1, E.in) : 0;
           if (inP <= 0 || outP >= 1) return null;
           return (
             <div
@@ -328,48 +313,28 @@ export const S3Operator: React.FC = () => {
                 top: 0,
                 display: "flex",
                 alignItems: "baseline",
-                gap: 18,
-                translate: `0 ${(1 - inP) * 64 - outP * 64}px`,
+                gap: 16,
+                translate: `0 ${(1 - inP) * 60 - outP * 60}px`,
+                fontFamily: FONT.sans,
+                whiteSpace: "nowrap",
               }}
             >
-              <Mono style={{ fontSize: 30, color: C.ember, letterSpacing: "0.06em" }}>0{i + 1}</Mono>
-              <div style={{ fontFamily: FONT.sans, fontWeight: 700, fontSize: 46, color: C.white, whiteSpace: "nowrap" }}>
-                {TASKS[i]}
-              </div>
+              <span style={{ fontWeight: 600, fontSize: TYPE.support, color: C.gold }}>0{i + 1}</span>
+              <span style={{ fontWeight: 500, fontSize: TYPE.support, color: C.fa }}>{TASKS[i]}</span>
             </div>
           );
         })}
       </div>
-
-      {/* tracker */}
-      <div style={{ position: "absolute", left: SAFE.x0, top: 1304, width: 820, display: "flex", gap: 12, opacity: panelIn }}>
+      <div style={{ position: "absolute", left: SAFE.x0, top: PANEL.y + PANEL.h + 110, width: 820, display: "flex", gap: 10, opacity: panelIn }}>
         {[0, 1, 2, 3].map((i) => {
           const a = SHOT0 + i * SHOT;
           const v = prog(f, a, a + SHOT);
           return (
-            <div key={i} style={{ flex: 1, height: 8, borderRadius: 4, background: C.steel2, overflow: "hidden" }}>
-              <div style={{ width: `${v * 100}%`, height: "100%", background: i === 3 ? C.ember : C.white }} />
+            <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: "#1E2024", overflow: "hidden" }}>
+              <div style={{ width: `${v * 100}%`, height: "100%", background: i === 3 ? C.gold : C.fa }} />
             </div>
           );
         })}
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: SAFE.x0,
-          top: 1336,
-          width: 820,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          opacity: panelIn,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 30, height: 30, borderRadius: 15, background: "#4A5058" }} />
-          <Mono style={{ fontSize: 22, color: C.white }}>Operator × 1</Mono>
-        </div>
-        <Mono style={{ fontSize: 22, color: idx === 3 ? C.ember : C.ash }}>Tasks {Math.min(4, Math.max(0, Math.floor((f - SHOT0) / SHOT) + 1))}/4</Mono>
       </div>
     </AbsoluteFill>
   );
