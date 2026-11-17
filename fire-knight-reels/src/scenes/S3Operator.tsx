@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { C, E, FONT, SAFE, TYPE, ip, noise1, prog, rand } from "../fk/theme";
+import { C, E, FONT, REAL, SAFE, TYPE, ip, noise1, prog, rand } from "../fk/theme";
 import { Display, Stack, TypeOn } from "../fk/ui";
 
 const PANEL = { x: SAFE.x0, y: 640, w: 820, h: 540 };
@@ -43,14 +43,14 @@ const Gauge: React.FC<{ cx: number; cy: number; r: number; v: number; hot?: bool
       <circle cx={cx} cy={cy} r={r + 18} fill="#0E1012" stroke="#2C3136" strokeWidth={3} />
       <circle cx={cx} cy={cy} r={r + 6} fill="url(#dialG)" />
       <path d={arc(cx, cy, r * 0.9, a0, a1)} stroke="#2E3338" strokeWidth={10} fill="none" />
-      {hot && <path d={arc(cx, cy, r * 0.9, a0 + (a1 - a0) * 0.78, a1)} stroke={C.ember} strokeWidth={10} fill="none" />}
+      {hot && <path d={arc(cx, cy, r * 0.9, a0 + (a1 - a0) * 0.78, a1)} stroke={REAL.lampRed} strokeWidth={10} fill="none" />}
       {Array.from({ length: 13 }, (_, i) => {
         const a = a0 + ((a1 - a0) * i) / 12;
         const [x0, y0] = polar(cx, cy, r * 0.74, a);
         const [x1, y1] = polar(cx, cy, r * (i % 3 === 0 ? 0.62 : 0.67), a);
         return <line key={i} x1={x0} y1={y0} x2={x1} y2={y1} stroke="#7A8189" strokeWidth={i % 3 === 0 ? 4 : 2} />;
       })}
-      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke={hot && v > 0.78 ? C.ember : C.white} strokeWidth={6} strokeLinecap="round" />
+      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke={hot && v > 0.78 ? REAL.lampRed : C.white} strokeWidth={6} strokeLinecap="round" />
       <circle cx={cx} cy={cy} r={16} fill="#2A2E33" stroke="#4A5058" strokeWidth={3} />
       <text x={cx} y={cy + r * 0.48} textAnchor="middle" fill={C.ash} fontFamily={FONT.mono} fontWeight={700} fontSize={20} letterSpacing="3">
         {label}
@@ -71,9 +71,9 @@ const ShotGauges: React.FC<{ p: number; f: number }> = ({ p, f }) => {
           <rect x={-56} y={-44} width={112} height={88} rx={14} fill="#111315" stroke="#2C3136" strokeWidth={2} />
           {i === 0 ? (
             <g opacity={blink ? 1 : 0.25}>
-              <circle r={36} fill={C.ember} opacity={0.25} filter="url(#glow)" />
-              <path d="M-6 -26 L6 -26 L6 8 A14 14 0 1 1 -6 8 Z" fill="none" stroke={C.ember} strokeWidth={5} />
-              <path d="M-26 22 Q-13 14 0 22 T26 22" fill="none" stroke={C.ember} strokeWidth={4} />
+              <circle r={36} fill={REAL.lampRed} opacity={0.3} filter="url(#glow)" />
+              <path d="M-6 -26 L6 -26 L6 8 A14 14 0 1 1 -6 8 Z" fill="none" stroke={REAL.lampRed} strokeWidth={5} />
+              <path d="M-26 22 Q-13 14 0 22 T26 22" fill="none" stroke={REAL.lampRed} strokeWidth={4} />
             </g>
           ) : i === 1 ? (
             <path d="M-28 10 L-6 -6 L20 -6 L26 -14 L32 -4 L22 4 L22 16 L-28 16 Z" fill="none" stroke="#3A4047" strokeWidth={4} />
@@ -102,9 +102,9 @@ const ShotStop: React.FC<{ p: number; f: number }> = ({ p, f }) => {
         return <rect key={i} x={x} y={500} width={80} height={6} rx={3} fill="#2A2E33" />;
       })}
       <g transform="translate(650 200)">
-        <circle r={70} fill="#111315" stroke={parked ? C.ember : "#2C3136"} strokeWidth={5} />
-        {parked && <circle r={84} fill={C.ember} opacity={0.18} filter="url(#glow)" />}
-        <text y={30} textAnchor="middle" fontFamily={FONT.slam} fontSize={92} fill={parked ? C.ember : "#3A4047"}>
+        <circle r={70} fill="#111315" stroke={parked ? REAL.lampRed : "#2C3136"} strokeWidth={5} />
+        {parked && <circle r={84} fill={REAL.lampRed} opacity={0.22} filter="url(#glow)" />}
+        <text y={30} textAnchor="middle" fontFamily={FONT.slam} fontSize={92} fill={parked ? REAL.lampRed : "#3A4047"}>
           P
         </text>
       </g>
@@ -122,22 +122,22 @@ const Extinguisher: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s 
     <rect x={80} y={212} width={26} height={40} rx={5} fill="#1A1C1E" transform="rotate(-8 92 220)" />
     {/* body */}
     <rect x={-58} y={0} width={116} height={300} rx={46} fill="url(#extG)" />
-    <rect x={-58} y={92} width={116} height={78} fill={C.gold} opacity={0.92} />
-    <rect x={-44} y={108} width={88} height={8} rx={3} fill="#2A2210" />
-    <rect x={-44} y={126} width={60} height={6} rx={3} fill="#5C4718" />
-    <rect x={-44} y={142} width={72} height={6} rx={3} fill="#5C4718" />
+    <rect x={-58} y={92} width={116} height={78} fill="#F4F2EE" opacity={0.95} />
+    <rect x={-44} y={108} width={88} height={8} rx={3} fill="#3A3A3A" />
+    <rect x={-44} y={126} width={60} height={6} rx={3} fill="#8A8A8A" />
+    <rect x={-44} y={142} width={72} height={6} rx={3} fill="#8A8A8A" />
     <path d="M-40 14 Q-46 150 -40 286" stroke="#FFFFFF" strokeOpacity={0.28} strokeWidth={8} fill="none" />
     {/* neck + valve */}
     <rect x={-22} y={-22} width={44} height={26} rx={4} fill="#3A4047" />
     <rect x={-34} y={-48} width={68} height={28} rx={6} fill="#5A616A" />
     {/* gauge */}
     <circle cx={-46} cy={-34} r={18} fill="#FAFAFA" stroke="#3A4047" strokeWidth={4} />
-    <path d="M-46 -34 L-38 -44" stroke="#1C1F22" strokeWidth={3} />
+    <path d="M-46 -34 L-38 -44" stroke={REAL.gaugeGreen} strokeWidth={3} />
     {/* lever + handle */}
     <path d="M-30 -52 L60 -70 L64 -60 L-24 -42 Z" fill="#7A8189" />
     <path d="M-30 -38 L56 -36 L56 -28 L-30 -30 Z" fill="#4A5058" />
     {/* pin */}
-    <circle cx={10} cy={-44} r={9} fill="none" stroke={C.heat} strokeWidth={3} />
+    <circle cx={10} cy={-44} r={9} fill="none" stroke="#E8C547" strokeWidth={3} />
   </g>
 );
 
@@ -181,8 +181,8 @@ const ShotAttempt: React.FC<{ p: number; f: number }> = ({ p, f }) => {
     <svg viewBox="0 0 820 520" width="100%" height="100%">
       {/* engine bay grille with heat behind */}
       <rect x={260} y={40} width={520} height={440} rx={10} fill="#0B0C0D" />
-      <ellipse cx={540} cy={250} rx={240} ry={190} fill={C.ember} opacity={0.38 * glow} filter="url(#glowBig)" />
-      <ellipse cx={540} cy={250} rx={110} ry={80} fill={C.heat} opacity={0.45 * glow} filter="url(#glowBig)" />
+      <ellipse cx={540} cy={250} rx={240} ry={190} fill={REAL.fireOrange} opacity={0.42 * glow} filter="url(#glowBig)" />
+      <ellipse cx={540} cy={250} rx={110} ry={80} fill={REAL.fireYellow} opacity={0.45 * glow} filter="url(#glowBig)" />
       {Array.from({ length: 11 }, (_, i) => (
         <rect key={i} x={272} y={56 + i * 38} width={496} height={18} rx={4} fill="#1C1F22" stroke="#2C3136" strokeWidth={2} />
       ))}
@@ -251,10 +251,10 @@ export const S3Operator: React.FC = () => {
           </radialGradient>
           {/* brushed-steel extinguisher body */}
           <linearGradient id="extG" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#5A6068" />
-            <stop offset="0.3" stopColor="#C8CCD6" />
-            <stop offset="0.55" stopColor="#8D939C" />
-            <stop offset="1" stopColor="#3A3F46" />
+            <stop offset="0" stopColor={REAL.extRedLo} />
+            <stop offset="0.3" stopColor={REAL.extRedHi} />
+            <stop offset="0.55" stopColor={REAL.extRed} />
+            <stop offset="1" stopColor={REAL.extRedLo} />
           </linearGradient>
           <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="10" />

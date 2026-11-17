@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { BAY_W, World } from "../fk/World";
-import { C, E, ip, noise1, prog } from "../fk/theme";
+import { C, E, REAL, ip, noise1, prog } from "../fk/theme";
 import { Display, Stack, TopShade, TypeOn } from "../fk/ui";
 
 /**
@@ -65,10 +65,10 @@ export const S1Hook: React.FC = () => {
       <svg width={1080} height={1920} style={{ position: "absolute", inset: 0, opacity: mystery, mixBlendMode: "screen" }}>
         <defs>
           <radialGradient id="mysteryG">
-            <stop offset="0" stopColor="#FFF8E8" stopOpacity="1" />
-            <stop offset="0.22" stopColor={C.goldL} stopOpacity="0.95" />
-            <stop offset="0.55" stopColor={C.gold} stopOpacity="0.45" />
-            <stop offset="1" stopColor={C.gold} stopOpacity="0" />
+            <stop offset="0" stopColor={REAL.fireCore} stopOpacity="1" />
+            <stop offset="0.22" stopColor={REAL.fireYellow} stopOpacity="0.95" />
+            <stop offset="0.55" stopColor={REAL.fireOrange} stopOpacity="0.5" />
+            <stop offset="1" stopColor={REAL.fireRed} stopOpacity="0" />
           </radialGradient>
         </defs>
         <ellipse cx={gx} cy={gy} rx={170 * gz * pulse} ry={120 * gz * pulse} fill="url(#mysteryG)" />
@@ -77,7 +77,7 @@ export const S1Hook: React.FC = () => {
             key={i}
             d={ring(gx, gy, 130 * gz * k * (0.9 + 0.1 * pulse), f, i)}
             fill="none"
-            stroke={i === 2 ? C.goldL : C.gold}
+            stroke={i === 2 ? REAL.fireYellow : i === 1 ? REAL.fireOrange : REAL.fireRed}
             strokeWidth={1.6}
             opacity={(0.25 + i * 0.15) * ip(f, [0, 40, 80], [1, 1, 0.4])}
           />

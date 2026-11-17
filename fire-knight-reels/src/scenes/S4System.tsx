@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { BAY_W, World } from "../fk/World";
-import { C, E, FONT, SAFE, TYPE, ip, prog, rand } from "../fk/theme";
+import { C, E, FONT, REAL, SAFE, TYPE, ip, prog, rand } from "../fk/theme";
 import { Display, Label, Reticle, Stack, TopShade, TypeOn } from "../fk/ui";
 
 export const S4_CAM = { z: 2.3, cx: BAY_W.x, cy: BAY_W.y, ax: 540, ay: 940 };
@@ -80,8 +80,8 @@ const Overlay: React.FC<{ f: number }> = ({ f }) => {
         )}
       <g>
         <rect x={BEACON.x - 6} y={BEACON.y + 4} width={12} height={8} fill="#3A4047" />
-        <path d={`M${BEACON.x - 7} ${BEACON.y + 4} A7 7 0 0 1 ${BEACON.x + 7} ${BEACON.y + 4} Z`} fill={alert ? C.gold : "#4A5058"} />
-        {alert && <circle cx={BEACON.x} cy={BEACON.y} r={16 + beat * 6} fill={C.gold} opacity={0.25 + beat * 0.3} filter="url(#soft)" />}
+        <path d={`M${BEACON.x - 7} ${BEACON.y + 4} A7 7 0 0 1 ${BEACON.x + 7} ${BEACON.y + 4} Z`} fill={alert ? REAL.beacon : "#4A5058"} />
+        {alert && <circle cx={BEACON.x} cy={BEACON.y} r={16 + beat * 6} fill={REAL.beacon} opacity={0.3 + beat * 0.35} filter="url(#soft)" />}
       </g>
     </g>
   );
@@ -123,7 +123,7 @@ export const S4System: React.FC = () => {
           thermal={0.7}
           crush={0.55}
           towers={0.4}
-          truckFilter="grayscale(0.7) brightness(0.9) contrast(1.12)"
+          truckFilter="brightness(0.85) contrast(1.05)"
           overlay={<Overlay f={f} />}
         />
         {f >= T_ALERT &&
@@ -139,7 +139,7 @@ export const S4System: React.FC = () => {
                   width: 40 + q * 180,
                   height: 40 + q * 180,
                   borderRadius: "50%",
-                  border: `2px solid ${C.gold}`,
+                  border: `2px solid ${REAL.beacon}`,
                   opacity: (1 - q) * 0.6 * (1 - prog(f, T_RESP + 10, T_RESP + 24)),
                 }}
               />

@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { Dumper, BAY } from "./Dumper";
-import { C, rand } from "./theme";
+import { C, REAL, rand } from "./theme";
 
 /** Truck placement in world space (1080 x 1920 frame at camera zoom 1). */
 export const TRUCK = { x: 40, y: 790, w: 1000, h: 560 };
@@ -109,7 +109,7 @@ const Tower: React.FC<{ x: number; y: number; s: number; on: number; t: number; 
       <path d="M-5 -30 L4 -60 M-4 -60 L3 -90 M-3 -90 L2 -120" stroke="#1D2024" strokeWidth={1.5} />
       <rect x={-16} y={-162} width={32} height={12} fill="#1A1D20" />
       {[-11, -3, 5].map((dx) => (
-        <rect key={dx} x={dx} y={-160} width={6} height={7} fill={C.heat} opacity={on * fl} />
+        <rect key={dx} x={dx} y={-160} width={6} height={7} fill={REAL.sodium} opacity={on * fl} />
       ))}
       <circle cx={0} cy={-156} r={60} fill="url(#towerGlow)" opacity={on * 0.55 * fl} />
       <polygon points="-14,-150 14,-150 70,0 -70,0" fill="url(#towerCone)" opacity={on * 0.18 * fl} />
@@ -171,8 +171,8 @@ export const World: React.FC<WorldProps> = ({
       <svg width={0} height={0} style={{ position: "absolute" }}>
         <defs>
           <radialGradient id="towerGlow">
-            <stop offset="0" stopColor={C.heat} stopOpacity="0.9" />
-            <stop offset="1" stopColor={C.heat} stopOpacity="0" />
+            <stop offset="0" stopColor={REAL.sodium} stopOpacity="0.9" />
+            <stop offset="1" stopColor={REAL.sodium} stopOpacity="0" />
           </radialGradient>
           <linearGradient id="towerCone" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#FFE9C9" stopOpacity="1" />

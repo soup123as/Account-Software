@@ -26,6 +26,34 @@ export const C = {
   ink: "#080808",
 } as const;
 
+/**
+ * Real-world colours for physical things (machines, fire, lamps, extinguishers).
+ * Brand colours (C) are for text, background and UI graphics only - objects keep
+ * the colours they have in reality.
+ */
+export const REAL = {
+  // mining haul truck yellow, graded for a night key light from above
+  yellowHi: "#F2B630",
+  yellow: "#D39A1C",
+  yellowMid: "#A87512",
+  yellowLo: "#5C3F08",
+  yellowDeep: "#2E2004",
+  // fire / heat
+  fireCore: "#FFF4DC",
+  fireYellow: "#FFB33A",
+  fireOrange: "#FF6A1A",
+  fireRed: "#E2361A",
+  // lamps and safety kit
+  lampRed: "#E3281C",
+  tailRed: "#C8221A",
+  beacon: "#FFA41A",
+  sodium: "#FFBE6A",
+  extRed: "#C61F1A",
+  extRedHi: "#EE4A3A",
+  extRedLo: "#7A120E",
+  gaugeGreen: "#2FA84F",
+} as const;
+
 export const FONT = {
   sans: "FK DM Sans", // primary: DM Sans 400-700
   display: "FK Anton", // secondary: Anton, caps hits only

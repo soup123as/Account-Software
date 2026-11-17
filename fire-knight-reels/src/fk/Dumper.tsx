@@ -1,5 +1,5 @@
 import React from "react";
-import { C, noise1 } from "./theme";
+import { C, REAL, noise1 } from "./theme";
 
 /**
  * Side view of a ~100-tonne rigid haul truck, facing right.
@@ -117,11 +117,15 @@ export const Dumper: React.FC<Props> = ({
   const defs = (
       <defs>
         <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#424951" />
-          <stop offset="0.35" stopColor="#2C3137" />
-          <stop offset="1" stopColor="#14171A" />
+          <stop offset="0" stopColor={REAL.yellow} />
+          <stop offset="0.4" stopColor={REAL.yellowMid} />
+          <stop offset="1" stopColor={REAL.yellowDeep} />
         </linearGradient>
         <linearGradient id="panelG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={REAL.yellow} />
+          <stop offset="1" stopColor={REAL.yellowLo} />
+        </linearGradient>
+        <linearGradient id="steelG" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#363C43" />
           <stop offset="1" stopColor="#181B1E" />
         </linearGradient>
@@ -154,19 +158,20 @@ export const Dumper: React.FC<Props> = ({
           <stop offset="1" stopColor="#FFF4E2" stopOpacity="0" />
         </linearGradient>
         <radialGradient id="heatOuter">
-          <stop offset="0" stopColor={C.ember} stopOpacity="0.85" />
-          <stop offset="1" stopColor={C.ember} stopOpacity="0" />
+          <stop offset="0" stopColor={REAL.fireOrange} stopOpacity="0.9" />
+          <stop offset="0.6" stopColor={REAL.fireRed} stopOpacity="0.35" />
+          <stop offset="1" stopColor={REAL.fireRed} stopOpacity="0" />
         </radialGradient>
         <radialGradient id="heatCore">
-          <stop offset="0" stopColor="#FFF6E0" stopOpacity="1" />
-          <stop offset="0.35" stopColor={C.heat} stopOpacity="0.95" />
-          <stop offset="1" stopColor={C.ember} stopOpacity="0" />
+          <stop offset="0" stopColor={REAL.fireCore} stopOpacity="1" />
+          <stop offset="0.35" stopColor={REAL.fireYellow} stopOpacity="0.95" />
+          <stop offset="1" stopColor={REAL.fireOrange} stopOpacity="0" />
         </radialGradient>
         <linearGradient id="accentG" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor={C.ember} stopOpacity="0" />
-          <stop offset="0.25" stopColor={C.ember} stopOpacity="1" />
-          <stop offset="0.8" stopColor={C.heat} stopOpacity="1" />
-          <stop offset="1" stopColor={C.ember} stopOpacity="0" />
+          <stop offset="0" stopColor={C.gold} stopOpacity="0" />
+          <stop offset="0.25" stopColor={C.gold} stopOpacity="1" />
+          <stop offset="0.8" stopColor={C.goldL} stopOpacity="1" />
+          <stop offset="1" stopColor={C.gold} stopOpacity="0" />
         </linearGradient>
         <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="6" />
@@ -210,7 +215,7 @@ export const Dumper: React.FC<Props> = ({
                   key={i}
                   d={blob(BAY.x, BAY.y, 130 * k * (0.35 + h * 0.9), t, i)}
                   fill="none"
-                  stroke={i < 2 ? C.ember : C.heat}
+                  stroke={i < 1 ? REAL.fireRed : i < 2 ? REAL.fireOrange : REAL.fireYellow}
                   strokeWidth={i < 2 ? 1.6 : 2.2}
                   opacity={(0.35 + i * 0.15) * Math.min(1, h * 1.6)}
                 />
@@ -261,7 +266,7 @@ export const Dumper: React.FC<Props> = ({
           <line x1={572} y1={340} x2={604} y2={276} stroke="#59616A" strokeWidth={8} strokeLinecap="round" />
         </g>
         {/* fuel tank */}
-        <rect x={418} y={330} width={140} height={78} rx={14} fill="url(#panelG)" stroke="#2D3237" strokeWidth={2} />
+        <rect x={418} y={330} width={140} height={78} rx={14} fill="url(#steelG)" stroke="#2D3237" strokeWidth={2} />
         <rect x={418} y={352} width={140} height={5} fill="#101214" />
         <rect x={418} y={384} width={140} height={5} fill="#101214" />
         <circle cx={540} cy={340} r={5} fill="#3A4047" />
@@ -274,28 +279,28 @@ export const Dumper: React.FC<Props> = ({
           strokeWidth={2}
         />
         {/* top rail */}
-        <path d="M18 128 L692 96 L692 122 L24 152 Z" fill="#3B4249" />
-        <path d="M24 152 L692 122" stroke="#121417" strokeWidth={3} />
+        <path d="M18 128 L692 96 L692 122 L24 152 Z" fill={REAL.yellowHi} />
+        <path d="M24 152 L692 122" stroke={REAL.yellowDeep} strokeWidth={3} />
         {/* ribs */}
         {ribXs.map((x) => {
           const yTop = 152 - ((x - 24) * 30) / 668 + 1;
           const yBot = bodyBottomY(x) - 2;
           return (
             <g key={x}>
-              <rect x={x} y={yTop} width={11} height={yBot - yTop} fill="#30353B" />
-              <rect x={x} y={yTop} width={2.5} height={yBot - yTop} fill="#56606A" />
-              <rect x={x + 11} y={yTop} width={3} height={yBot - yTop} fill="#0F1113" opacity={0.8} />
+              <rect x={x} y={yTop} width={11} height={yBot - yTop} fill={REAL.yellowMid} />
+              <rect x={x} y={yTop} width={2.5} height={yBot - yTop} fill={REAL.yellowHi} />
+              <rect x={x + 11} y={yTop} width={3} height={yBot - yTop} fill={REAL.yellowDeep} opacity={0.9} />
             </g>
           );
         })}
         {/* lower beam */}
-        <path d="M72 258 L150 280 L692 258 L692 244 L150 266 L84 246 Z" fill="#15181B" />
+        <path d="M72 258 L150 280 L692 258 L692 244 L150 266 L84 246 Z" fill={REAL.yellowLo} />
         {/* tail light */}
-        <rect x={34} y={226} width={10} height={16} rx={2} fill={C.ember} opacity={0.55} />
+        <rect x={34} y={226} width={10} height={16} rx={2} fill={REAL.tailRed} opacity={0.85} />
 
         {/* ---------- canopy over cab ---------- */}
-        <path d="M692 96 L986 84 L996 90 L996 108 L986 112 L700 124 Z" fill="#2B3036" stroke="#0D0F11" strokeWidth={2} />
-        <path d="M700 124 L986 112" stroke="#14171A" strokeWidth={4} />
+        <path d="M692 96 L986 84 L996 90 L996 108 L986 112 L700 124 Z" fill={REAL.yellow} stroke="#0D0F11" strokeWidth={2} />
+        <path d="M700 124 L986 112" stroke={REAL.yellowDeep} strokeWidth={4} />
         {/* canopy underside shadow */}
         <path d="M692 124 L986 112 L986 130 L692 150 Z" fill="#000" opacity={0.45} />
 
@@ -351,7 +356,7 @@ export const Dumper: React.FC<Props> = ({
 
         {/* ---------- deck + handrails ---------- */}
         <rect x={690} y={292} width={300} height={12} fill="url(#plate)" stroke="#0D0F11" strokeWidth={1.5} />
-        <g stroke="#4A5058" strokeWidth={4} strokeLinecap="round">
+        <g stroke={REAL.yellow} strokeWidth={4} strokeLinecap="round">
           <line x1={842} y1={246} x2={988} y2={246} />
           <line x1={842} y1={268} x2={988} y2={268} strokeWidth={2.5} />
           {[848, 896, 944, 986].map((x) => (
@@ -360,7 +365,7 @@ export const Dumper: React.FC<Props> = ({
         </g>
 
         {/* ---------- front access ladder ---------- */}
-        <g stroke="#3A4047" strokeWidth={4}>
+        <g stroke={REAL.yellowMid} strokeWidth={4}>
           <line x1={898} y1={536} x2={946} y2={404} />
           <line x1={924} y1={536} x2={972} y2={404} />
           {Array.from({ length: 5 }, (_, i) => {
@@ -379,12 +384,12 @@ export const Dumper: React.FC<Props> = ({
         </g>
 
         {/* ---------- fender over front tyre ---------- */}
-        <path d="M576 375 A 132 132 0 0 1 824 375" stroke="#22262A" strokeWidth={16} fill="none" />
-        <path d="M576 375 A 132 132 0 0 1 824 375" stroke="#3E444B" strokeWidth={2.5} fill="none" transform="translate(0 -7)" />
+        <path d="M576 375 A 132 132 0 0 1 824 375" stroke={REAL.yellowMid} strokeWidth={16} fill="none" />
+        <path d="M576 375 A 132 132 0 0 1 824 375" stroke={REAL.yellowHi} strokeWidth={2.5} fill="none" transform="translate(0 -7)" />
 
         {/* ---------- bumper ---------- */}
         <rect x={904} y={398} width={92} height={36} rx={4} fill="url(#panelG)" stroke="#0D0F11" strokeWidth={2} />
-        <rect x={904} y={398} width={92} height={4} fill="#3A4047" />
+        <rect x={904} y={398} width={92} height={4} fill={REAL.yellowHi} />
         {/* lamps */}
         <rect x={986} y={404} width={10} height={14} rx={2} fill={headlights > 0.05 ? "#FFF6E6" : "#3A4047"} />
         <rect x={980} y={282} width={10} height={10} rx={2} fill={headlights > 0.05 ? "#FFF6E6" : "#3A4047"} />

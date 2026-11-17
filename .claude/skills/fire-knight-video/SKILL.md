@@ -5,16 +5,16 @@ description: Build a premium cinematic 9:16 reel for The Fire Knight (thefirekni
 
 # The Fire Knight: cinematic product reels ("Steel & Gold")
 
-A Fire Knight reel looks like a premium automotive or engineering ad. It is quiet, dark and confident. One idea at a time sits on a black frame, a detailed machine is always on screen, a single gold accent is used, and it ends on the shield logo.
+A Fire Knight reel looks like a premium automotive or engineering ad. It is quiet, dark and confident. One idea at a time sits on a black frame, a detailed real-coloured machine is always on screen, a single gold accent is used in the type, and it ends on the shield logo.
 
-The reference implementation is **Operator Akela v4** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
+The reference implementation is **Operator Akela v5** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
 
 The client approves every stage and does all posting. Never publish, schedule, comment or DM.
 
 ## 1. The three rules that make it premium
 1. **Less on screen.** At most three things per frame: one text group, one machine or product, and at most one supporting detail (a reticle, a label or a progress line). No header bar, no brand pill, no HUD clutter, no clocks or status chips "for flavour". If a frame feels busy, delete something.
 2. **The machine is the hero.** Every scene shows a machine (dumper, truck, bus, excavator, DG set, rack, panel, room) or a real Fire Knight product. Text never plays over an empty frame. Product-first is the brand: the viewer must always see *what* is protected and *what* protects it.
-3. **Calm type, one accent.** Small, crisp DM Sans sentences with one Anton hit. Gold marks only the key word. Everything else is white or #fafafa.
+3. **Calm type, one accent, real objects.** Small, crisp DM Sans sentences with one Anton hit. Gold marks only the key word, and text is otherwise white or #fafafa. Machines, fire, lamps and products keep their real colours.
 
 ## 1b. Curiosity hook (every reel opens a loop and closes it late)
 The reel must make the viewer **need** the ending. Build it in both the script and the visuals:
@@ -32,18 +32,31 @@ The reel must make the viewer **need** the ending. Build it in both the script a
 ## 2. Brand system
 
 ### Colour (fixed)
+**Brand colours are for text, background and UI graphics only.** Physical things (machines, fire, lamps, safety kit, products) keep their real-world colours. Never recolour an object to match the brand.
+
+**Brand: text, background, UI** (`C` in `theme.ts`)
 | Token | Hex | Use |
 |---|---|---|
 | `black` | `#000000` | Background, always. Site primary `#080808` is acceptable for panels |
 | `white` | `#FFFFFF` | Display (Anton) text |
 | `fa` | `#FAFAFA` | DM Sans sentences and supporting text (75% opacity for support lines) |
-| `gold` | `#F0B242` | The only accent: one key word per text group, heat, alerts, the active step |
-| `goldL` | `#F7D58F` | Heat core and glow only (never text) |
-| Steel greys | `#1C1F22` `#272B30` `#3A4047` `#9C9CA4` `#C8CCD6` | Only for drawing machines and products, plus the small silver caps label (`#9C9CA4`). These are the site's silver scale |
+| `gold` | `#F0B242` | The only text accent (one key word per group), plus UI graphics: thermal scan line, sensing line, reticle on detect, active step index, hero accent line |
+| silver | `#9C9CA4` | Small caps labels only |
 
-- No orange, red, green, blue, neon, gradients behind text, emoji or stock flames.
-- Fire and heat are drawn as gold to white-hot glows and contour lines, never as photographic flames.
-- Resolved / OK states are `#fafafa`, not green.
+**Real-world: objects** (`REAL` in `theme.ts`)
+| Object | Colour |
+|---|---|
+| Mining haul truck / HEMM | Industrial yellow body graded for night light (`#F2B630` → `#D39A1C` → `#5C3F08`), black tyres, steel-grey rims, chassis, deck plate and fuel tank, dark glass |
+| Fire and heat | Natural: white-hot core `#FFF4DC` → `#FFB33A` → `#FF6A1A` → `#E2361A` |
+| Dashboard warning lamps, park brake, gauge red zone | Red `#E3281C` |
+| Rotating beacon and its light rings | Amber `#FFA41A` |
+| Floodlights | Sodium `#FFBE6A` |
+| Extinguisher | Red body with a white label, a green gauge needle and a yellow pin |
+| Fire Knight products, logo | Exactly as the official renders and logo files. Never tint |
+| Other machines (trucks, buses, DG sets, racks) | Their real livery or finish. Ask if unsure; default to the common real colour |
+
+- A thermal-camera viewfinder may show the machine in greyscale, because that is what a thermal camera shows. Elsewhere, don't desaturate or tint machines.
+- No neon, no gradients behind text, no emoji, no stock flames (fire is drawn).
 
 ### Typography (fixed)
 - **Primary: DM Sans** (400/500/600/700). Use it for all sentences, labels and the end-card line. Install with `npm i @fontsource/dm-sans`.
@@ -110,7 +123,7 @@ Use real renders wherever a product appears, cut out on black. Fetch them from `
 - **Product reveal:** the real product render rises on black with a light sweep and a caps label; the line sits above it.
 - **Hero + logo end frame:** pull back to the machine low in frame with a restrained gold accent along the protected zone. The emblem rises with one light sweep, the wordmark unmasks left to right, then `Because every second matters.` (DM Sans 40, "second" in gold) and `THEFIREKNIGHT.IN` label. Hold ≥ 1.2 s.
 
-New machines follow `src/fk/Dumper.tsx`: a side view at real proportions, steel greys with gradients for form, rim-light strokes on top edges, lamps with glows and beams, and props for `heat`, `thermal`, `accent`, `wheelAngle`, `bob`, an `overlay` slot and `layer: "heat"`. Write down real dimensions in a comment (e.g. haul truck ~10.2 m long, 2.5 m tyres). No people or faces anywhere; use objects and POV only.
+New machines follow `src/fk/Dumper.tsx`: a side view at real proportions, their **real colours** (from `REAL`) with gradients for form, rim-light strokes on top edges, lamps with glows and beams, and props for `heat`, `thermal`, `accent`, `wheelAngle`, `bob`, an `overlay` slot and `layer: "heat"`. Write down real dimensions in a comment (e.g. haul truck ~10.2 m long, 2.5 m tyres). No people or faces anywhere; use objects and POV only.
 
 ## 6. Language and copy
 - Instagram: Hinglish in Roman script for sentences. Display hits can be Hinglish or English CAPS. LinkedIn: English.
@@ -147,4 +160,5 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 | Date | Reel | Viewer / product | Recipes in order | Notes |
 |---|---|---|---|---|
 | 2026-11-17 | Operator Akela v3 (20 s) | Mining HEMM / Ranger | Emerge → Night haul + thermal → Four tasks → Automatic response → Product reveal → Hero + logo | First Steel & Gold build. |
-| 2026-11-17 | Operator Akela v4 (20 s) | Mining HEMM / Ranger | Mystery reveal ("Ek cheez is dumper ko BACHA SAKTI HAI. / OPERATOR NAHI.") → Night haul + thermal → Four tasks → Re-hook ("TOH PHIR KAUN?") → Automatic response → Product reveal → Hero + logo | Reference build with the curiosity hook. Scenes: 3.5 / 4 / 3.5 / 5 / 4 s. Next reel: change the machine and the loop line. |
+| 2026-11-17 | Operator Akela v4 (20 s) | Mining HEMM / Ranger | Mystery reveal ("Ek cheez is dumper ko BACHA SAKTI HAI. / OPERATOR NAHI.") → Night haul + thermal → Four tasks → Re-hook ("TOH PHIR KAUN?") → Automatic response → Product reveal → Hero + logo | Curiosity hook. Scenes: 3.5 / 4 / 3.5 / 5 / 4 s. |
+| 2026-11-17 | Operator Akela v5 (20 s) | Mining HEMM / Ranger | as v4 | **Reference build.** Real object colours (yellow truck, red extinguisher, natural fire); brand colours only on text and background. Next reel: change the machine and the loop line. |

@@ -26,7 +26,7 @@ const HeatFlash: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 540px 1050px, rgba(255,250,236,${a}) 0%, rgba(247,213,143,${a * 0.9}) 18%, rgba(240,178,66,${a * 0.7}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
+        background: `radial-gradient(circle at 540px 1050px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
       }}
     />
   );
