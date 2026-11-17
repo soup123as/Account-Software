@@ -6,6 +6,7 @@ import { S1Hook } from "./scenes/S1Hook";
 import { S2Night } from "./scenes/S2Night";
 import { S3Operator } from "./scenes/S3Operator";
 import { S4System } from "./scenes/S4System";
+import { S4Rehook } from "./scenes/S4Rehook";
 import { S5Product } from "./scenes/S5Product";
 import { S5Hero } from "./scenes/S5Hero";
 import { C, SCENES, STARTS, ip } from "./fk/theme";
@@ -32,7 +33,7 @@ const HeatFlash: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 540px 1230px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
+        background: `radial-gradient(circle at 540px 1280px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
       }}
     />
   );
@@ -82,28 +83,34 @@ export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio, 
       <TransitionSeries.Sequence name="2 Night haul" durationInFrames={SCENES.night}>
         <S2Night />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={22}>
+      <TransitionSeries.Overlay durationInFrames={20}>
         <HeatFlash />
       </TransitionSeries.Overlay>
       <TransitionSeries.Sequence name="3 Operator" durationInFrames={SCENES.operator}>
         <S3Operator />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={20}>
+      <TransitionSeries.Overlay durationInFrames={18}>
         <Bloom />
       </TransitionSeries.Overlay>
-      <TransitionSeries.Sequence name="4 System" durationInFrames={SCENES.system}>
-        <S4System />
+      <TransitionSeries.Sequence name="4 Re-hook" durationInFrames={SCENES.rehook}>
+        <S4Rehook />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={22}>
+      <TransitionSeries.Overlay durationInFrames={20}>
         <MistWash />
       </TransitionSeries.Overlay>
       <TransitionSeries.Sequence name="5 Product" durationInFrames={SCENES.product}>
         <S5Product />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={20}>
+      <TransitionSeries.Overlay durationInFrames={16}>
         <Dip />
       </TransitionSeries.Overlay>
-      <TransitionSeries.Sequence name="6 Hero" durationInFrames={SCENES.hero}>
+      <TransitionSeries.Sequence name="6 System" durationInFrames={SCENES.system}>
+        <S4System />
+      </TransitionSeries.Sequence>
+      <TransitionSeries.Overlay durationInFrames={18}>
+        <Dip />
+      </TransitionSeries.Overlay>
+      <TransitionSeries.Sequence name="7 Hero" durationInFrames={SCENES.hero}>
         <S5Hero logoSrc={logoSrc} />
       </TransitionSeries.Sequence>
     </TransitionSeries>

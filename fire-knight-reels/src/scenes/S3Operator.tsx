@@ -1,13 +1,16 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { C, E, FONT, REAL, SAFE, ip, noise1, prog, rand } from "../fk/theme";
+import { TRUCK, World } from "../fk/World";
 import { Display, Stack, TypeOn } from "../fk/ui";
 
 /** 2x2 grid of tasks that builds up - the load on one person becomes visible. */
 const GRID = { x: SAFE.x0, y: 680, tw: 400, th: 300, gap: 20 };
-const TILE0 = 22; // first tile
-const TILE = 22; // frames between tiles
+/** Each tile lands on its spoken word (VO 10.40 / 11.42 / 12.56 / 13.83 s; scene starts 6.93 s). */
+const TILE_AT = [102, 133, 167, 205];
 const TILE_LIFE = 60; // each tile animates for this long, then holds its end state
+/** Operator's cab, framed below the text zone (truck coords of the cab ~ (770, 215)). */
+const CAB = { x: TRUCK.x + 770, y: TRUCK.y + 215 };
 
 const TASKS = ["Khatra dekhna", "Dumper rokna", "Extinguisher lana", "Aag se ladna"];
 
@@ -207,11 +210,14 @@ const ShotAttempt: React.FC<{ p: number; f: number }> = ({ p, f }) => {
 
 export const S3Operator: React.FC = () => {
   const f = useCurrentFrame();
-  const shake = f > 100 ? noise1(f * 2, 9) * 1.5 : 0;
-  const dive = prog(f, 122, 135, E.in); // dive into tile 4 (engine bay) for the next scene
+  // VO: "Aur ek operator" 7.09 (local 5) | "jiski hain chaar zimmedariyaan" 8.39-9.89 (local 44-89)
+  const shake = f > 210 ? noise1(f * 2, 9) * 1.5 : 0;
+  const dive = prog(f, 234, 248, E.in); // dive into tile 4 for the next scene
+  const cabOut = prog(f, 88, 104, E.inOut); // cab shot hands over to the task grid
+  const cabCam = { z: 1.9 + prog(f, 0, 104) * 0.08, cx: CAB.x, cy: CAB.y, ax: 540, ay: 1150 };
 
   const tiles = [0, 1, 2, 3].map((i) => {
-    const a = TILE0 + i * TILE;
+    const a = TILE_AT[i];
     const inP = prog(f, a, a + 12, E.out);
     if (inP <= 0) return null;
     const p = Math.min(1, Math.max(0, (f - a) / TILE_LIFE));
@@ -219,7 +225,7 @@ export const S3Operator: React.FC = () => {
     const row = Math.floor(i / 2);
     const x = GRID.x + col * (GRID.tw + GRID.gap);
     const y = GRID.y + row * (GRID.th + GRID.gap);
-    const active = f < a + TILE + 6 || i === 3;
+    const active = i === 3 ? f >= a : f < TILE_AT[i + 1];
     return (
       <div
         key={i}
@@ -287,9 +293,29 @@ export const S3Operator: React.FC = () => {
         </defs>
       </svg>
 
+      {/* the operator's cab, alone at night (no person shown) */}
+      <AbsoluteFill style={{ opacity: 1 - cabOut * 0.85, filter: cabOut > 0 ? `blur(${cabOut * 10}px)` : undefined }}>
+        <World t={f + 208} cam={cabCam} headlights={0.8} rim={0.8} heat={0.6} towers={0.6} />
+        {/* a single warm cab light: someone is in there, on their own */}
+        <div
+          style={{
+            position: "absolute",
+            left: 540 - 70,
+            top: 1150 - 60,
+            width: 140,
+            height: 110,
+            borderRadius: "50%",
+            background: "radial-gradient(ellipse at center, rgba(255,190,106,0.35) 0%, rgba(255,190,106,0) 70%)",
+            opacity: 0.6 + 0.4 * Math.sin(f * 0.08),
+          }}
+        />
+        <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.92) 0px, rgba(0,0,0,0.6) 620px, rgba(0,0,0,0) 860px)" }} />
+      </AbsoluteFill>
+
       <Stack top={380}>
-        <Display words={["EK", "OPERATOR."]} at={2} out={120} />
-        <TypeOn words={[{ w: "Chaar", c: C.gold }, "zimmedariyaan."]} at={16} out={121} color={C.fa} />
+        <TypeOn words={["Aur"]} at={4} out={238} color={C.fa} />
+        <Display words={["EK", "OPERATOR."]} at={8} out={238} />
+        <TypeOn words={["Jiski", "hain", { w: "chaar", c: C.gold }, "zimmedariyaan:"]} at={44} out={239} perLetter={0.8} color={C.fa} />
       </Stack>
 
       <AbsoluteFill

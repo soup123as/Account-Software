@@ -3,11 +3,11 @@ import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { C, E, SAFE, ip, prog } from "../fk/theme";
 import { Display, Label, Stack, TypeOn } from "../fk/ui";
 
-/** Scene 5 | 18.2-21.4 s - the answer to the hook: the real Ranger. */
+/** Product | 18.60-21.07 s - the answer. VO: "Yahin kaam aata hai Ranger." 18.86-20.69 (local 8-63) */
 export const S5Product: React.FC = () => {
   const f = useCurrentFrame();
-  const pr = prog(f, 2, 26, E.out);
-  const sweep = ip(f, [24, 60], [-40, 140], E.inOut);
+  const pr = prog(f, 0, 20, E.out);
+  const sweep = ip(f, [34, 66], [-40, 140], E.inOut);
   const src = staticFile("product/ranger-cylinder.png");
   return (
     <AbsoluteFill style={{ background: `radial-gradient(ellipse 760px 520px at 540px 1000px, #16181B 0%, ${C.black} 70%)` }}>
@@ -31,7 +31,7 @@ export const S5Product: React.FC = () => {
           width: 820,
           opacity: pr,
           translate: `0 ${(1 - pr) * 70}px`,
-          scale: `${0.96 + 0.04 * pr + prog(f, 0, 96) * 0.03}`,
+          scale: `${0.96 + 0.04 * pr + prog(f, 0, 74) * 0.03}`,
           filter: pr < 1 ? `blur(${(1 - pr) * 12}px)` : undefined,
         }}
       >
@@ -47,16 +47,15 @@ export const S5Product: React.FC = () => {
           }}
         />
       </div>
-      <div style={{ position: "absolute", left: SAFE.x0, top: 1250, opacity: prog(f, 24, 36) }}>
+      <div style={{ position: "absolute", left: SAFE.x0, top: 1250, opacity: prog(f, 40, 50) }}>
         <Label style={{ color: C.silver }}>
           The Ranger <span style={{ color: C.gold }}>·</span> fire suppression aid
         </Label>
       </div>
 
       <Stack top={380}>
-        <TypeOn words={["Fire", "response", "shouldn't"]} at={12} perLetter={0.7} color={C.fa} />
-        <TypeOn words={["depend", "on"]} at={28} perLetter={0.7} color={C.fa} />
-        <Display words={[{ w: "ONE", c: C.gold }, { w: "PERSON.", c: C.gold }]} at={36} />
+        <TypeOn words={["Yahin", "kaam", "aata", "hai"]} at={8} perLetter={0.8} color={C.fa} />
+        <Display words={[{ w: "RANGER.", c: C.gold }]} at={38} />
       </Stack>
     </AbsoluteFill>
   );

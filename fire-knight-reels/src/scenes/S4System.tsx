@@ -2,25 +2,26 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { BAY_W, World } from "../fk/World";
 import { C, E, FONT, REAL, SAFE, ip, prog, rand } from "../fk/theme";
-import { Display, Label, Reticle, Stack, TypeOn } from "../fk/ui";
+import { Label, Reticle, TypeOn } from "../fk/ui";
 
 /**
- * Scene 4 | 13-18.2 s - RE-HOOK, then the three-step response as a motion graphic.
+ * System | 21.07-26.47 s - the three-step response as a motion graphic, cut to the VO:
+ * "Heat detect hote hi" 21.20 (local 4) | "alert milta hai" ~22.25 (local 36) |
+ * "aur suppression system automatically activate ho jaata hai" 23.39-26.24 (local 76).
  * Top: the engine bay, where each step happens visibly (sensing line, beacon, mist).
  * Bottom: a vertical chain. Each step lights an animated icon node, a gold connector
  * fills to the next node, and the title + one plain line scan in. Steps stay visible,
  * so the viewer ends on the whole chain: Detection -> Alert -> Suppression response.
  */
-const REHOOK_CAM = { z: 2.1, cx: BAY_W.x, cy: BAY_W.y, ay: 1180 };
 const DIAGRAM_CAM = { z: 1.6, cx: BAY_W.x - 40, cy: BAY_W.y, ay: 720 };
 export const S4_CAM = { ...DIAGRAM_CAM, ax: 540 };
 
-const T = [52, 88, 122]; // step starts: detection, alert, suppression
+const T = [4, 36, 76]; // step starts: detection, alert, suppression (on the spoken words)
 
 const STEPS = [
-  { title: "Detection", line: "Engine bay ki heat sense hoti hai" },
-  { title: "Alert", line: "Alarm + emergency light on" },
-  { title: "Suppression response", line: "Nozzles se agent automatic discharge" },
+  { title: "Detection", line: "Engine bay ki heat detect hoti hai" },
+  { title: "Alert", line: "Alert milta hai: alarm + emergency light" },
+  { title: "Suppression response", line: "System automatically activate hota hai" },
 ];
 
 /* ---------- engine bay overlay (truck coordinates) ---------- */
@@ -243,13 +244,12 @@ const StepChain: React.FC<{ f: number }> = ({ f }) => (
 
 export const S4System: React.FC = () => {
   const f = useCurrentFrame();
-  const m = prog(f, 30, 58, E.cam);
   const cam = {
-    z: ip(m, [0, 1], [REHOOK_CAM.z, DIAGRAM_CAM.z]) + prog(f, 58, 156) * 0.05,
-    cx: ip(m, [0, 1], [REHOOK_CAM.cx, DIAGRAM_CAM.cx]),
-    cy: ip(m, [0, 1], [REHOOK_CAM.cy, DIAGRAM_CAM.cy]),
+    z: DIAGRAM_CAM.z + 0.12 - prog(f, 0, 30, E.out) * 0.12 + prog(f, 30, 162) * 0.05,
+    cx: DIAGRAM_CAM.cx,
+    cy: DIAGRAM_CAM.cy,
     ax: 540,
-    ay: ip(m, [0, 1], [REHOOK_CAM.ay, DIAGRAM_CAM.ay]),
+    ay: DIAGRAM_CAM.ay,
   };
   const heat = ip(f, [0, T[2], T[2] + 34], [0.85, 0.9, 0.3], E.inOut);
 
@@ -265,7 +265,7 @@ export const S4System: React.FC = () => {
   return (
     <AbsoluteFill>
       <World
-        t={f + 390}
+        t={f + 632}
         cam={cam}
         headlights={0.6}
         rim={0.55}
@@ -303,17 +303,12 @@ export const S4System: React.FC = () => {
       <AbsoluteFill
         style={{
           background: "linear-gradient(180deg, rgba(0,0,0,0) 900px, rgba(0,0,0,0.9) 1040px, rgba(0,0,0,0.96) 1920px)",
-          opacity: prog(f, 36, 56),
+          opacity: 1,
         }}
       />
-      <div style={{ position: "absolute", left: SAFE.x0, top: 1436, opacity: 0.55 * prog(f, 44, 56) }}>
+      <div style={{ position: "absolute", left: SAFE.x0, top: 1436, opacity: 0.55 * prog(f, 6, 16) }}>
         <Label style={{ fontSize: 20 }}>Conceptual illustration</Label>
       </div>
-
-      {/* RE-HOOK */}
-      <Stack top={380}>
-        <Display words={["TOH", "PHIR", { w: "KAUN?", c: C.gold }]} at={2} out={34} />
-      </Stack>
 
       <StepChain f={f} />
     </AbsoluteFill>

@@ -77,24 +77,24 @@ export const FPS = 30;
 /** Instagram safe box: all text and cards stay inside. */
 export const SAFE = { x0: 130, x1: 950, y0: 300, y1: 1460 } as const;
 
-/** Scene lengths in frames (30 fps). v6 pacing: slower, readable. Total = 762 = 25.4 s. */
+/**
+ * Scene lengths in frames (30 fps), cut to the client's voiceover (34 s) - every cut sits
+ * in a VO pause. Total = 1066 = 35.53 s (VO + 1.8 s logo hold).
+ */
 export const SCENES = {
-  hook: 120, // 0-4 s       curiosity hook (open loop), poster first frame
-  night: 135, // 4-8.5 s    night haul, push to engine bay, thermal scan
-  operator: 135, // 8.5-13 s  one operator, four tasks (grid)
-  system: 156, // 13-18.2 s re-hook + three-step response graphic
-  product: 96, // 18.2-21.4 s the answer: the Ranger
-  hero: 120, // 21.4-25.4 s hero + logo end frame
+  hook: 81, //      0.00-2.70  "Ek cheez is dumper ko bacha sakti hai."
+  night: 127, //    2.70-6.93  "Raat ke do baje... Engine bay mein heat badh rahi hai."
+  operator: 248, // 6.93-15.20 "Aur ek operator, jiski hain chaar zimmedariyaan: ..."
+  rehook: 102, //   15.20-18.60 "Lekin... agar woh waqt par na pahunch paaye?"
+  product: 74, //   18.60-21.07 "Yahin kaam aata hai Ranger."
+  system: 162, //   21.07-26.47 "Heat detect hote hi alert milta hai, aur suppression system..."
+  hero: 272, //     26.47-35.53 "Kyunki fire response ... The Fire Knight. Because every second matters."
 } as const;
 export const TOTAL = Object.values(SCENES).reduce((a, b) => a + b, 0);
-export const STARTS = {
-  hook: 0,
-  night: SCENES.hook,
-  operator: SCENES.hook + SCENES.night,
-  system: SCENES.hook + SCENES.night + SCENES.operator,
-  product: SCENES.hook + SCENES.night + SCENES.operator + SCENES.system,
-  hero: SCENES.hook + SCENES.night + SCENES.operator + SCENES.system + SCENES.product,
-} as const;
+const order = ["hook", "night", "operator", "rehook", "product", "system", "hero"] as const;
+export const STARTS = Object.fromEntries(
+  order.map((k, i) => [k, order.slice(0, i).reduce((s, x) => s + SCENES[x], 0)]),
+) as Record<(typeof order)[number], number>;
 
 /** Easings. */
 export const E = {

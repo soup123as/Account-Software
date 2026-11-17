@@ -8,7 +8,7 @@ import wave
 import numpy as np
 
 SR = 48000
-DUR = 762 / 30.0  # v6: 25.4 s
+DUR = 1066 / 30.0  # v8: 35.53 s, cut to the client's voiceover
 N = int(SR * DUR)
 rng = np.random.default_rng(11)
 L = np.zeros(N)
@@ -147,116 +147,103 @@ pad = band(pad, 40, 1800)
 pad = norm(pad)
 # pad dynamics: in from 0.5 s, builds through scene 3, drops to sub alone before scene 4, warm in scene 5
 tt = np.arange(N) / SR
-pad_g = np.interp(tt, [0, 1.5, 8.5, 12.4, 12.8, 13.5, 15.5, 18.2, 21.4, 23.5, DUR], [0, 0.45, 0.55, 0.7, 0.0, 0.0, 0.5, 0.45, 0.6, 0.55, 0])
+pad_g = np.interp(tt, [0, 1.5, 6.9, 14.6, 15.1, 18.6, 19.4, 26.4, 30.3, 33.5, DUR], [0.1, 0.45, 0.55, 0.65, 0.0, 0.0, 0.5, 0.5, 0.65, 0.55, 0])
 L += pad * pad_g * 0.32
 R += pad * pad_g * 0.32
 
 # sub pulse on beats from scene 2
 beat = 60 / 100
 t = 3.0
-while t < 21.4:
-    if not (12.6 <= t < 13.2):
+while t < 30.3:
+    if not (15.0 <= t < 18.6):
         put(thud(48, 34, 0.4, click=0.0), t, 0.32)
     t += beat
 
 # drone under everything
 drone = norm(np.sin(2 * np.pi * 36.7 * tt) + 0.5 * np.sin(2 * np.pi * 55 * tt + 0.7))
-drone_g = np.interp(tt, [0, 1.0, 21.0, 21.6, 24.4, DUR], [0.12, 0.22, 0.22, 0.1, 0.18, 0])
+drone_g = np.interp(tt, [0, 1.0, 15.0, 16.0, 18.4, 26.4, 30.3, 33.5, DUR], [0.12, 0.22, 0.22, 0.3, 0.3, 0.2, 0.1, 0.18, 0])
 L += drone * drone_g
 R += drone * drone_g
 
-# ---------------- scene starts (frames) ----------------
-S1, S2, S3, S4, S5, S6 = 0, 120, 255, 390, 546, 642
+# ---------------- scene starts (frames) - v8, cut to the voiceover ----------------
+HOOK, NIGHT, OPER, REHOOK, PROD, SYS, HERO = 0, 81, 208, 456, 558, 632, 794
 
-def scan(fr, gain=0.07):
-    """Soft rising shimmer for the thermal-scan text reveal."""
-    d = t_(0.5)
-    tone = np.sin(2 * np.pi * np.cumsum(900 + 1600 * (d / 0.5)) / SR) * adsr(len(d), 0.02, 0.25)
-    put(tone, F(fr), gain, 0.2)
-    put(band(rng.standard_normal(len(d)), 3000, 9000) * adsr(len(d), 0.05, 0.3), F(fr), gain * 0.5, -0.2)
+# hook: heartbeat on the glow, lamps, slow pull-back
+for k in range(4):
+    put(thud(48, 30, 0.35, 0.0), F(HOOK + 1 + k * 18.5), 0.45 - k * 0.05)
+    put(thud(42, 28, 0.3, 0.0), F(HOOK + 1 + k * 18.5) + 0.16, 0.26 - k * 0.03)
+put(clank() * 0.5, F(HOOK + 10), 0.16, 0.4)
+put(thud(70, 40, 0.35), F(HOOK + 10), 0.4)
+put(clank(), F(HOOK + 15), 0.12, 0.4)
+put(whoosh(2.2, 90, 2500, 0.55), F(HOOK + 12), 0.4)
 
-# ---------------- scene 1: poster hook ----------------
-for k in range(6):  # heartbeat matching the glow pulse (~18.5 frames)
-    put(thud(48, 30, 0.35, 0.0), F(S1 + 1 + k * 18.5), 0.5 - k * 0.05)
-    put(thud(42, 28, 0.3, 0.0), F(S1 + 1 + k * 18.5) + 0.16, 0.3 - k * 0.03)
-scan(S1 + 3, 0.08)
-put(clank() * 0.5, F(S1 + 16), 0.18, 0.4)  # lamp relay
-put(thud(70, 40, 0.35), F(S1 + 16), 0.45)
-put(clank(), F(S1 + 21), 0.14, 0.4)
-put(whoosh(2.6, 90, 2500, 0.55), F(S1 + 24), 0.45)  # slow pull-back reveal
-put(boom(1.8), F(S1 + 68), 0.85)  # OPERATOR NAHI.
-put(thud(64, 36, 0.7, 0.4), F(S1 + 68), 0.6)
-scan(S1 + 68, 0.06)
-
-# ---------------- scene 2: night haul + thermal ----------------
-rt = t_(4.8)
+# night haul + thermal
+rt = t_(4.4)
 rumble = band(rng.standard_normal(len(rt)), 25, 140) * (1 + 0.35 * np.sin(2 * np.pi * 7.5 * rt))
 rumble = norm(rumble + 0.4 * np.sin(2 * np.pi * 34 * rt)) * adsr(len(rt), 0.4, 0.8)
-put(rumble, F(S2) - 0.1, 0.35)
-put(thud(60, 36, 0.6), F(S2 + 4), 0.65)  # RAAT 2 BAJE.
-scan(S2 + 4)
-put(whoosh(2.0, 120, 2500, 0.85), F(S2 + 60), 0.4)  # slow push-in
-put(thud(60, 36, 0.5), F(S2 + 66), 0.5)  # HEAT BADH
-scan(S2 + 66)
-put(beep(1320, 0.06), F(S2 + 100), 0.12, 0.3)  # viewfinder
-sw = t_(0.8)
-put(np.sin(2 * np.pi * np.cumsum(500 + 2200 * (sw / 0.8)) / SR) * adsr(len(sw), 0.05, 0.2), F(S2 + 106), 0.07, 0.2)
-put(riser(2.0), F(S2 + 76), 0.42)
-put(boom(2.4), F(S3), 0.85)  # heat flash
-put(whoosh(0.8, 300, 8000, 0.5), F(S3) - 0.4, 0.45, 0.4)
+put(rumble, F(NIGHT) - 0.1, 0.32)
+put(thud(60, 36, 0.6), F(NIGHT + 3), 0.5)
+put(whoosh(1.9, 120, 2500, 0.85), F(NIGHT + 44), 0.35)
+put(thud(60, 36, 0.5), F(NIGHT + 74), 0.42)  # HEAT BADH
+put(beep(1320, 0.06), F(NIGHT + 84), 0.1, 0.3)
+sw = t_(0.75)
+put(np.sin(2 * np.pi * np.cumsum(500 + 2200 * (sw / 0.75)) / SR) * adsr(len(sw), 0.05, 0.2), F(NIGHT + 88), 0.06, 0.2)
+put(riser(1.6), F(NIGHT + 78), 0.38)
+put(boom(2.2), F(OPER), 0.8)  # heat flash
+put(whoosh(0.7, 300, 8000, 0.5), F(OPER) - 0.35, 0.4, 0.4)
 
-# ---------------- scene 3: four tasks grid ----------------
-put(thud(60, 36, 0.6), F(S3 + 2), 0.5)  # EK OPERATOR.
-scan(S3 + 2)
-hb = F(S3 + 10)
-while hb < F(S4) - 0.4:
-    put(thud(52, 32, 0.3, 0.05), hb, 0.4)
-    put(thud(46, 30, 0.3, 0.05), hb + 0.17, 0.28)
+# operator: cab, then tiles land on the words
+put(thud(60, 36, 0.6), F(OPER + 8), 0.42)
+hb = F(OPER + 40)
+while hb < F(REHOOK) - 0.4:
+    put(thud(52, 32, 0.3, 0.05), hb, 0.34)
+    put(thud(46, 30, 0.3, 0.05), hb + 0.17, 0.24)
     hb += 0.62
-for k in range(4):  # each tile lands
-    put(whoosh(0.4, 400, 7000, 0.6), F(S3 + 22 + k * 22) - 0.15, 0.3, 0.5 - k * 0.3)
-    put(tick(2200, 0.04), F(S3 + 22 + k * 22) + 0.2, 0.08)
+for k, at in enumerate([102, 133, 167, 205]):
+    put(whoosh(0.4, 400, 7000, 0.6), F(OPER + at) - 0.15, 0.26, 0.5 - k * 0.3)
+    put(tick(2200, 0.04), F(OPER + at) + 0.2, 0.07)
 for k in range(5):
-    put(beep(1000, 0.06), F(S3 + 30) + k * 0.2, 0.06, -0.2)  # warning lamp
-put(clank(), F(S3 + 44 + 45), 0.18)  # park brake
-put(clank(), F(S3 + 66 + 14), 0.26, 0.3)  # strap
-put(hiss(0.9), F(S3 + 88 + 12), 0.14, -0.2)  # extinguisher attempt
-put(whoosh(0.7, 200, 6000, 0.95), F(S4) - 0.6, 0.4)  # dive into the bay
+    put(beep(1000, 0.06), F(OPER + 110) + k * 0.2, 0.05, -0.2)
+put(clank(), F(OPER + 133 + 45), 0.16)
+put(clank(), F(OPER + 167 + 14), 0.22, 0.3)
+put(hiss(0.9), F(OPER + 205 + 12), 0.12, -0.2)
+put(whoosh(0.7, 200, 6000, 0.95), F(REHOOK) - 0.6, 0.35)
 
-# ---------------- scene 4: re-hook + three steps ----------------
-put(boom(1.6), F(S4 + 2), 0.7)  # TOH PHIR KAUN? on the pad drop
-scan(S4 + 2)
-put(whoosh(1.0, 150, 3000, 0.7), F(S4 + 30), 0.3)  # camera to diagram framing
-put(tick(1800, 0.05), F(S4 + 52), 0.12)  # 01 detection
-for k in range(3):
-    put(tick(2400, 0.035), F(S4 + 56 + k * 5), 0.09, 0.2)
-put(beep(880), F(S4 + 66), 0.2)
-put(beep(1320), F(S4 + 66) + 0.13, 0.2)
-for k in range(6):  # 02 alert
-    put(beep(740 if k % 2 == 0 else 980, 0.16), F(S4 + 88) + k * 0.2, 0.1, 0.25)
-put(hiss(1.6), F(S4 + 122), 0.22)  # 03 suppression (conceptual)
-put(thud(50, 32, 0.8, 0.0), F(S4 + 122), 0.42)
-for k in range(3):
-    scan(S4 + [52, 88, 122][k], 0.05)
+# re-hook: pad drops out, low tension, a clock-like pulse
+put(boom(1.6), F(REHOOK + 6), 0.55)
+for k in range(9):
+    put(tick(900, 0.06), F(REHOOK + 10) + k * 0.36, 0.08 + k * 0.006)
+put(riser(2.6), F(REHOOK + 20), 0.32)
 
-# ---------------- scene 5: product answer ----------------
-put(whoosh(1.0, 150, 4000, 0.7), F(S5), 0.35)  # product rises
+# product answer
+put(whoosh(1.0, 150, 4000, 0.7), F(PROD) - 0.1, 0.35)
 mt2 = t_(1.6)
-put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.6) ** 1.5 * adsr(len(mt2), 0.01, 0.3), F(S5 + 10), 0.12)
-scan(S5 + 14)
-put(thud(56, 34, 0.7, 0.1), F(S5 + 30), 0.5)  # ONE PERSON.
+put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.6) ** 1.5 * adsr(len(mt2), 0.01, 0.3), F(PROD + 6), 0.14)
+put(thud(56, 34, 0.7, 0.1), F(PROD + 38), 0.42)  # RANGER.
 
-# ---------------- scene 6: hero + logo ----------------
-put(whoosh(1.6, 100, 3000, 0.3), F(S6) - 0.2, 0.35)
+# system steps on the words
+put(tick(1800, 0.05), F(SYS + 4), 0.1)
+for k in range(3):
+    put(tick(2400, 0.035), F(SYS + 8 + k * 5), 0.07, 0.2)
+put(beep(880), F(SYS + 20), 0.14)
+put(beep(1320), F(SYS + 20) + 0.13, 0.14)
+for k in range(6):
+    put(beep(740 if k % 2 == 0 else 980, 0.16), F(SYS + 36) + k * 0.2, 0.07, 0.25)
+put(hiss(2.2), F(SYS + 76), 0.18)
+put(thud(50, 32, 0.8, 0.0), F(SYS + 76), 0.36)
+
+# hero + logo
+put(whoosh(2.0, 100, 3000, 0.3), F(HERO) - 0.2, 0.3)
+put(thud(56, 34, 0.7, 0.1), F(HERO + 66), 0.36)  # DEPEND NAHI
 mt = t_(1.6)
 metal = sum(np.sin(2 * np.pi * f * mt) * g for f, g in [(147, 1), (220.5, 0.5), (293, 0.35), (441, 0.15)])
-put(norm(metal) * (mt / 1.6) ** 2 * adsr(len(mt), 0.01, 0.15), F(S6 + 10), 0.14)
-put(boom(3.0), F(S6 + 30), 0.9)  # logo
-put(thud(52, 30, 1.2, 0.2), F(S6 + 30), 0.5)
-et = t_(3.0)
-tone = (np.sin(2 * np.pi * 73.4 * et) + 0.5 * np.sin(2 * np.pi * 110 * et) + 0.25 * np.sin(2 * np.pi * 146.8 * et)) * adsr(len(et), 0.3, 1.8)
-put(norm(tone), F(S6 + 30), 0.3)
-put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(S6 + 42), 0.05, 0.3)
+put(norm(metal) * (mt / 1.6) ** 2 * adsr(len(mt), 0.01, 0.15), F(HERO + 96), 0.12)
+put(boom(3.0), F(HERO + 112), 0.85)  # logo
+put(thud(52, 30, 1.2, 0.2), F(HERO + 112), 0.45)
+et = t_(4.5)
+tone = (np.sin(2 * np.pi * 73.4 * et) + 0.5 * np.sin(2 * np.pi * 110 * et) + 0.25 * np.sin(2 * np.pi * 146.8 * et)) * adsr(len(et), 0.4, 2.5)
+put(norm(tone), F(HERO + 112), 0.28)
+put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(HERO + 124), 0.05, 0.3)
 
 # ---------------- out ----------------
 mix = np.stack([L, R], axis=1)

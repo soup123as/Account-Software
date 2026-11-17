@@ -7,7 +7,7 @@ description: Build a premium cinematic 9:16 reel for The Fire Knight (thefirekni
 
 A Fire Knight reel looks like a premium automotive or engineering ad. It is quiet, dark and confident. One idea at a time sits on a black frame, a detailed real-coloured machine is always on screen, a single gold accent is used in the type, and it ends on the shield logo.
 
-The reference implementation is **Operator Akela v7** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
+The reference implementation is **Operator Akela v8** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
 
 The client approves every stage and does all posting. Never publish, schedule, comment or DM.
 
@@ -161,6 +161,21 @@ New machines follow `src/fk/Dumper.tsx`: a side view at real proportions, their 
 
 Drop the pad for one beat before the turn. **Voiceover:** the client supplies the recording (or an ElevenLabs key; never assume one). Put it in `public/audio/` and pass `voSrc`. The end-frame VO starts at the emblem rise (`VO_AT`) and the bed ducks to 50%. Master with `volume` + `alimiter` to **−14 LUFS, true peak ≤ −1 dB** (check with `ebur128`). If a voiceover is supplied, duck the bed 5 dB under it and time cuts to its words.
 
+## 7b. Voiceover sync (the client supplies the VO file)
+The voiceover drives the timeline. Never stretch or cut the voice; move the cuts.
+1. **Find the pauses:** `ffmpeg -i vo.mp3 -af silencedetect=noise=-38dB:d=0.18 -f null -` gives the phrase segments.
+2. **Transcribe each segment** with sherpa-onnx Whisper (`pip install sherpa-onnx soundfile`). Get the model from GitHub releases, because Hugging Face is blocked in cloud containers: `https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-small.tar.bz2`. Decode each segment with `language="en"` (it gives a readable English gloss) and `language="hi"`, then reconstruct the Hinglish line by hand. List the reconstructed script in the reply.
+3. **Re-time the scenes:**
+   - Each scene cut sits inside a VO pause.
+   - Each on-screen text group starts on its spoken word (≤ 0.1 s early) and matches the spoken words, shortened if needed.
+   - Each visual beat lands on the word that names it (task tiles, the product reveal on its name, step nodes on "detect" / "alert" / "suppression", the logo on "The Fire Knight").
+   - Reel length = VO length + about 1.8 s logo hold.
+   - Write the VO timecodes as comments at the top of each scene.
+4. **Mix:**
+   - Music and SFX from `scripts/sound.py` sit at −13 dB, ducked by the VO with `sidechaincompress` (threshold 0.02, ratio 5, attack 15, release 400). The VO goes on top at +2 dB.
+   - Then `alimiter` and a gain tweak to **−14 LUFS, true peak ≤ −1.3 dB**. The result is one `public/audio/akela-mix.wav`.
+   - Keep SFX sparse and low under speech.
+
 ## 8. Workflow
 1. **Plan:** reply with a beat table (time · on-screen text · machine/product · recipe · transition) and the claims you're relying on.
 2. **Build:** copy the engine, edit `src/scenes/*` and `src/fk/theme.ts` `SCENES` timings, then run `npx tsc --noEmit`.
@@ -183,4 +198,5 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 | 2026-11-17 | Operator Akela v4 (20 s) | Mining HEMM / Ranger | Mystery reveal ("Ek cheez is dumper ko BACHA SAKTI HAI. / OPERATOR NAHI.") → Night haul + thermal → Four tasks → Re-hook ("TOH PHIR KAUN?") → Automatic response → Product reveal → Hero + logo | Curiosity hook. Scenes: 3.5 / 4 / 3.5 / 5 / 4 s. |
 | 2026-11-17 | Operator Akela v5 (20 s) | Mining HEMM / Ranger | as v4 | Real object colours. |
 | 2026-11-17 | Operator Akela v6 (25.4 s) | Mining HEMM / Ranger | Mystery reveal (poster frame 0) → Night haul + thermal → Task grid → Re-hook → Step chain → Product reveal → Hero + logo | Thermal-scan text (rejected), slower pacing, step chain. |
-| 2026-11-17 | Operator Akela v7 (25.4 s) | Mining HEMM / Ranger | as v6 | **Reference build.** Type-on and mask-rise text restored; text never on objects; `voSrc` slot for an end-frame VO ("The Fire Knight. Because every second matters."), with the music ducked under it. Awaiting the client's VO file. |
+| 2026-11-17 | Operator Akela v7 (25.4 s) | Mining HEMM / Ranger | as v6 | Type-on and mask-rise text restored; text never on objects. |
+| 2026-11-17 | Operator Akela v8 (35.5 s, with VO) | Mining HEMM / Ranger | Mystery reveal → Night haul + thermal → Cab + task grid → Re-hook ("Lekin... agar woh waqt par na PAHUNCH PAAYE?") → Product ("Yahin kaam aata hai RANGER.") → Step chain → Hero line + logo | **Reference build.** Cut to the client's ElevenLabs Hinglish VO (34 s). Cuts sit in pauses, text matches speech, beats land on their words, music ducks under the VO. |

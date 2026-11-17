@@ -26,25 +26,26 @@ const ring = (cx: number, cy: number, r: number, t: number, seed: number) => {
 export const S1Hook: React.FC = () => {
   const f = useCurrentFrame();
 
-  const pull = prog(f, 24, 100, E.cam);
+  // VO: "Ek cheez is dumper ko bacha sakti hai." 0.00-2.24 s; cut at 2.70 s (frame 81)
+  const pull = prog(f, 12, 78, E.cam);
   const cam = {
-    z: ip(pull, [0, 1], [TIGHT.z + prog(f, 0, 24) * 0.04, 1]),
+    z: ip(pull, [0, 1], [TIGHT.z + prog(f, 0, 12) * 0.03, 1]),
     cx: ip(pull, [0, 1], [TIGHT.cx, 540]),
     cy: ip(pull, [0, 1], [TIGHT.cy, 960]),
     ax: 540,
     ay: ip(pull, [0, 1], [TIGHT.ay, 960]),
-    sx: f >= 66 && f < 76 ? noise1(f * 3, 2) * 5 * (1 - (f - 66) / 10) : 0,
-    sy: f >= 66 && f < 76 ? noise1(f * 3, 5) * 3 * (1 - (f - 66) / 10) : 0,
+    sx: 0,
+    sy: 0,
   };
 
-  const lamps = f < 16 ? 0 : f < 18 ? 0.9 : f < 21 ? 0.15 : 1; // two flickers
-  const lift = ip(f, [0, 18, 80], [0.3, 0.32, 1], E.out);
+  const lamps = f < 10 ? 0 : f < 12 ? 0.9 : f < 15 ? 0.15 : 1; // two flickers
+  const lift = ip(f, [0, 12, 70], [0.3, 0.32, 1], E.out);
   const pulse = 0.72 + 0.28 * Math.pow(Math.abs(Math.sin(f * 0.17)), 3);
 
   const gx = 540 + (BAY_W.x - cam.cx) * cam.z;
   const gy = (cam.ay ?? 960) + (BAY_W.y - cam.cy) * cam.z;
   const gz = cam.z / TIGHT.z;
-  const mystery = ip(f, [0, 40, 90], [1, 1, 0.5]);
+  const mystery = ip(f, [0, 36, 81], [1, 1, 0.5]);
 
   return (
     <AbsoluteFill>
@@ -54,8 +55,8 @@ export const S1Hook: React.FC = () => {
         headlights={lamps}
         rim={ip(f, [0, 60], [0.6, 0.9], E.out)}
         heat={0.5}
-        towers={ip(f, [36, 70], [0, 1])}
-        dust={ip(f, [18, 60], [0, 1])}
+        towers={ip(f, [30, 60], [0, 1])}
+        dust={ip(f, [12, 50], [0, 1])}
       />
 
       {/* night exposure: the silhouette reads from frame 0, the light pool opens with the lamps */}
@@ -83,20 +84,15 @@ export const S1Hook: React.FC = () => {
             fill="none"
             stroke={i === 2 ? REAL.fireYellow : i === 1 ? REAL.fireOrange : REAL.fireRed}
             strokeWidth={1.8}
-            opacity={(0.3 + i * 0.15) * ip(f, [0, 50, 90], [1, 1, 0.35])}
+            opacity={(0.3 + i * 0.15) * ip(f, [0, 40, 81], [1, 1, 0.35])}
           />
         ))}
       </svg>
 
       {/* open loop, part 1 - already on screen at frame 0 (poster) */}
       <Stack top={380}>
-        <TypeOn words={["Ek", "cheez", "is", "dumper", "ko"]} at={-40} out={58} color={C.fa} />
-        <Display words={[{ w: "BACHA", c: C.gold }, "SAKTI", "HAI."]} at={-40} out={59} size={112} />
-      </Stack>
-
-      {/* open loop, part 2 - the twist on the full machine */}
-      <Stack top={380}>
-        <Display words={["OPERATOR", { w: "NAHI.", c: C.gold }]} at={68} out={106} />
+        <TypeOn words={["Ek", "cheez", "is", "dumper", "ko"]} at={-40} out={70} color={C.fa} />
+        <Display words={[{ w: "BACHA", c: C.gold }, "SAKTI", "HAI."]} at={-40} out={71} size={112} />
       </Stack>
     </AbsoluteFill>
   );
