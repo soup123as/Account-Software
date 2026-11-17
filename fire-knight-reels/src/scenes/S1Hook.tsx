@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { BAY_W, World } from "../fk/World";
 import { C, E, REAL, ip, noise1, prog } from "../fk/theme";
-import { Hit, Line, ScanReveal, Stack } from "../fk/ui";
+import { Display, Stack, TypeOn } from "../fk/ui";
 
 /**
  * Scene 1 | 0-4 s - CURIOSITY HOOK, poster first frame.
@@ -88,19 +88,15 @@ export const S1Hook: React.FC = () => {
         ))}
       </svg>
 
-      {/* open loop, part 1 - already on screen at frame 0, scanner passes over it */}
+      {/* open loop, part 1 - already on screen at frame 0 (poster) */}
       <Stack top={380}>
-        <ScanReveal at={-20} glintAt={3} out={58} dur={16}>
-          <Line w={["Ek", "cheez", "is", "dumper", "ko"]} />
-          <Hit w={[{ w: "BACHA", c: C.gold }, "SAKTI", "HAI."]} size={112} />
-        </ScanReveal>
+        <TypeOn words={["Ek", "cheez", "is", "dumper", "ko"]} at={-40} out={58} color={C.fa} />
+        <Display words={[{ w: "BACHA", c: C.gold }, "SAKTI", "HAI."]} at={-40} out={59} size={112} />
       </Stack>
 
       {/* open loop, part 2 - the twist on the full machine */}
       <Stack top={380}>
-        <ScanReveal at={68} out={106} dur={14}>
-          <Hit w={["OPERATOR", { w: "NAHI.", c: C.gold }]} />
-        </ScanReveal>
+        <Display words={["OPERATOR", { w: "NAHI.", c: C.gold }]} at={68} out={106} />
       </Stack>
     </AbsoluteFill>
   );

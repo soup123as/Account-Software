@@ -2,13 +2,13 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { BAY_W, World } from "../fk/World";
 import { C, E, ip, prog } from "../fk/theme";
-import { Hit, Line, Reticle, ScanReveal, Stack } from "../fk/ui";
+import { Display, Reticle, Stack, TypeOn } from "../fk/ui";
 
 /** Thermal viewfinder (screen space) - sits below the text zone. */
-const RX = { x: 190, y: 950, w: 700, h: 470 };
+const RX = { x: 190, y: 990, w: 700, h: 430 };
 
 /** Engine bay framed low so the machine never runs into the text zone. */
-export const ZOOM_BAY = { z: 2.2, cx: BAY_W.x, cy: BAY_W.y, ay: 1190 };
+export const ZOOM_BAY = { z: 2.2, cx: BAY_W.x, cy: BAY_W.y, ay: 1230 };
 
 export const s2Camera = (f: number) => {
   const p = prog(f, 62, 120, E.cam);
@@ -77,17 +77,13 @@ export const S2Night: React.FC = () => {
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.9) 0px, rgba(0,0,0,0.6) 560px, rgba(0,0,0,0) 760px)" }} />
 
       <Stack top={380}>
-        <ScanReveal at={4} out={56}>
-          <Hit w={["RAAT", { w: "2", c: C.gold }, "BAJE."]} />
-        </ScanReveal>
+        <Display words={["RAAT", { w: "2", c: C.gold }, "BAJE."]} at={4} out={56} />
       </Stack>
 
       <Stack top={380}>
-        <ScanReveal at={66} out={120} dur={18}>
-          <Line w={["Engine", "bay", "mein"]} />
-          <Hit w={[{ w: "HEAT", c: C.gold }, "BADH"]} />
-          <Line w={["rahi", "hai."]} />
-        </ScanReveal>
+        <TypeOn words={["Engine", "bay", "mein"]} at={66} out={120} color={C.fa} />
+        <Display words={[{ w: "HEAT", c: C.gold }, "BADH"]} at={76} out={121} />
+        <TypeOn words={["rahi", "hai."]} at={84} out={122} color={C.fa} />
       </Stack>
     </AbsoluteFill>
   );

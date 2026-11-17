@@ -7,7 +7,7 @@ description: Build a premium cinematic 9:16 reel for The Fire Knight (thefirekni
 
 A Fire Knight reel looks like a premium automotive or engineering ad. It is quiet, dark and confident. One idea at a time sits on a black frame, a detailed real-coloured machine is always on screen, a single gold accent is used in the type, and it ends on the shield logo.
 
-The reference implementation is **Operator Akela v6** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
+The reference implementation is **Operator Akela v7** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
 
 The client approves every stage and does all posting. Never publish, schedule, comment or DM.
 
@@ -94,13 +94,16 @@ Use real renders wherever a product appears, cut out on black. Fetch them from `
 - Present a product with: a rise from +70 px plus a blur clear, a slow 3% push, one light sweep masked to the product's alpha, a faint floor glow, and a silver caps label `THE RANGER · FIRE SUPPRESSION AID`.
 
 ## 3. Motion language
-- **Signature text animation: the thermal-scan reveal** (`ScanReveal` in `ui.tsx`). It echoes the product's detection story, and every text block uses it.
-  - A 2 px gold scanner line with a soft glow sweeps top to bottom through the block in 14–20 frames (ease in-out). Text above the line is revealed.
-  - Letters inside a 22% band just above the line render gold, then cool to their own colour.
-  - Exit: the scanner sweeps down again and wipes the text from the top in 12 frames.
-  - A soft black legibility plate (black radial gradient, never coloured) sits behind the block whenever text is over a machine.
-  - Static `Line` (DM Sans) and `Hit` (Anton) go inside it. Don't stack other entry effects on top.
-- **Framing rule:** the machine never enters the text zone (y 360–700) while text is on screen. Frame close-ups low (anchor the hot spot at y ≈ 1190–1250) and use a black top field. If a shot can't avoid it, move the text, not the plate.
+- **Text animation (client-approved, v7):**
+  - DM Sans lead lines **type on letter by letter** (`TypeOn`). Each letter moves x+18 px → 0 and blur 14 → 0 over 4 frames, about 1 frame apart (0.6–0.7 for long lines). Exit: the line lifts 24 px and blurs out over 7 frames.
+  - Anton hits **rise out of a mask** word by word (`Display`). Each word moves translateY 110% → 0, scale 1.06 → 1 and blur 8 → 0 over 9 frames, staggered 3 frames.
+  - For the poster first frame, start the hook group at a negative frame (e.g. `at={-40}`) so it is fully on screen at frame 0.
+  - Don't swap this for other text effects. The client tried a thermal-scan reveal (`ScanReveal`, still in `ui.tsx`) and preferred this.
+- **Placement rule (client requirement): text never sits on any object.** While text is on screen, the machine, product or graphic stays out of the text zone (y 360–700 for top stacks).
+  - Frame close-ups low: anchor the hot spot at y ≈ 1230 at zoom 2.2, which puts the truck's canopy at y ≈ 650.
+  - Keep a black top field.
+  - Put step-chain text and labels on clear black, below the machine.
+  - Check every scene with `showSafe` frames. If a shot can't avoid an overlap, move the text or re-frame the camera; never place text over the object.
 - (Legacy, still in `ui.tsx`: `TypeOn` letter type-on and `Display` mask rise. Use them only for small UI labels.)
 - **Camera:** every shot has a slow push (2–3%) or a motivated move (push-in to the engine bay, pull-back to the hero). Use bezier (.45,0,.15,1) for camera and (.16,1,.3,1) for reveals. Never linear, never bouncing.
 - **Depth:** layered parallax with a camera rig. Pit benches at 0.15, towers at 0.25, mid wall at 0.4, road and machine at 1. Add headlight beams with dust, rim light on the machine's top edges, and soft vignette and grain (5%).
@@ -156,7 +159,7 @@ New machines follow `src/fk/Dumper.tsx`: a side view at real proportions, their 
 - a double beep (880/1320) on detection, a soft alarm, and a filtered hiss on suppression
 - a steel swell on the product and a deep boom plus tone on the logo
 
-Drop the pad for one beat before the turn. Master with `volume` + `alimiter` to **−14 LUFS, true peak ≤ −1 dB** (check with `ebur128`). If a voiceover is supplied, duck the bed 5 dB under it and time cuts to its words.
+Drop the pad for one beat before the turn. **Voiceover:** the client supplies the recording (or an ElevenLabs key; never assume one). Put it in `public/audio/` and pass `voSrc`. The end-frame VO starts at the emblem rise (`VO_AT`) and the bed ducks to 50%. Master with `volume` + `alimiter` to **−14 LUFS, true peak ≤ −1 dB** (check with `ebur128`). If a voiceover is supplied, duck the bed 5 dB under it and time cuts to its words.
 
 ## 8. Workflow
 1. **Plan:** reply with a beat table (time · on-screen text · machine/product · recipe · transition) and the claims you're relying on.
@@ -179,4 +182,5 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 | 2026-11-17 | Operator Akela v3 (20 s) | Mining HEMM / Ranger | Emerge → Night haul + thermal → Four tasks → Automatic response → Product reveal → Hero + logo | First Steel & Gold build. |
 | 2026-11-17 | Operator Akela v4 (20 s) | Mining HEMM / Ranger | Mystery reveal ("Ek cheez is dumper ko BACHA SAKTI HAI. / OPERATOR NAHI.") → Night haul + thermal → Four tasks → Re-hook ("TOH PHIR KAUN?") → Automatic response → Product reveal → Hero + logo | Curiosity hook. Scenes: 3.5 / 4 / 3.5 / 5 / 4 s. |
 | 2026-11-17 | Operator Akela v5 (20 s) | Mining HEMM / Ranger | as v4 | Real object colours. |
-| 2026-11-17 | Operator Akela v6 (25.4 s) | Mining HEMM / Ranger | Mystery reveal (poster frame 0) → Night haul + thermal → Task grid → Re-hook → Step chain → Product reveal → Hero + logo | **Reference build.** Thermal-scan text reveal, slower pacing (transitions 0.7–0.8 s), step-chain motion graphic, machines framed below text. Scenes 4 / 4.5 / 4.5 / 5.2 / 3.2 / 4 s. |
+| 2026-11-17 | Operator Akela v6 (25.4 s) | Mining HEMM / Ranger | Mystery reveal (poster frame 0) → Night haul + thermal → Task grid → Re-hook → Step chain → Product reveal → Hero + logo | Thermal-scan text (rejected), slower pacing, step chain. |
+| 2026-11-17 | Operator Akela v7 (25.4 s) | Mining HEMM / Ranger | as v6 | **Reference build.** Type-on and mask-rise text restored; text never on objects; `voSrc` slot for an end-frame VO ("The Fire Knight. Because every second matters."), with the music ducked under it. Awaiting the client's VO file. |

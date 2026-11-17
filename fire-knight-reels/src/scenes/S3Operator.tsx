@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { C, E, FONT, REAL, SAFE, ip, noise1, prog, rand } from "../fk/theme";
-import { Hit, Line, ScanReveal, Stack } from "../fk/ui";
+import { Display, Stack, TypeOn } from "../fk/ui";
 
 /** 2x2 grid of tasks that builds up - the load on one person becomes visible. */
 const GRID = { x: SAFE.x0, y: 680, tw: 400, th: 300, gap: 20 };
@@ -288,10 +288,8 @@ export const S3Operator: React.FC = () => {
       </svg>
 
       <Stack top={380}>
-        <ScanReveal at={2} out={122}>
-          <Hit w={["EK", "OPERATOR."]} />
-          <Line w={[{ w: "Chaar", c: C.gold }, "zimmedariyaan."]} />
-        </ScanReveal>
+        <Display words={["EK", "OPERATOR."]} at={2} out={120} />
+        <TypeOn words={[{ w: "Chaar", c: C.gold }, "zimmedariyaan."]} at={16} out={121} color={C.fa} />
       </Stack>
 
       <AbsoluteFill

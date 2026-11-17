@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { Audio } from "@remotion/media";
 import { TransitionSeries } from "@remotion/transitions";
 import { S1Hook } from "./scenes/S1Hook";
@@ -8,16 +8,21 @@ import { S3Operator } from "./scenes/S3Operator";
 import { S4System } from "./scenes/S4System";
 import { S5Product } from "./scenes/S5Product";
 import { S5Hero } from "./scenes/S5Hero";
-import { C, SCENES, ip } from "./fk/theme";
+import { C, SCENES, STARTS, ip } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
 export type AkelaProps = {
   showSafe: boolean;
   logoSrc: string | null;
   audio: boolean;
+  /** End-frame voiceover file in public/ (e.g. "audio/vo-end.mp3"). Plays from the logo reveal; the music ducks under it. */
+  voSrc: string | null;
 };
 
-export const akelaDefaults: AkelaProps = { showSafe: false, logoSrc: null, audio: true };
+/** Frame the end-frame voiceover starts (the emblem rise in scene 6). */
+export const VO_AT = STARTS.hero + 30;
+
+export const akelaDefaults: AkelaProps = { showSafe: false, logoSrc: null, audio: true, voSrc: null };
 
 /** The heat signature flares and whips us into the operator sequence. */
 const HeatFlash: React.FC = () => {
@@ -27,7 +32,7 @@ const HeatFlash: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 540px 1190px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
+        background: `radial-gradient(circle at 540px 1230px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
       }}
     />
   );
@@ -68,7 +73,7 @@ const MistWash: React.FC = () => {
   );
 };
 
-export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio }) => (
+export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio, voSrc }) => (
   <AbsoluteFill style={{ backgroundColor: C.black }}>
     <TransitionSeries>
       <TransitionSeries.Sequence name="1 Hook" durationInFrames={SCENES.hook}>
@@ -106,6 +111,16 @@ export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio }
     <Vignette strength={0.7} />
     <Grain opacity={0.05} />
     {showSafe && <SafeGuide />}
-    {audio && <Audio src={staticFile("audio/akela-mix.wav")} />}
+    {audio && (
+      <Audio
+        src={staticFile("audio/akela-mix.wav")}
+        volume={(f) => (voSrc ? ip(f, [VO_AT - 8, VO_AT + 4], [1, 0.5]) : 1)}
+      />
+    )}
+    {audio && voSrc && (
+      <Sequence from={VO_AT} layout="none">
+        <Audio src={staticFile(voSrc)} volume={1} />
+      </Sequence>
+    )}
   </AbsoluteFill>
 );

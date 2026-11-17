@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { C, E, SAFE, ip, prog } from "../fk/theme";
-import { Hit, Label, Line, ScanReveal, Stack } from "../fk/ui";
+import { Display, Label, Stack, TypeOn } from "../fk/ui";
 
 /** Scene 5 | 18.2-21.4 s - the answer to the hook: the real Ranger. */
 export const S5Product: React.FC = () => {
@@ -54,11 +54,9 @@ export const S5Product: React.FC = () => {
       </div>
 
       <Stack top={380}>
-        <ScanReveal at={14} dur={20} plate={false}>
-          <Line w={["Fire", "response", "shouldn't"]} />
-          <Line w={["depend", "on"]} />
-          <Hit w={[{ w: "ONE", c: C.gold }, { w: "PERSON.", c: C.gold }]} />
-        </ScanReveal>
+        <TypeOn words={["Fire", "response", "shouldn't"]} at={12} perLetter={0.7} color={C.fa} />
+        <TypeOn words={["depend", "on"]} at={28} perLetter={0.7} color={C.fa} />
+        <Display words={[{ w: "ONE", c: C.gold }, { w: "PERSON.", c: C.gold }]} at={36} />
       </Stack>
     </AbsoluteFill>
   );

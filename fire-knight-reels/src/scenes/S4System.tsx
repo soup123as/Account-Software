@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { BAY_W, World } from "../fk/World";
 import { C, E, FONT, REAL, SAFE, ip, prog, rand } from "../fk/theme";
-import { Hit, Label, Reticle, ScanReveal, Stack } from "../fk/ui";
+import { Display, Label, Reticle, Stack, TypeOn } from "../fk/ui";
 
 /**
  * Scene 4 | 13-18.2 s - RE-HOOK, then the three-step response as a motion graphic.
@@ -217,15 +217,23 @@ const StepChain: React.FC<{ f: number }> = ({ f }) => (
           )}
           {/* title + line */}
           <div style={{ position: "absolute", left: NODE + 28, top: -2, opacity: active ? 1 : 0.62 }}>
-            <ScanReveal at={a} dur={14} plate={false}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 14, fontFamily: FONT.sans, whiteSpace: "nowrap" }}>
+            {/* title rises out of a mask, the plain line types on */}
+            <div style={{ overflow: "hidden", paddingBottom: 4 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: 14,
+                  fontFamily: FONT.sans,
+                  whiteSpace: "nowrap",
+                  translate: `0 ${(1 - prog(f, a, a + 9, E.out)) * 110}%`,
+                }}
+              >
                 <span style={{ fontWeight: 600, fontSize: 26, color: C.gold, letterSpacing: "0.08em" }}>0{i + 1}</span>
                 <span style={{ fontWeight: 600, fontSize: 44, color: C.white, letterSpacing: "-0.02em" }}>{s.title}</span>
               </div>
-              <div style={{ fontFamily: FONT.sans, fontWeight: 500, fontSize: 30, color: "rgba(250,250,250,0.72)", marginTop: 4, whiteSpace: "nowrap" }}>
-                {s.line}
-              </div>
-            </ScanReveal>
+            </div>
+            <TypeOn words={s.line.split(" ")} at={a + 6} perLetter={0.6} size={30} weight={500} color="rgba(250,250,250,0.72)" style={{ marginTop: 2 }} />
           </div>
         </div>
       );
@@ -298,15 +306,13 @@ export const S4System: React.FC = () => {
           opacity: prog(f, 36, 56),
         }}
       />
-      <div style={{ position: "absolute", right: 1080 - SAFE.x1, top: 1010, opacity: 0.55 * prog(f, 44, 56) }}>
+      <div style={{ position: "absolute", left: SAFE.x0, top: 1436, opacity: 0.55 * prog(f, 44, 56) }}>
         <Label style={{ fontSize: 20 }}>Conceptual illustration</Label>
       </div>
 
       {/* RE-HOOK */}
       <Stack top={380}>
-        <ScanReveal at={2} out={34} dur={14}>
-          <Hit w={["TOH", "PHIR", { w: "KAUN?", c: C.gold }]} />
-        </ScanReveal>
+        <Display words={["TOH", "PHIR", { w: "KAUN?", c: C.gold }]} at={2} out={34} />
       </Stack>
 
       <StepChain f={f} />
