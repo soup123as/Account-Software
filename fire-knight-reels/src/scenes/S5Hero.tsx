@@ -3,7 +3,6 @@ import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { World } from "../fk/World";
 import { C, E, FONT, SAFE, TYPE, ip, prog } from "../fk/theme";
 import { Label } from "../fk/ui";
-import { S4_CAM } from "./S4System";
 
 /** Hero framing: machine low in frame, logo above it. */
 const HERO = { z: 0.74, cx: 547, cy: 1100, ax: 540, ay: 1262 };
@@ -14,17 +13,17 @@ const EMBLEM_W = Math.round((EMBLEM_H * 762) / 909);
 const WORD_W = 470; // wordmark-light.png is 1077 x 104
 const WORD_H = Math.round((WORD_W * 104) / 1077);
 
-/** Scene 5 | 16-20 s - hero dumper and the official logo end frame. */
+/** Scene 6 | 21.4-25.4 s - hero dumper and the official logo end frame. */
 export const S5Hero: React.FC<{ logoSrc?: string | null }> = () => {
   const f = useCurrentFrame();
-  const p = prog(f, 0, 44, E.cam);
-  const settle = prog(f, 44, 120);
+  const p = prog(f, 0, 50, E.cam);
+  const settle = prog(f, 50, 120);
   const cam = {
-    z: ip(p, [0, 1], [S4_CAM.z, HERO.z]) + settle * 0.02,
-    cx: ip(p, [0, 1], [S4_CAM.cx, HERO.cx]),
-    cy: ip(p, [0, 1], [S4_CAM.cy, HERO.cy]),
+    z: ip(p, [0, 1], [0.9, HERO.z]) + settle * 0.02,
+    cx: HERO.cx,
+    cy: ip(p, [0, 1], [1080, HERO.cy]),
     ax: 540,
-    ay: ip(p, [0, 1], [S4_CAM.ay, HERO.ay]),
+    ay: ip(p, [0, 1], [1100, HERO.ay]),
   };
   const accent = prog(f, 20, 50, E.out);
 
@@ -40,7 +39,7 @@ export const S5Hero: React.FC<{ logoSrc?: string | null }> = () => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ opacity: ip(f, [0, 12], [0.4, 1]) }}>
-        <World t={f + 480} cam={cam} headlights={1} rim={ip(f, [0, 40], [0.5, 1])} accent={accent} towers={1} crush={ip(f, [0, 30], [0.5, 0])} />
+        <World t={f + 480} cam={cam} headlights={1} rim={ip(f, [0, 40], [0.5, 1])} accent={accent} towers={1} crush={0} />
       </AbsoluteFill>
       {/* restrained gold spill under the engine bay */}
       <AbsoluteFill

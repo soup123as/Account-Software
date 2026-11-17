@@ -77,13 +77,14 @@ export const FPS = 30;
 /** Instagram safe box: all text and cards stay inside. */
 export const SAFE = { x0: 130, x1: 950, y0: 300, y1: 1460 } as const;
 
-/** Scene lengths in frames (30 fps). Total = 600 = 20 s. */
+/** Scene lengths in frames (30 fps). v6 pacing: slower, readable. Total = 762 = 25.4 s. */
 export const SCENES = {
-  hook: 105, // 0-3.5 s  curiosity hook (open loop)
-  night: 120, // 3.5-7.5 s
-  operator: 105, // 7.5-11 s
-  system: 150, // 11-16 s
-  hero: 120, // 16-20 s
+  hook: 120, // 0-4 s       curiosity hook (open loop), poster first frame
+  night: 135, // 4-8.5 s    night haul, push to engine bay, thermal scan
+  operator: 135, // 8.5-13 s  one operator, four tasks (grid)
+  system: 156, // 13-18.2 s re-hook + three-step response graphic
+  product: 96, // 18.2-21.4 s the answer: the Ranger
+  hero: 120, // 21.4-25.4 s hero + logo end frame
 } as const;
 export const TOTAL = Object.values(SCENES).reduce((a, b) => a + b, 0);
 export const STARTS = {
@@ -91,7 +92,8 @@ export const STARTS = {
   night: SCENES.hook,
   operator: SCENES.hook + SCENES.night,
   system: SCENES.hook + SCENES.night + SCENES.operator,
-  hero: SCENES.hook + SCENES.night + SCENES.operator + SCENES.system,
+  product: SCENES.hook + SCENES.night + SCENES.operator + SCENES.system,
+  hero: SCENES.hook + SCENES.night + SCENES.operator + SCENES.system + SCENES.product,
 } as const;
 
 /** Easings. */

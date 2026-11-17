@@ -7,7 +7,7 @@ description: Build a premium cinematic 9:16 reel for The Fire Knight (thefirekni
 
 A Fire Knight reel looks like a premium automotive or engineering ad. It is quiet, dark and confident. One idea at a time sits on a black frame, a detailed real-coloured machine is always on screen, a single gold accent is used in the type, and it ends on the shield logo.
 
-The reference implementation is **Operator Akela v5** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
+The reference implementation is **Operator Akela v6** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
 
 The client approves every stage and does all posting. Never publish, schedule, comment or DM.
 
@@ -19,7 +19,7 @@ The client approves every stage and does all posting. Never publish, schedule, c
 ## 1b. Curiosity hook (every reel opens a loop and closes it late)
 The reel must make the viewer **need** the ending. Build it in both the script and the visuals:
 
-1. **Visual mystery at frame 0.** Open on something unexplained: a lone gold heat glow pulsing in total black, a beam sweeping an unseen machine, or a single LED blinking. Give no context and no text for 4 frames. Sound: a heartbeat thud synced to the pulse.
+1. **Frame 0 is a finished poster.** It is the thumbnail and the scroll-stopper, so it must never be black or half-typed. At frame 0 the hook line is already fully on screen (scan-revealed before the start, then the scanner makes one live pass over it from frame 3). Behind it is one unexplained visual: a fire-orange heat signature pulsing in the engine bay, with the machine's silhouette rim-lit in the dark (exposure about 30%, not black). Sound: a heartbeat thud synced to the pulse.
 2. **Open loop in the first line (≤ 0.5 s to start, done by 3.5 s).** Promise an answer without giving it. The pattern is: *"Ek cheez [is asset] ko [bacha sakti hai / bachati hai]."* + twist *"[OBVIOUS ANSWER] NAHI."*
    - Operator Akela: "Ek cheez is dumper ko BACHA SAKTI HAI." → "OPERATOR NAHI."
    - Other loops that work: "Is truck ki aag 2 baje kaun dekhega?" → "DRIVER NAHI." · "Extinguisher laga hai. PHIR BHI KHATRA?" · "Is generator room mein ek cheez missing hai."
@@ -94,8 +94,14 @@ Use real renders wherever a product appears, cut out on black. Fetch them from `
 - Present a product with: a rise from +70 px plus a blur clear, a slow 3% push, one light sweep masked to the product's alpha, a faint floor glow, and a silver caps label `THE RANGER · FIRE SUPPRESSION AID`.
 
 ## 3. Motion language
-- **Lead sentences type on letter by letter** (from the iType system). Each letter moves x+18 px → 0 and blur 14 → 0 over 4 frames, with letters about 1 frame apart (0.7 for long lines). Exit: the whole line lifts 24 px and blurs out over 7 frames.
-- **Display hits rise out of a mask** word by word. Each word moves translateY 110% → 0, scale 1.06 → 1 and blur 8 → 0 over 9 frames, staggered 3 frames.
+- **Signature text animation: the thermal-scan reveal** (`ScanReveal` in `ui.tsx`). It echoes the product's detection story, and every text block uses it.
+  - A 2 px gold scanner line with a soft glow sweeps top to bottom through the block in 14–20 frames (ease in-out). Text above the line is revealed.
+  - Letters inside a 22% band just above the line render gold, then cool to their own colour.
+  - Exit: the scanner sweeps down again and wipes the text from the top in 12 frames.
+  - A soft black legibility plate (black radial gradient, never coloured) sits behind the block whenever text is over a machine.
+  - Static `Line` (DM Sans) and `Hit` (Anton) go inside it. Don't stack other entry effects on top.
+- **Framing rule:** the machine never enters the text zone (y 360–700) while text is on screen. Frame close-ups low (anchor the hot spot at y ≈ 1190–1250) and use a black top field. If a shot can't avoid it, move the text, not the plate.
+- (Legacy, still in `ui.tsx`: `TypeOn` letter type-on and `Display` mask rise. Use them only for small UI labels.)
 - **Camera:** every shot has a slow push (2–3%) or a motivated move (push-in to the engine bay, pull-back to the hero). Use bezier (.45,0,.15,1) for camera and (.16,1,.3,1) for reveals. Never linear, never bouncing.
 - **Depth:** layered parallax with a camera rig. Pit benches at 0.15, towers at 0.25, mid wall at 0.4, road and machine at 1. Add headlight beams with dust, rim light on the machine's top edges, and soft vignette and grain (5%).
 - **Transitions are motivated by the action**, never generic slides:
@@ -105,7 +111,12 @@ Use real renders wherever a product appears, cut out on black. Fetch them from `
   - **mist wash** (when suppression hands over to the product or the hero)
   - match cut on the same object
   - No `backdrop-filter` (it mirrors the frame edges in Chromium renders).
-- Hold every text group long enough to read: at least **1.3 s for ≤ 4 words** and about **0.3 s per extra word**. Hero moves are fast (0.2–0.4 s), then hold.
+- **Pacing (v6, the client found faster cuts hard to follow):**
+  - Scene transitions are **20–24 frames (0.7–0.8 s)**.
+  - Camera pushes and pulls are **55–75 frames**.
+  - Text entries are 14–20 frames, and exits 12 frames.
+  - Hold every text group at least **1.5 s for ≤ 4 words**, plus about 0.35 s per extra word.
+  - Never cut faster than 0.7 s between ideas. A 6-scene reel runs about 25 s. Trim scenes rather than speed them up.
 
 ## 4. Frame and safe area
 - Format 1080 × 1920, 30 fps (or 60 on request), H.264, yuv420p **tv range**, BT.709, AAC 192k, `+faststart`.
@@ -113,14 +124,20 @@ Use real renders wherever a product appears, cut out on black. Fetch them from `
 - Text zone is y 360–700. The machine or product zone is y 700–1300. Bottom labels sit around y 1230.
 
 ## 5. Scene recipes (pick 4–6, never the same recipe twice in a row)
-- **Mystery reveal** (hook, default): black frame, one pulsing gold glow (heartbeat). The camera holds tight, then pulls back from the glow to reveal the machine while the open-loop line types on. The headlights flicker on mid-pull (2 flickers). The twist Display lands on the full machine.
+- **Mystery reveal** (hook, default): a poster first frame (see 1b), tight on the fire-orange heat signature in a rim-lit, dark machine with the hook line already on screen. The scanner passes once, the camera holds for 0.8 s, then pulls back over about 2.5 s to reveal the whole machine. The headlights flicker on as the pull starts, and the twist line scans in on the full machine.
 - **Emerge** (alternative hook): the machine in darkness, headlights flicker on, a light pool lifts the exposure, and the camera pushes in.
 - **Re-hook:** the same risk zone, unattended, with the loop question as one Display hit ("TOH PHIR KAUN?") and a sub boom on the pad drop.
 - **Night haul:** the machine drives, the world scrolls in parallax, wheels turn, the body bobs 1.6 px. Use it for time or place ("Raat 2 baje.").
 - **Push to the risk zone:** the camera flies into the engine bay, battery pack or panel. A **thermal viewfinder** (hairline corner brackets plus a gold scan line) reveals gold heat contours inside it. The heat layer is drawn unfiltered on top of a greyscale body.
-- **Four tasks / checklist:** one rounded window with no border, showing illustrated macro shots that whip-swap every 0.9 s. Below it go one support line (`01  Khatra notice karna`, gold index) and a hairline 4-step progress bar.
-- **Automatic response:** the same zone as a schematic. One stage line at a time (`01 Detection` → `02 Alert` → `03 Suppression response`) with visuals: the sensing line draws on with a pulse, the reticle locks, the beacon pulses gold rings, then the nozzles mist. Mark it `CONCEPTUAL ILLUSTRATION` (20 px label, 55%).
-- **Product reveal:** the real product render rises on black with a light sweep and a caps label; the line sits above it.
+- **Task grid** (manual load): a 2×2 grid of 400×300 rounded tiles that builds up one tile every 22 frames. Each tile holds an illustrated macro shot (gauges, braking, extinguisher, attempt) and a short label (`01 Khatra dekhna`, gold index, DM Sans 600 30). Tiles stay on screen, so the pile-up of work on one person is visible. The newest tile gets a gold hairline border. End by diving into the last tile.
+- **Step chain** (how it works; use it for any 3–4 step process):
+  - Top half: the machine's risk zone, where each step visibly happens (sensing line draws on, reticle locks, amber beacon rings, nozzle mist).
+  - Bottom half (y 1076–1440): a vertical chain of 68 px icon nodes joined by a connector that fills gold node to node.
+  - Each node has a looping animated icon: a sensor with heat waves, a beacon with flashing rays, a nozzle with falling droplets. The active node is filled gold with a black icon and has a pulsing ring; finished nodes are outlined.
+  - Next to each node: a gold index, a title (DM Sans 600 44) and one plain line (DM Sans 500 30, 72%), scan-revealed.
+  - Steps arrive about 1.2 s apart and stay, so the viewer ends on the whole chain.
+  - Mark it `CONCEPTUAL ILLUSTRATION`.
+- **Product reveal (its own scene, ≥ 3 s):** the real product render rises on black with a light sweep and a caps label; the line scans in above it. This is where the hook's loop closes.
 - **Hero + logo end frame:** pull back to the machine low in frame with a restrained gold accent along the protected zone. The emblem rises with one light sweep, the wordmark unmasks left to right, then `Because every second matters.` (DM Sans 40, "second" in gold) and `THEFIREKNIGHT.IN` label. Hold ≥ 1.2 s.
 
 New machines follow `src/fk/Dumper.tsx`: a side view at real proportions, their **real colours** (from `REAL`) with gradients for form, rim-light strokes on top edges, lamps with glows and beams, and props for `heat`, `thermal`, `accent`, `wheelAngle`, `bob`, an `overlay` slot and `layer: "heat"`. Write down real dimensions in a comment (e.g. haul truck ~10.2 m long, 2.5 m tyres). No people or faces anywhere; use objects and POV only.
@@ -161,4 +178,5 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 |---|---|---|---|---|
 | 2026-11-17 | Operator Akela v3 (20 s) | Mining HEMM / Ranger | Emerge → Night haul + thermal → Four tasks → Automatic response → Product reveal → Hero + logo | First Steel & Gold build. |
 | 2026-11-17 | Operator Akela v4 (20 s) | Mining HEMM / Ranger | Mystery reveal ("Ek cheez is dumper ko BACHA SAKTI HAI. / OPERATOR NAHI.") → Night haul + thermal → Four tasks → Re-hook ("TOH PHIR KAUN?") → Automatic response → Product reveal → Hero + logo | Curiosity hook. Scenes: 3.5 / 4 / 3.5 / 5 / 4 s. |
-| 2026-11-17 | Operator Akela v5 (20 s) | Mining HEMM / Ranger | as v4 | **Reference build.** Real object colours (yellow truck, red extinguisher, natural fire); brand colours only on text and background. Next reel: change the machine and the loop line. |
+| 2026-11-17 | Operator Akela v5 (20 s) | Mining HEMM / Ranger | as v4 | Real object colours. |
+| 2026-11-17 | Operator Akela v6 (25.4 s) | Mining HEMM / Ranger | Mystery reveal (poster frame 0) → Night haul + thermal → Task grid → Re-hook → Step chain → Product reveal → Hero + logo | **Reference build.** Thermal-scan text reveal, slower pacing (transitions 0.7–0.8 s), step-chain motion graphic, machines framed below text. Scenes 4 / 4.5 / 4.5 / 5.2 / 3.2 / 4 s. |

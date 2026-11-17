@@ -1,18 +1,15 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { C, E, FONT, REAL, SAFE, TYPE, ip, noise1, prog, rand } from "../fk/theme";
-import { Display, Stack, TypeOn } from "../fk/ui";
+import { C, E, FONT, REAL, SAFE, ip, noise1, prog, rand } from "../fk/theme";
+import { Hit, Line, ScanReveal, Stack } from "../fk/ui";
 
-const PANEL = { x: SAFE.x0, y: 640, w: 820, h: 540 };
-const SHOT0 = 10; // first shot starts
-const SHOT = 23; // frames per shot
+/** 2x2 grid of tasks that builds up - the load on one person becomes visible. */
+const GRID = { x: SAFE.x0, y: 680, tw: 400, th: 300, gap: 20 };
+const TILE0 = 22; // first tile
+const TILE = 22; // frames between tiles
+const TILE_LIFE = 60; // each tile animates for this long, then holds its end state
 
-const TASKS = [
-  "Khatra notice karna",
-  "Dumper safely rokna",
-  "Extinguisher tak pahunchna",
-  "Akele response ki koshish",
-];
+const TASKS = ["Khatra dekhna", "Dumper rokna", "Extinguisher lana", "Aag se ladna"];
 
 /* ---------------- shot illustrations (viewBox 820 x 520) ---------------- */
 
@@ -210,46 +207,71 @@ const ShotAttempt: React.FC<{ p: number; f: number }> = ({ p, f }) => {
 
 export const S3Operator: React.FC = () => {
   const f = useCurrentFrame();
-  const idx = Math.max(0, Math.min(3, Math.floor((f - SHOT0) / SHOT)));
-  const panelIn = prog(f, 4, 14, E.out);
-  const zoomOut = prog(f, 94, 105, E.in);
+  const shake = f > 100 ? noise1(f * 2, 9) * 1.5 : 0;
+  const dive = prog(f, 122, 135, E.in); // dive into tile 4 (engine bay) for the next scene
 
-  const shots = [0, 1, 2, 3].map((i) => {
-    const a = SHOT0 + i * SHOT;
-    const lt = f - a;
-    if (lt < -1 || lt > SHOT + 4) return null;
-    const p = Math.max(0, Math.min(1, lt / SHOT));
-    const inP = prog(lt, 1, 7, E.out);
-    const outP = i < 3 ? prog(lt, SHOT - 2, SHOT + 2, E.in) : 0;
-    const style: React.CSSProperties = {
-      position: "absolute",
-      inset: 0,
-      translate: `${(1 - inP) * 140 - outP * 160}px 0`,
-      filter: inP < 1 || outP > 0 ? `blur(${(1 - inP) * 14 + outP * 18}px)` : undefined,
-      opacity: Math.min(inP * 1.5, 1 - outP),
-      scale: `${1 + p * 0.06}`,
-    };
+  const tiles = [0, 1, 2, 3].map((i) => {
+    const a = TILE0 + i * TILE;
+    const inP = prog(f, a, a + 12, E.out);
+    if (inP <= 0) return null;
+    const p = Math.min(1, Math.max(0, (f - a) / TILE_LIFE));
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const x = GRID.x + col * (GRID.tw + GRID.gap);
+    const y = GRID.y + row * (GRID.th + GRID.gap);
+    const active = f < a + TILE + 6 || i === 3;
     return (
-      <div key={i} style={style}>
-        {i === 0 && <ShotGauges p={p} f={f} />}
-        {i === 1 && <ShotStop p={p} f={f} />}
-        {i === 2 && <ShotExt p={p} />}
-        {i === 3 && <ShotAttempt p={p} f={f} />}
+      <div
+        key={i}
+        style={{
+          position: "absolute",
+          left: x,
+          top: y,
+          width: GRID.tw,
+          height: GRID.th,
+          borderRadius: 22,
+          overflow: "hidden",
+          background: "#0A0B0C",
+          border: `1.5px solid ${active ? "rgba(240,178,66,0.55)" : "rgba(250,250,250,0.08)"}`,
+          opacity: inP,
+          translate: `0 ${(1 - inP) * 40}px`,
+          scale: `${0.94 + 0.06 * inP}`,
+          filter: inP < 1 ? `blur(${(1 - inP) * 10}px)` : undefined,
+        }}
+      >
+        <div style={{ position: "absolute", inset: "0 0 46px 0" }}>
+          {i === 0 && <ShotGauges p={p} f={f} />}
+          {i === 1 && <ShotStop p={p} f={f} />}
+          {i === 2 && <ShotExt p={p} />}
+          {i === 3 && <ShotAttempt p={p} f={f} />}
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            left: 18,
+            bottom: 14,
+            display: "flex",
+            gap: 10,
+            alignItems: "baseline",
+            fontFamily: FONT.sans,
+            whiteSpace: "nowrap",
+          }}
+        >
+          <span style={{ fontWeight: 600, fontSize: 30, color: C.gold }}>0{i + 1}</span>
+          <span style={{ fontWeight: 600, fontSize: 30, color: C.fa }}>{TASKS[i]}</span>
+        </div>
       </div>
     );
   });
 
-  const shake = idx === 3 ? noise1(f * 2, 9) * 2 : 0;
-
   return (
-    <AbsoluteFill style={{ background: `radial-gradient(ellipse 700px 600px at 540px 960px, #15171A 0%, ${C.black} 72%)` }}>
+    <AbsoluteFill style={{ background: `radial-gradient(ellipse 700px 600px at 540px 980px, #15171A 0%, ${C.black} 72%)` }}>
       <svg width={0} height={0} style={{ position: "absolute" }}>
         <defs>
           <radialGradient id="dialG" cx="0.5" cy="0.4" r="0.7">
             <stop offset="0" stopColor="#1E2226" />
             <stop offset="1" stopColor="#0C0D0F" />
           </radialGradient>
-          {/* brushed-steel extinguisher body */}
           <linearGradient id="extG" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor={REAL.extRedLo} />
             <stop offset="0.3" stopColor={REAL.extRedHi} />
@@ -265,77 +287,23 @@ export const S3Operator: React.FC = () => {
         </defs>
       </svg>
 
-      <Stack top={360}>
-        <Display words={["EK", "OPERATOR."]} at={2} />
-        <TypeOn words={[{ w: "Chaar", c: C.gold }, "zimmedariyaan."]} at={18} color={C.fa} />
+      <Stack top={380}>
+        <ScanReveal at={2} out={122}>
+          <Hit w={["EK", "OPERATOR."]} />
+          <Line w={[{ w: "Chaar", c: C.gold }, "zimmedariyaan."]} />
+        </ScanReveal>
       </Stack>
 
-      {/* macro shots: no card chrome, just a soft rounded window */}
-      <div
+      <AbsoluteFill
         style={{
-          position: "absolute",
-          left: PANEL.x,
-          top: PANEL.y,
-          width: PANEL.w,
-          height: PANEL.h,
-          borderRadius: 28,
-          overflow: "hidden",
-          background: "#0A0B0C",
-          opacity: panelIn,
-          scale: `${(0.96 + 0.04 * panelIn) * (1 + zoomOut * 0.35)}`,
-          translate: `${shake}px ${shake * 0.6}px`,
-          filter: zoomOut > 0 ? `brightness(${1 + zoomOut * 0.6})` : undefined,
+          translate: `${shake}px ${shake * 0.5}px`,
+          transformOrigin: `${GRID.x + GRID.tw * 1.5 + GRID.gap}px ${GRID.y + GRID.th * 1.5 + GRID.gap}px`,
+          scale: `${1 + dive * 0.5}`,
+          opacity: 1 - dive * 0.6,
         }}
       >
-        {shots}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.65) 100%)",
-          }}
-        />
-      </div>
-
-      {/* one task line at a time + a hairline 4-step progress */}
-      <div style={{ position: "absolute", left: SAFE.x0, top: PANEL.y + PANEL.h + 34, height: 60, width: 820, overflow: "hidden" }}>
-        {[0, 1, 2, 3].map((i) => {
-          const a = SHOT0 + i * SHOT;
-          const inP = prog(f, a + 1, a + 7, E.out);
-          const outP = i < 3 ? prog(f, a + SHOT - 3, a + SHOT + 1, E.in) : 0;
-          if (inP <= 0 || outP >= 1) return null;
-          return (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                display: "flex",
-                alignItems: "baseline",
-                gap: 16,
-                translate: `0 ${(1 - inP) * 60 - outP * 60}px`,
-                fontFamily: FONT.sans,
-                whiteSpace: "nowrap",
-              }}
-            >
-              <span style={{ fontWeight: 600, fontSize: TYPE.support, color: C.gold }}>0{i + 1}</span>
-              <span style={{ fontWeight: 500, fontSize: TYPE.support, color: C.fa }}>{TASKS[i]}</span>
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ position: "absolute", left: SAFE.x0, top: PANEL.y + PANEL.h + 110, width: 820, display: "flex", gap: 10, opacity: panelIn }}>
-        {[0, 1, 2, 3].map((i) => {
-          const a = SHOT0 + i * SHOT;
-          const v = prog(f, a, a + SHOT);
-          return (
-            <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: "#1E2024", overflow: "hidden" }}>
-              <div style={{ width: `${v * 100}%`, height: "100%", background: i === 3 ? C.gold : C.fa }} />
-            </div>
-          );
-        })}
-      </div>
+        {tiles}
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };

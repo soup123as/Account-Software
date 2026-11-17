@@ -6,6 +6,7 @@ import { S1Hook } from "./scenes/S1Hook";
 import { S2Night } from "./scenes/S2Night";
 import { S3Operator } from "./scenes/S3Operator";
 import { S4System } from "./scenes/S4System";
+import { S5Product } from "./scenes/S5Product";
 import { S5Hero } from "./scenes/S5Hero";
 import { C, SCENES, ip } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
@@ -26,13 +27,20 @@ const HeatFlash: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(circle at 540px 1050px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
+        background: `radial-gradient(circle at 540px 1190px, rgba(255,244,220,${a}) 0%, rgba(255,179,58,${a * 0.9}) 18%, rgba(255,106,26,${a * 0.75}) 42%, rgba(0,0,0,${a * 0.6}) 85%)`,
       }}
     />
   );
 };
 
 /** A cool bloom: the panel dives into the engine bay schematic. */
+/** Soft dip to black between the product and the hero. */
+const Dip: React.FC = () => {
+  const f = useCurrentFrame();
+  const { durationInFrames: d } = useVideoConfig();
+  return <AbsoluteFill style={{ background: `rgba(0,0,0,${ip(f, [0, d * 0.5, d], [0, 0.95, 0])})` }} />;
+};
+
 const Bloom: React.FC = () => {
   const f = useCurrentFrame();
   const { durationInFrames: d } = useVideoConfig();
@@ -69,22 +77,28 @@ export const OperatorAkela: React.FC<AkelaProps> = ({ showSafe, logoSrc, audio }
       <TransitionSeries.Sequence name="2 Night haul" durationInFrames={SCENES.night}>
         <S2Night />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={10} offset={-1}>
+      <TransitionSeries.Overlay durationInFrames={22}>
         <HeatFlash />
       </TransitionSeries.Overlay>
       <TransitionSeries.Sequence name="3 Operator" durationInFrames={SCENES.operator}>
         <S3Operator />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={10}>
+      <TransitionSeries.Overlay durationInFrames={20}>
         <Bloom />
       </TransitionSeries.Overlay>
       <TransitionSeries.Sequence name="4 System" durationInFrames={SCENES.system}>
         <S4System />
       </TransitionSeries.Sequence>
-      <TransitionSeries.Overlay durationInFrames={12}>
+      <TransitionSeries.Overlay durationInFrames={22}>
         <MistWash />
       </TransitionSeries.Overlay>
-      <TransitionSeries.Sequence name="5 Hero" durationInFrames={SCENES.hero}>
+      <TransitionSeries.Sequence name="5 Product" durationInFrames={SCENES.product}>
+        <S5Product />
+      </TransitionSeries.Sequence>
+      <TransitionSeries.Overlay durationInFrames={20}>
+        <Dip />
+      </TransitionSeries.Overlay>
+      <TransitionSeries.Sequence name="6 Hero" durationInFrames={SCENES.hero}>
         <S5Hero logoSrc={logoSrc} />
       </TransitionSeries.Sequence>
     </TransitionSeries>

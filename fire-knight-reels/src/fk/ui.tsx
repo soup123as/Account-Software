@@ -240,3 +240,113 @@ export const Reticle: React.FC<{
     </div>
   );
 };
+
+/* ------------------------------------------------------------------ */
+/* THERMAL SCAN REVEAL - the signature text animation (v6).            */
+/* A thin gold scanner line sweeps down through the block; text above  */
+/* the line is revealed, letters inside the scan band glow gold and    */
+/* cool to white. Exit: the scanner sweeps down again and wipes it.    */
+/* A soft black plate sits behind so text stays legible over machines. */
+/* ------------------------------------------------------------------ */
+const GOLD_CSS = `.fk-gold, .fk-gold * { color: ${C.gold} !important; }`;
+
+export const ScanReveal: React.FC<{
+  at: number;
+  out?: number;
+  dur?: number;
+  outDur?: number;
+  plate?: boolean;
+  /** Frame for an extra scanner pass over already-visible text (first-frame poster). */
+  glintAt?: number;
+  children: React.ReactNode;
+}> = ({ at, out, dur = 16, outDur = 12, plate = true, glintAt, children }) => {
+  const f = useCurrentFrame();
+  const g = glintAt !== undefined ? prog(f, glintAt, glintAt + dur + 4, E.inOut) : 0;
+  const pIn = prog(f, at, at + dur, E.inOut);
+  const glinting = g > 0 && g < 1 && pIn >= 1;
+  const p = glinting ? g : pIn;
+  const o = out !== undefined ? prog(f, out, out + outDur, E.inOut) : 0;
+  if (f < at - 1 || o >= 1) return null;
+  const band = 0.22;
+  const inScan = p > 0 && p < 1;
+  const outScan = o > 0 && o < 1;
+  const bandFade = p < 1 ? 1 : 1 - prog(f, at + dur, at + dur + 8);
+  const beamY = inScan ? p : outScan ? o : -1;
+  const clipIn = `inset(${o * 100}% -40px ${(glinting ? 0 : 1 - p) * 100}% -40px)`;
+  const goldTop = inScan ? Math.max(0, p - band) : outScan ? o : 0;
+  const goldBot = inScan ? 1 - p : outScan ? 1 - Math.min(1, o + band) : 1;
+  return (
+    <div style={{ position: "relative" }}>
+      <style>{GOLD_CSS}</style>
+      {plate && (
+        <div
+          style={{
+            position: "absolute",
+            left: -160,
+            right: -120,
+            top: -90,
+            bottom: -90,
+            background: "radial-gradient(ellipse 60% 62% at 38% 50%, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0) 100%)",
+            opacity: Math.min(1, pIn * 1.6) * (1 - o),
+          }}
+        />
+      )}
+      <div style={{ position: "relative", clipPath: clipIn }}>{children}</div>
+      {(inScan || outScan || bandFade > 0) && (
+        <div
+          className="fk-gold"
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath: `inset(${goldTop * 100}% -40px ${goldBot * 100}% -40px)`,
+            opacity: inScan || outScan ? 1 : bandFade * 0,
+            filter: "blur(0.4px)",
+          }}
+        >
+          {children}
+        </div>
+      )}
+      {beamY >= 0 && (
+        <div
+          style={{
+            position: "absolute",
+            left: -28,
+            right: -28,
+            top: `${beamY * 100}%`,
+            height: 2,
+            background: `linear-gradient(90deg, rgba(240,178,66,0) 0%, ${C.gold} 12%, #FFE7B0 50%, ${C.gold} 88%, rgba(240,178,66,0) 100%)`,
+            boxShadow: "0 0 14px 2px rgba(240,178,66,0.55)",
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+const words = (list: (string | Word)[]) =>
+  norm(list).map((x, i, a) => (
+    <span key={i} style={{ color: x.c }}>
+      {x.w}
+      {i < a.length - 1 ? " " : ""}
+    </span>
+  ));
+
+/** Static DM Sans lead line (animate it with ScanReveal). */
+export const Line: React.FC<{ w: (string | Word)[]; size?: number; color?: string; weight?: number }> = ({
+  w,
+  size = TYPE.lead,
+  color = C.fa,
+  weight = 600,
+}) => (
+  <div style={{ fontFamily: FONT.sans, fontWeight: weight, fontSize: size, lineHeight: 1.16, letterSpacing: "-0.02em", color, whiteSpace: "nowrap" }}>
+    {words(w)}
+  </div>
+);
+
+/** Static Anton display hit (animate it with ScanReveal). */
+export const Hit: React.FC<{ w: (string | Word)[]; size?: number; color?: string }> = ({ w, size = TYPE.display, color = C.white }) => (
+  <div style={{ fontFamily: FONT.display, fontSize: size, lineHeight: 1.04, letterSpacing: "0.01em", textTransform: "uppercase", color, whiteSpace: "nowrap" }}>
+    {words(w)}
+  </div>
+);

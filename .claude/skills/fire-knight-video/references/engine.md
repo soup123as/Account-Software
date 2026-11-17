@@ -20,13 +20,21 @@ public/product      ranger-cylinder.png (cut-out)
 ## Text
 ```tsx
 <Stack top={380}>
-  <TypeOn words={["Engine", "bay", "mein"]} at={58} out={114} color={C.fa} />
-  <Display words={[{ w: "HEAT", c: C.gold }, "BADH"]} at={68} out={115} />
-  <TypeOn words={["rahi", "hai."]} at={76} out={116} color={C.fa} />
+  <ScanReveal at={66} out={120} dur={18}>
+    <Line w={["Engine", "bay", "mein"]} />
+    <Hit w={[{ w: "HEAT", c: C.gold }, "BADH"]} />
+    <Line w={["rahi", "hai."]} />
+  </ScanReveal>
 </Stack>
 ```
-- `at` / `out` are local frames. Only one Stack is visible at a time: make the next `at` ≥ the previous `out + 4`.
-- A word given as `{ w, c }` takes a colour. Use `C.gold` on one word per group only.
+- `ScanReveal` props:
+  - `at` / `out`: local frames
+  - `dur` (default 16) and `outDur` (default 12)
+  - `plate` (default true): the black legibility plate
+  - `glintAt`: an extra scanner pass over text that is already visible (the poster first frame uses `at={-20} glintAt={3}`)
+- Only one ScanReveal block is visible at a time: make the next `at` ≥ the previous `out + 12`.
+- A word given as `{ w, c }` takes a colour. Use `C.gold` on one key word per group only.
+- `ScanReveal` injects `.fk-gold` CSS (`!important` gold) to draw the scan band, so text inside must not rely on `!important` colours.
 
 ## Camera
 `cam = { z, cx, cy, ax?, ay?, sx?, sy? }` places world point (cx, cy) at screen anchor (ax, ay) with zoom z. Each layer has a depth d (0 = sky, 1 = machine), so pushes produce parallax automatically. For continuity, end scene N's camera exactly where scene N+1's begins. Scene 2 exports `s2Camera` and Scene 4 exports `S4_CAM` for that reason.
