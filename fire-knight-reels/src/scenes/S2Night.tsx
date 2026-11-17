@@ -72,7 +72,7 @@ export const S2Night: React.FC = () => {
             crush={1}
             towers={0}
             dust={0}
-            truckFilter="grayscale(1) brightness(0.5) contrast(1.5)"
+            truckFilter="grayscale(1) brightness(0.95) contrast(1.25)"
           />
           {/* scan raster */}
           <AbsoluteFill

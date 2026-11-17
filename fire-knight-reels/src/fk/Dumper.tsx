@@ -23,6 +23,8 @@ type Props = {
   bob?: number;
   overlay?: React.ReactNode; // drawn in truck coordinates, on top
   beams?: boolean;
+  /** 'heat' draws only the heat signature (so a filtered body can't desaturate it). */
+  layer?: "all" | "body" | "heat";
 };
 
 const Wheel: React.FC<{ cx: number; cy: number; angle: number; id: string }> = ({
@@ -105,19 +107,14 @@ export const Dumper: React.FC<Props> = ({
   bob = 0,
   overlay,
   beams = true,
+  layer = "all",
 }) => {
   const flick = 0.92 + 0.08 * noise1(t * 0.7, 3);
   const h = heat;
   const ribXs = Array.from({ length: 9 }, (_, i) => 108 + i * 66);
   const bodyBottomY = (x: number) => 280 - ((x - 150) * 24) / 540;
 
-  return (
-    <svg
-      viewBox="0 0 1000 560"
-      width="100%"
-      height="100%"
-      style={{ overflow: "visible", display: "block" }}
-    >
+  const defs = (
       <defs>
         <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#424951" />
@@ -182,6 +179,66 @@ export const Dumper: React.FC<Props> = ({
           <path d="M2 6 L6 2 M9 6 L13 2" stroke="#30353B" strokeWidth="1.4" />
         </pattern>
       </defs>
+  );
+  const heatG = (
+    <>
+      {h > 0 && (
+        <g transform={`translate(0 ${bob})`}>
+          <ellipse
+            cx={BAY.x}
+            cy={BAY.y}
+            rx={150 * (0.45 + h)}
+            ry={110 * (0.45 + h)}
+            fill="url(#heatOuter)"
+            opacity={(0.28 + 0.5 * thermal) * h * flick}
+            filter="url(#softer)"
+            style={{ mixBlendMode: "screen" }}
+          />
+          {thermal > 0 && (
+            <g opacity={thermal}>
+              <ellipse
+                cx={BAY.x}
+                cy={BAY.y}
+                rx={70 * (0.3 + h)}
+                ry={50 * (0.3 + h)}
+                fill="url(#heatCore)"
+                opacity={h}
+                filter="url(#soft)"
+              />
+              {[1, 0.74, 0.5, 0.3].map((k, i) => (
+                <path
+                  key={i}
+                  d={blob(BAY.x, BAY.y, 130 * k * (0.35 + h * 0.9), t, i)}
+                  fill="none"
+                  stroke={i < 2 ? C.ember : C.heat}
+                  strokeWidth={i < 2 ? 1.6 : 2.2}
+                  opacity={(0.35 + i * 0.15) * Math.min(1, h * 1.6)}
+                />
+              ))}
+            </g>
+          )}
+        </g>
+      )}
+
+    </>
+  );
+  if (layer === "heat") {
+    return (
+      <svg viewBox="0 0 1000 560" width="100%" height="100%" style={{ overflow: "visible", display: "block" }}>
+        {defs}
+        {heatG}
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      viewBox="0 0 1000 560"
+      width="100%"
+      height="100%"
+      style={{ overflow: "visible", display: "block" }}
+    >
+      {defs}
 
       {/* ground contact shadow */}
       <ellipse cx={500} cy={542} rx={500} ry={16} fill="#000" opacity={0.75} filter="url(#soft)" />
@@ -334,45 +391,7 @@ export const Dumper: React.FC<Props> = ({
       </g>
 
 
-      {/* ---------- heat signature ---------- */}
-      {h > 0 && (
-        <g transform={`translate(0 ${bob})`}>
-          <ellipse
-            cx={BAY.x}
-            cy={BAY.y}
-            rx={150 * (0.45 + h)}
-            ry={110 * (0.45 + h)}
-            fill="url(#heatOuter)"
-            opacity={(0.28 + 0.5 * thermal) * h * flick}
-            filter="url(#softer)"
-            style={{ mixBlendMode: "screen" }}
-          />
-          {thermal > 0 && (
-            <g opacity={thermal}>
-              <ellipse
-                cx={BAY.x}
-                cy={BAY.y}
-                rx={70 * (0.3 + h)}
-                ry={50 * (0.3 + h)}
-                fill="url(#heatCore)"
-                opacity={h}
-                filter="url(#soft)"
-              />
-              {[1, 0.74, 0.5, 0.3].map((k, i) => (
-                <path
-                  key={i}
-                  d={blob(BAY.x, BAY.y, 130 * k * (0.35 + h * 0.9), t, i)}
-                  fill="none"
-                  stroke={i < 2 ? C.ember : C.heat}
-                  strokeWidth={i < 2 ? 1.6 : 2.2}
-                  opacity={(0.35 + i * 0.15) * Math.min(1, h * 1.6)}
-                />
-              ))}
-            </g>
-          )}
-        </g>
-      )}
-
+      {layer === "all" && heatG}
       {/* ---------- hero accent: restrained ember line along the engine bay ---------- */}
       {accent > 0 && (
         <g opacity={accent}>

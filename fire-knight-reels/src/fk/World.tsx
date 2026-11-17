@@ -280,9 +280,15 @@ export const World: React.FC<WorldProps> = ({
             thermal={thermal}
             accent={accent}
             bob={bob}
-            overlay={overlay}
+            overlay={truckFilter ? undefined : overlay}
+            layer={truckFilter ? "body" : "all"}
           />
         </div>
+        {truckFilter && (
+          <div style={{ position: "absolute", left: TRUCK.x, top: TRUCK.y, width: TRUCK.w, height: TRUCK.h }}>
+            <Dumper t={t} heat={heat} thermal={thermal} bob={bob} layer="heat" overlay={overlay} />
+          </div>
+        )}
         {/* dust in the beams */}
         <svg width={1080} height={1920} style={{ position: "absolute", overflow: "visible", opacity: dust * headlights }}>
           {motes.map((m, i) => (

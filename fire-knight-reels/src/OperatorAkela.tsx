@@ -37,7 +37,13 @@ const Bloom: React.FC = () => {
   const f = useCurrentFrame();
   const { durationInFrames: d } = useVideoConfig();
   const a = ip(f, [0, d * 0.5, d], [0, 0.85, 0]);
-  return <AbsoluteFill style={{ background: `rgba(244,244,242,${a * 0.55})`, backdropFilter: `blur(${a * 18}px)` }} />;
+  return (
+    <AbsoluteFill
+      style={{
+        background: `radial-gradient(ellipse 600px 500px at 540px 960px, rgba(255,177,61,${a * 0.18}) 0%, rgba(11,11,12,${a * 0.55}) 100%)`,
+      }}
+    />
+  );
 };
 
 /** Mist washes the frame as the camera pulls back to the hero. */
@@ -49,7 +55,6 @@ const MistWash: React.FC = () => {
     <AbsoluteFill
       style={{
         background: `radial-gradient(ellipse 900px 700px at 540px 1000px, rgba(244,244,242,${a * 0.5}) 0%, rgba(11,11,12,${a * 0.4}) 100%)`,
-        backdropFilter: `blur(${a * 14}px)`,
       }}
     />
   );

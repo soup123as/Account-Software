@@ -93,7 +93,7 @@ export const S5Hero: React.FC<{ logoSrc?: string | null }> = ({ logoSrc }) => {
             <div
               style={{
                 fontFamily: FONT.slam,
-                fontSize: 124,
+                fontSize: 112,
                 lineHeight: 1,
                 color: C.white,
                 letterSpacing: `${track}em`,
@@ -135,7 +135,7 @@ export const S5Hero: React.FC<{ logoSrc?: string | null }> = ({ logoSrc }) => {
             words={["Because", "every", { w: "second", c: C.heat }, "matters."]}
             start={64}
             stagger={3}
-            style={{ fontFamily: FONT.sans, fontWeight: 600, fontSize: 54, color: C.white, justifyContent: "center" }}
+            style={{ fontFamily: FONT.sans, fontWeight: 600, fontSize: 50, color: C.white, justifyContent: "center" }}
           />
         </div>
         <div

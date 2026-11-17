@@ -267,7 +267,7 @@ export const S3Operator: React.FC = () => {
 
       {/* headline */}
       <div style={{ position: "absolute", left: SAFE.x0, top: 388 }}>
-        <Slam at={2} size={168}>
+        <Slam at={2} size={156}>
           Ek operator.
         </Slam>
         <div style={{ height: 14 }} />
