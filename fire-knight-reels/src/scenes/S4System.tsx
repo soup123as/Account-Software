@@ -165,8 +165,8 @@ export const S4System: React.FC = () => {
       <Stack top={370} style={{ height: 80, overflow: "hidden" }}>
         {STAGES.map((s, i) => {
           const next = i < 2 ? STAGES[i + 1].at : T_PRODUCT - 4;
-          const inP = prog(f, s.at, s.at + 7, E.out);
-          const outP = prog(f, next - 2, next + 4, E.in);
+          const inP = prog(f, s.at + 1, s.at + 7, E.out);
+          const outP = prog(f, next - 5, next, E.in);
           if (inP <= 0 || outP >= 1) return null;
           return (
             <div
