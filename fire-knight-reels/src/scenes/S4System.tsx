@@ -6,11 +6,12 @@ import { Display, Label, Reticle, Stack, TopShade, TypeOn } from "../fk/ui";
 
 export const S4_CAM = { z: 2.3, cx: BAY_W.x, cy: BAY_W.y, ax: 540, ay: 940 };
 
-const T_DETECT = 12;
-const T_ALERT = 38;
-const T_RESP = 60;
-const T_PRODUCT = 82; // engine bay hands over to the product
-const T_LINE = 90;
+const T_REHOOK = 2; // "TOH PHIR KAUN?" - re-opens the loop before the answer
+const T_DETECT = 40;
+const T_ALERT = 58;
+const T_RESP = 74;
+const T_PRODUCT = 90; // engine bay hands over to the product
+const T_LINE = 96;
 
 /** Linear heat detection loop around the engine bay (truck coordinates). */
 const LOOP: [number, number][] = [
@@ -36,7 +37,7 @@ const NOZZLES = [836, 912];
 const BEACON = { x: 944, y: 236 };
 
 const Overlay: React.FC<{ f: number }> = ({ f }) => {
-  const draw = prog(f, 0, T_DETECT + 6, E.inOut);
+  const draw = prog(f, T_DETECT - 8, T_DETECT + 6, E.inOut);
   const pulseU = prog(f, T_DETECT, T_DETECT + 14, E.inOut);
   const [px, py] = pointOnLoop(0.12 + pulseU * 0.3);
   const alert = f >= T_ALERT;
@@ -54,7 +55,7 @@ const Overlay: React.FC<{ f: number }> = ({ f }) => {
         </g>
       )}
       {NOZZLES.map((x) => (
-        <g key={x} opacity={prog(f, 4, 12)}>
+        <g key={x} opacity={prog(f, T_DETECT - 6, T_DETECT)}>
           <rect x={x - 6} y={304} width={12} height={9} rx={2} fill="#7A8189" />
           <path d={`M${x - 4} 313 L${x + 4} 313 L${x + 2} 319 L${x - 2} 319 Z`} fill="#A8AEB4" />
         </g>
@@ -95,7 +96,7 @@ const STAGES = [
 export const S4System: React.FC = () => {
   const f = useCurrentFrame();
   const cam = { ...S4_CAM, z: S4_CAM.z + prog(f, 0, 150) * 0.12, cx: S4_CAM.cx - prog(f, 0, 150) * 10 };
-  const heat = ip(f, [0, T_RESP, T_RESP + 30], [0.7, 0.85, 0.3], E.inOut);
+  const heat = ip(f, [0, T_DETECT, T_RESP, T_RESP + 30], [0.8, 0.9, 0.9, 0.3], E.inOut);
   const lock = prog(f, T_DETECT + 8, T_DETECT + 18, E.out);
   const rw = ip(lock, [0, 1], [640, 330]);
   const rh = ip(lock, [0, 1], [440, 230]);
@@ -160,6 +161,11 @@ export const S4System: React.FC = () => {
       </AbsoluteFill>
 
       <TopShade opacity={0.95} to={700} />
+
+      {/* re-hook: the loop opened in scene 1 is re-asked right before the answer */}
+      <Stack top={370}>
+        <Display words={["TOH", "PHIR", { w: "KAUN?", c: C.gold }]} at={T_REHOOK} out={T_DETECT - 8} />
+      </Stack>
 
       {/* stage line: one at a time */}
       <Stack top={370} style={{ height: 80, overflow: "hidden" }}>

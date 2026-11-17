@@ -166,16 +166,21 @@ L += drone * drone_g
 R += drone * drone_g
 
 # ---------------- scene 1 ----------------
-put(clank() * 0.5 + 0, F(3), 0.18, 0.4)  # lamp relay
-put(thud(70, 40, 0.35), F(3), 0.45)
-put(clank(), F(7), 0.14, 0.4)
-put(thud(60, 36, 0.6), F(4), 0.75)  # 100-TONNE
-put(whoosh(0.45, 600, 9000, 0.7), F(26), 0.35, -0.3)  # sweep line
-put(boom(1.8), F(44), 0.85)  # SIRF OPERATOR?
-put(thud(64, 36, 0.7, 0.4), F(44), 0.6)
+# mystery glow: heartbeat that matches the glow pulse (period ~18.5 frames)
+for k in range(5):
+    put(thud(48, 30, 0.35, 0.0), F(2 + k * 18.5), 0.5 - k * 0.06)
+    put(thud(42, 28, 0.3, 0.0), F(2 + k * 18.5) + 0.16, 0.3 - k * 0.04)
+put(tick(5200, 0.02), F(1), 0.06)
+put(clank() * 0.5, F(12), 0.18, 0.4)  # lamp relay
+put(thud(70, 40, 0.35), F(12), 0.45)
+put(clank(), F(16), 0.14, 0.4)
+put(thud(60, 36, 0.6), F(16), 0.6)  # BACHA SAKTI HAI.
+put(whoosh(2.0, 90, 2500, 0.55), F(18), 0.45)  # pull-back reveal
+put(boom(1.8), F(57), 0.85)  # OPERATOR NAHI.
+put(thud(64, 36, 0.7, 0.4), F(57), 0.6)
 
 # ---------------- scene 2 (starts f90) ----------------
-S2 = 90
+S2 = 105
 rt = t_(4.2)
 rumble = band(rng.standard_normal(len(rt)), 25, 140) * (1 + 0.35 * np.sin(2 * np.pi * 7.5 * rt))
 rumble = norm(rumble + 0.4 * np.sin(2 * np.pi * 34 * rt)) * adsr(len(rt), 0.4, 0.6)
@@ -187,42 +192,42 @@ put(beep(1320, 0.06), F(S2 + 82), 0.12, 0.3)  # reticle
 sw = t_(0.75)
 put(np.sin(2 * np.pi * np.cumsum(500 + 2200 * (sw / 0.75)) / SR) * adsr(len(sw), 0.05, 0.2), F(S2 + 88), 0.07, 0.2)  # scan
 put(riser(1.6), F(S2 + 72), 0.42)
-put(boom(2.2), F(210), 0.9)  # heat flash
-put(whoosh(0.4, 400, 9000, 0.3), F(206), 0.5, 0.4)
+put(boom(2.2), F(225), 0.9)  # heat flash
+put(whoosh(0.4, 400, 9000, 0.3), F(221), 0.5, 0.4)
 
 # ---------------- scene 3 (starts f210) ----------------
-S3 = 210
+S3 = 225
 put(thud(60, 36, 0.6), F(S3 + 2), 0.55)  # EK OPERATOR.
-hb = 7.15
+hb = 7.6
 while hb < 10.9:
     put(thud(52, 32, 0.3, 0.05), hb, 0.42)
     put(thud(46, 30, 0.3, 0.05), hb + 0.17, 0.3)
     hb += 0.62
 for k in range(4):
-    put(whoosh(0.32, 500, 9000, 0.55), F(S3 + 12 + k * 26) - 0.12, 0.38, 0.5 - k * 0.3)
+    put(whoosh(0.32, 500, 9000, 0.55), F(S3 + 10 + k * 23) - 0.12, 0.38, 0.5 - k * 0.3)
 for k in range(5):
-    put(beep(1000, 0.06), F(S3 + 22) + k * 0.2, 0.07, -0.2)  # warning lamp
-put(clank(), F(S3 + 12 + 26 + 19), 0.2)  # park brake
-put(clank(), F(S3 + 12 + 52 + 6), 0.3, 0.3)  # strap
-put(hiss(0.9), F(S3 + 12 + 78 + 4), 0.16, -0.2)  # extinguisher attempt
+    put(beep(1000, 0.06), F(S3 + 18) + k * 0.18, 0.07, -0.2)  # warning lamp
+put(clank(), F(S3 + 10 + 23 + 17), 0.2)  # park brake
+put(clank(), F(S3 + 10 + 46 + 5), 0.3, 0.3)  # strap
+put(hiss(0.8), F(S3 + 10 + 69 + 4), 0.16, -0.2)  # extinguisher attempt
 rev = whoosh(0.5, 200, 6000, 0.95)
 put(rev, F(330) - 0.45, 0.4)  # bloom in
 
 # ---------------- scene 4 (starts f330) ----------------
 S4 = 330
-put(tick(1800, 0.05), F(S4 + 4), 0.12)
+put(boom(1.6), F(S4 + 2), 0.7)  # TOH PHIR KAUN? (re-hook, lands on the pad drop)
 for k in range(3):
-    put(tick(2400, 0.035), F(S4 + 14 + k * 4), 0.09, 0.2)
-put(beep(880), F(S4 + 20), 0.2)  # detection double beep
-put(beep(1320), F(S4 + 20) + 0.13, 0.2)
+    put(tick(2400, 0.035), F(S4 + 40 + k * 4), 0.09, 0.2)
+put(beep(880), F(S4 + 48), 0.2)  # detection double beep
+put(beep(1320), F(S4 + 48) + 0.13, 0.2)
 for k in range(6):
-    put(beep(740 if k % 2 == 0 else 980, 0.16), F(S4 + 38) + k * 0.22, 0.11, 0.25)  # alarm
-put(hiss(1.6), F(S4 + 60), 0.22)  # discharge (conceptual)
-put(thud(50, 32, 0.8, 0.0), F(S4 + 60), 0.45)
-put(thud(56, 34, 0.7, 0.1), F(S4 + 108), 0.45)  # ONE PERSON.
-put(whoosh(0.9, 150, 4000, 0.8), F(S4 + 80), 0.35)  # product rises
+    put(beep(740 if k % 2 == 0 else 980, 0.16), F(S4 + 58) + k * 0.2, 0.11, 0.25)  # alarm
+put(hiss(1.4), F(S4 + 74), 0.22)  # discharge (conceptual)
+put(thud(50, 32, 0.8, 0.0), F(S4 + 74), 0.45)
+put(thud(56, 34, 0.7, 0.1), F(S4 + 114), 0.5)  # ONE PERSON.
+put(whoosh(0.9, 150, 4000, 0.8), F(S4 + 88), 0.35)  # product rises
 mt2 = t_(1.4)
-put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.4) ** 1.5 * adsr(len(mt2), 0.01, 0.3), F(S4 + 86), 0.12)  # steel swell
+put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.4) ** 1.5 * adsr(len(mt2), 0.01, 0.3), F(S4 + 94), 0.12)  # steel swell
 
 # ---------------- scene 5 (starts f480) ----------------
 S5 = 480
@@ -238,7 +243,7 @@ put(norm(tone), F(S5 + 30), 0.3)
 put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(S5 + 42), 0.05, 0.3)  # sheen on the emblem
 
 # soft key clicks under the typed DM Sans lines
-for fr, n in [(36, 9), (90 + 58, 13), (90 + 76, 8), (210 + 18, 19), (330 + 90, 20)]:
+for fr, n in [(4, 18), (105 + 58, 13), (105 + 76, 8), (225 + 18, 19), (330 + 96, 20)]:
     for k in range(0, n, 2):
         put(tick(1900 + 300 * rng.random(), 0.03), F(fr + k * 1.05), 0.05, 0.3 * (rng.random() - 0.5))
 

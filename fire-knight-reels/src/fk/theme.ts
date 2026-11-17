@@ -51,9 +51,9 @@ export const SAFE = { x0: 130, x1: 950, y0: 300, y1: 1460 } as const;
 
 /** Scene lengths in frames (30 fps). Total = 600 = 20 s. */
 export const SCENES = {
-  hook: 90, // 0-3 s
-  night: 120, // 3-7 s
-  operator: 120, // 7-11 s
+  hook: 105, // 0-3.5 s  curiosity hook (open loop)
+  night: 120, // 3.5-7.5 s
+  operator: 105, // 7.5-11 s
   system: 150, // 11-16 s
   hero: 120, // 16-20 s
 } as const;

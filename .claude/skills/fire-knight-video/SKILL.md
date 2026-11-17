@@ -7,7 +7,7 @@ description: Build a premium cinematic 9:16 reel for The Fire Knight (thefirekni
 
 A Fire Knight reel looks like a premium automotive or engineering ad. It is quiet, dark and confident. One idea at a time sits on a black frame, a detailed machine is always on screen, a single gold accent is used, and it ends on the shield logo.
 
-The reference implementation is **Operator Akela v3** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
+The reference implementation is **Operator Akela v4** in `fire-knight-reels/` (repo `soup123as/account-software`) or in `assets/engine/` of this skill. **Start every new reel by copying that engine.** Change the content, not the system.
 
 The client approves every stage and does all posting. Never publish, schedule, comment or DM.
 
@@ -15,6 +15,19 @@ The client approves every stage and does all posting. Never publish, schedule, c
 1. **Less on screen.** At most three things per frame: one text group, one machine or product, and at most one supporting detail (a reticle, a label or a progress line). No header bar, no brand pill, no HUD clutter, no clocks or status chips "for flavour". If a frame feels busy, delete something.
 2. **The machine is the hero.** Every scene shows a machine (dumper, truck, bus, excavator, DG set, rack, panel, room) or a real Fire Knight product. Text never plays over an empty frame. Product-first is the brand: the viewer must always see *what* is protected and *what* protects it.
 3. **Calm type, one accent.** Small, crisp DM Sans sentences with one Anton hit. Gold marks only the key word. Everything else is white or #fafafa.
+
+## 1b. Curiosity hook (every reel opens a loop and closes it late)
+The reel must make the viewer **need** the ending. Build it in both the script and the visuals:
+
+1. **Visual mystery at frame 0.** Open on something unexplained: a lone gold heat glow pulsing in total black, a beam sweeping an unseen machine, or a single LED blinking. Give no context and no text for 4 frames. Sound: a heartbeat thud synced to the pulse.
+2. **Open loop in the first line (≤ 0.5 s to start, done by 3.5 s).** Promise an answer without giving it. The pattern is: *"Ek cheez [is asset] ko [bacha sakti hai / bachati hai]."* + twist *"[OBVIOUS ANSWER] NAHI."*
+   - Operator Akela: "Ek cheez is dumper ko BACHA SAKTI HAI." → "OPERATOR NAHI."
+   - Other loops that work: "Is truck ki aag 2 baje kaun dekhega?" → "DRIVER NAHI." · "Extinguisher laga hai. PHIR BHI KHATRA?" · "Is generator room mein ek cheez missing hai."
+   - The asset is named by the 5th word. The twist is a Display hit, with the gold word on the twist.
+3. **Reveal by camera, not by cut.** Start tight on the mystery (z ≈ 2.3 on the hot spot) and pull back while the line types, so the scale of the machine arrives as part of the hook.
+4. **Re-hook at 50–60% of the reel**, right before the answer. Ask it again as a Display hit over the unattended risk ("TOH PHIR KAUN?"), with the music bed dropped to the sub for that beat.
+5. **Payoff = the product.** The real product render answers the loop (rise + light sweep + name label), followed by the line and then the logo end frame. Never answer the loop before ~65% of the reel.
+6. Don't use cheap retention bait: no "watch till the end", fake countdowns, timers implying response times, or clickbait claims. The loop must be honest and answered.
 
 ## 2. Brand system
 
@@ -87,7 +100,9 @@ Use real renders wherever a product appears, cut out on black. Fetch them from `
 - Text zone is y 360–700. The machine or product zone is y 700–1300. Bottom labels sit around y 1230.
 
 ## 5. Scene recipes (pick 4–6, never the same recipe twice in a row)
-- **Emerge** (hook): the machine in darkness, headlights flicker on (2 flickers), a light pool lifts the exposure, the camera pushes in, and the hook stack lands.
+- **Mystery reveal** (hook, default): black frame, one pulsing gold glow (heartbeat). The camera holds tight, then pulls back from the glow to reveal the machine while the open-loop line types on. The headlights flicker on mid-pull (2 flickers). The twist Display lands on the full machine.
+- **Emerge** (alternative hook): the machine in darkness, headlights flicker on, a light pool lifts the exposure, and the camera pushes in.
+- **Re-hook:** the same risk zone, unattended, with the loop question as one Display hit ("TOH PHIR KAUN?") and a sub boom on the pad drop.
 - **Night haul:** the machine drives, the world scrolls in parallax, wheels turn, the body bobs 1.6 px. Use it for time or place ("Raat 2 baje.").
 - **Push to the risk zone:** the camera flies into the engine bay, battery pack or panel. A **thermal viewfinder** (hairline corner brackets plus a gold scan line) reveals gold heat contours inside it. The heat layer is drawn unfiltered on top of a greyscale body.
 - **Four tasks / checklist:** one rounded window with no border, showing illustrated macro shots that whip-swap every 0.9 s. Below it go one support line (`01  Khatra notice karna`, gold index) and a hairline 4-step progress bar.
@@ -99,7 +114,7 @@ New machines follow `src/fk/Dumper.tsx`: a side view at real proportions, steel 
 
 ## 6. Language and copy
 - Instagram: Hinglish in Roman script for sentences. Display hits can be Hinglish or English CAPS. LinkedIn: English.
-- Copy structure: hook (asset + gap), the risk, one person / manual limits, automatic response, product, end frame.
+- Copy structure: **open loop** (asset + promise + twist), the risk, one person / manual limits, **re-hook**, automatic response, **product = answer**, end frame.
 - Every claim must trace to `references/facts.md`. Anything else is marked `[VERIFY]` and you tell the client.
 - Claims guard (check every frame): the products are **fire suppression aids**. Never say "extinguishes", "100%", "guaranteed" or "replaces your extinguisher". Show no response times, thresholds or numbers the site does not state. Claim no DGMS / AIS / BIS approval. Say "International patent application PCT/AU2023/050224", never "patented". Use none of the site's unsourced statistics (5M trucks, 600,000 DG sets, 500–600 °C turbo heat, the bus rule). No named incidents, companies or competitors.
 
@@ -131,4 +146,5 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 ## 9. Reel log
 | Date | Reel | Viewer / product | Recipes in order | Notes |
 |---|---|---|---|---|
-| 2026-11-17 | Operator Akela v3 (20 s) | Mining HEMM / Ranger | Emerge → Night haul + thermal → Four tasks → Automatic response → Product reveal → Hero + logo | Reference build. Next reel: change the machine and the recipe order. |
+| 2026-11-17 | Operator Akela v3 (20 s) | Mining HEMM / Ranger | Emerge → Night haul + thermal → Four tasks → Automatic response → Product reveal → Hero + logo | First Steel & Gold build. |
+| 2026-11-17 | Operator Akela v4 (20 s) | Mining HEMM / Ranger | Mystery reveal ("Ek cheez is dumper ko BACHA SAKTI HAI. / OPERATOR NAHI.") → Night haul + thermal → Four tasks → Re-hook ("TOH PHIR KAUN?") → Automatic response → Product reveal → Hero + logo | Reference build with the curiosity hook. Scenes: 3.5 / 4 / 3.5 / 5 / 4 s. Next reel: change the machine and the loop line. |

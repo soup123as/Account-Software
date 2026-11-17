@@ -4,8 +4,8 @@ import { C, E, FONT, SAFE, TYPE, ip, noise1, prog, rand } from "../fk/theme";
 import { Display, Stack, TypeOn } from "../fk/ui";
 
 const PANEL = { x: SAFE.x0, y: 640, w: 820, h: 540 };
-const SHOT0 = 12; // first shot starts
-const SHOT = 26; // frames per shot
+const SHOT0 = 10; // first shot starts
+const SHOT = 23; // frames per shot
 
 const TASKS = [
   "Khatra notice karna",
@@ -212,7 +212,7 @@ export const S3Operator: React.FC = () => {
   const f = useCurrentFrame();
   const idx = Math.max(0, Math.min(3, Math.floor((f - SHOT0) / SHOT)));
   const panelIn = prog(f, 4, 14, E.out);
-  const zoomOut = prog(f, 108, 120, E.in);
+  const zoomOut = prog(f, 94, 105, E.in);
 
   const shots = [0, 1, 2, 3].map((i) => {
     const a = SHOT0 + i * SHOT;
