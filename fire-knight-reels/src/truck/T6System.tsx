@@ -12,7 +12,7 @@ import { Label, Reticle, TypeOn } from "../fk/ui";
  */
 const DIAGRAM_CAM = { z: 1.6, cx: BAY_W.x - 60, cy: BAY_W.y, ay: 760 };
 
-const T = [3, 36, 63]; // step starts: detection, alert, suppression (on the spoken words)
+const T = [4, 32, 70]; // "heat detect" 24.88 / "alarm" ~25.8 / "suppression" ~27.0 s
 
 const STEPS = [
   { title: "Detection", line: "Engine ki heat detect hoti hai" },
@@ -262,7 +262,7 @@ export const T6System: React.FC = () => {
   return (
     <AbsoluteFill>
       <World
-        t={f + 700}
+        t={f + 740}
         machine="truck"
         setting="highway"
         cam={cam}

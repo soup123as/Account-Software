@@ -1,24 +1,25 @@
 /**
- * "Truck Owners" reel - scene lengths (30 fps) cut to the revised VO script.
- * Phrase times below are ESTIMATED (natural Hinglish pace, ~2.3 words/s) until the client's
- * voiceover arrives; then re-time from silencedetect + transcript (see skill 7b).
+ * "Truck Owners" reel - scene lengths (30 fps) cut to the client's ElevenLabs VO (38.6 s).
+ * Every cut sits in a VO pause. Total 1206 frames = 40.2 s (VO + 1.6 s hold).
  *
- * P1 0.10-3.40  Truck owners, aapka sabse bada nuksaan accident nahi... yeh ho sakta hai.
- * P2 3.80-8.00  Raat ke do baje. Highway par. Engine bay mein heat badh rahi hai.
- * P3 8.50-15.30 Aur driver ke paas chaar kaam hain: khatra dekhna, truck rokna, extinguisher lana, aur aag se ladna.
- * P4 15.80-20.70 Lekin agar woh waqt par na pahunche... toh nuksaan sirf truck ka nahi, maal aur kamaai ka bhi.
- * P5 21.20-22.90 Yahin kaam aata hai Ranger.
- * P6 23.40-28.10 Heat detect hote hi alarm bajta hai, aur suppression automatically activate ho jaata hai.
- * P7 28.60-31.90 Kyunki aapka business ek driver ke bharose nahi chalna chahiye.
- * P8 32.40-38.20 The Fire Knight. Because every second matters. Free consultation ke liye WhatsApp karein.
+ * 0.00-0.77 Truck owners, | 1.15-3.71 aapka sabse bada nuksaan accident nahi... | 4.25-5.09 yeh ho sakta hai.
+ * 5.56-6.61 Raat ke do baje. | 7.00-7.58 Highway par. | 8.02-9.59 Engine bay mein heat badh rahi hai.
+ * 10.04-11.67 Aur driver ke paas chaar kaam hain: | 12.11 khatra dekhna | 13.18 truck rokna |
+ *   14.18 extinguisher lana | 15.39-16.52 aur aag se ladna.
+ * 17.01-18.79 Lekin agar woh waqt par na pahunche... | 19.13-20.58 toh nuksaan sirf truck ka nahi, |
+ *   20.91-22.27 maal aur kamaai ka bhi.
+ * 22.83-24.47 Yahin kaam aata hai Ranger.
+ * 24.88-26.64 Heat detect hote hi alarm bajta hai, | 26.90-29.21 aur suppression automatically activate ho jaata hai.
+ * 29.65-32.73 Kyunki aapka business ek driver ke bharose nahi chalna chahiye.
+ * 33.15-34.04 The Fire Knight. | 34.40-36.17 Because every second matters. | 36.55-38.31 Free consultation ke liye WhatsApp karein.
  */
 export const T_SCENES = {
-  hook: 110, // 0.00-3.67
-  night: 140, // 3.67-8.33
-  driver: 219, // 8.33-15.63
-  loss: 162, // 15.63-21.03
-  product: 69, // 21.03-23.33
-  system: 153, // 23.33-28.43
-  hero: 348, // 28.43-40.03
+  hook: 160, // 0.00-5.33
+  night: 135, // 5.33-9.83
+  driver: 208, // 9.83-16.77
+  loss: 174, // 16.77-22.57
+  product: 63, // 22.57-24.67
+  system: 143, // 24.67-29.43
+  hero: 323, // 29.43-40.20
 } as const;
 export const T_TOTAL = Object.values(T_SCENES).reduce((a, b) => a + b, 0);

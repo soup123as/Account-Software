@@ -43,7 +43,7 @@ export const TruckOwners: React.FC<TruckProps> = ({ showSafe, audio }) => (
         <MistWash />
       </TransitionSeries.Overlay>
       <TransitionSeries.Sequence name="5 Product" durationInFrames={T_SCENES.product}>
-        <S5Product />
+        <S5Product lineAt={3} hitAt={33} />
       </TransitionSeries.Sequence>
       <TransitionSeries.Overlay durationInFrames={16}>
         <Dip />
@@ -61,6 +61,6 @@ export const TruckOwners: React.FC<TruckProps> = ({ showSafe, audio }) => (
     <Vignette strength={0.7} />
     <Grain opacity={0.05} />
     {showSafe && <SafeGuide />}
-    {audio && <Audio src={staticFile("audio/truck-mix.wav")} />}
+    {audio && <Audio src={staticFile("audio/truck-mix-vo.wav")} />}
   </AbsoluteFill>
 );

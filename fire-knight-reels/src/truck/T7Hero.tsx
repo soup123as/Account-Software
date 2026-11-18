@@ -11,8 +11,8 @@ import { Display, Label, Stack, TypeOn } from "../fk/ui";
  *        "Free consultation ke liye WhatsApp karein." 35.90-38.20 (local 224-293)
  */
 const HERO = { z: 0.8, cx: TRUCK.x + 500, cy: TRUCK.y + 360, ax: 540, ay: 1296 };
-const T_LOGO = 112;
-const T_CTA = 222;
+const T_LOGO = 92; // wordmark unmasks on "The Fire Knight" (33.15 s)
+const T_CTA = 164; // "Free consultation ke liye WhatsApp karein" (36.55 s)
 const EMBLEM_H = 300;
 const EMBLEM_W = Math.round((EMBLEM_H * 762) / 909);
 const WORD_W = 450;
@@ -22,9 +22,9 @@ const WHATSAPP = "+91 79080 54311";
 
 export const T7Hero: React.FC = () => {
   const f = useCurrentFrame();
-  const p = prog(f, 0, 110, E.cam);
+  const p = prog(f, 0, 100, E.cam);
   const cam = {
-    z: ip(p, [0, 1], [0.95, HERO.z]) + prog(f, 110, 348) * 0.025,
+    z: ip(p, [0, 1], [0.95, HERO.z]) + prog(f, 100, 323) * 0.025,
     cx: HERO.cx,
     cy: ip(p, [0, 1], [TRUCK.y + 310, HERO.cy]),
     ax: 540,
@@ -35,7 +35,7 @@ export const T7Hero: React.FC = () => {
   const em = prog(f, T_LOGO, T_LOGO + 16, E.out);
   const sheen = ip(f, [T_LOGO + 12, T_LOGO + 40], [-30, 130], E.inOut);
   const wm = prog(f, T_LOGO + 14, T_LOGO + 28, E.out);
-  const tag = prog(f, T_LOGO + 43, T_LOGO + 55, E.out);
+  const tag = prog(f, T_LOGO + 41, T_LOGO + 53, E.out); // "Because every second matters" 34.40 s
   const cta = prog(f, T_CTA, T_CTA + 14, E.out);
   const ctaPulse = f > T_CTA + 14 ? 0.5 + 0.5 * Math.sin((f - T_CTA) * 0.12) : 0;
   const emblemSrc = staticFile("brand/emblem.png");
@@ -46,7 +46,7 @@ export const T7Hero: React.FC = () => {
     <AbsoluteFill>
       <AbsoluteFill style={{ opacity: ip(f, [0, 12], [0.4, 1]) }}>
         <World
-          t={f + 853}
+          t={f + 883}
           cam={cam}
           machine="truck"
           setting="highway"
@@ -59,15 +59,15 @@ export const T7Hero: React.FC = () => {
         />
       </AbsoluteFill>
       <AbsoluteFill
-        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.96) 0px, rgba(0,0,0,0.9) 900px, rgba(0,0,0,0) 1130px)", opacity: Math.max(prog(f, 0, 12) * 0.75, prog(f, 100, 116)) }}
+        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.96) 0px, rgba(0,0,0,0.9) 900px, rgba(0,0,0,0) 1130px)", opacity: Math.max(prog(f, 0, 12) * 0.75, prog(f, 84, 98)) }}
       />
 
       {/* the line */}
       <Stack top={380}>
-        <TypeOn words={["Kyunki", "aapka", "business"]} at={6} out={104} perLetter={0.8} color={C.fa} />
-        <TypeOn words={["ek", "driver", "ke"]} at={30} out={104} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "BHAROSE", c: C.gold }]} at={56} out={104} />
-        <TypeOn words={["nahi", "chalna", "chahiye."]} at={76} out={104} perLetter={0.8} color={C.fa} />
+        <TypeOn words={["Kyunki", "aapka", "business"]} at={7} out={86} perLetter={0.8} color={C.fa} />
+        <TypeOn words={["ek", "driver", "ke"]} at={36} out={86} perLetter={0.8} color={C.fa} />
+        <Display words={[{ w: "BHAROSE", c: C.gold }]} at={56} out={86} />
+        <TypeOn words={["nahi", "chalna", "chahiye."]} at={68} out={86} perLetter={0.6} color={C.fa} />
       </Stack>
 
       {/* emblem + sheen */}

@@ -8,7 +8,7 @@ import wave
 import numpy as np
 
 SR = 48000
-DUR = 1201 / 30.0  # Truck Owners reel: 40.03 s
+DUR = 1206 / 30.0  # Truck Owners reel: 40.2 s, cut to the client's VO
 N = int(SR * DUR)
 rng = np.random.default_rng(11)
 L = np.zeros(N)
@@ -147,35 +147,35 @@ pad = band(pad, 40, 1800)
 pad = norm(pad)
 # pad dynamics: in from 0.5 s, builds through scene 3, drops to sub alone before scene 4, warm in scene 5
 tt = np.arange(N) / SR
-pad_g = np.interp(tt, [0, 1.5, 8.3, 15.2, 15.6, 20.8, 21.4, 28.4, 32.2, 37.5, DUR], [0.15, 0.45, 0.55, 0.65, 0.0, 0.0, 0.5, 0.5, 0.65, 0.55, 0])
+pad_g = np.interp(tt, [0, 1.5, 9.8, 16.4, 16.9, 22.4, 23.0, 29.4, 33.0, 38.5, DUR], [0.15, 0.45, 0.55, 0.65, 0.0, 0.0, 0.5, 0.5, 0.65, 0.55, 0])
 L += pad * pad_g * 0.32
 R += pad * pad_g * 0.32
 
 # sub pulse on beats from scene 2
 beat = 60 / 100
 t = 3.0
-while t < 32.2:
-    if not (15.4 <= t < 21.0):
+while t < 33.0:
+    if not (16.8 <= t < 22.6):
         put(thud(48, 34, 0.4, click=0.0), t, 0.32)
     t += beat
 
 # drone under everything
 drone = norm(np.sin(2 * np.pi * 36.7 * tt) + 0.5 * np.sin(2 * np.pi * 55 * tt + 0.7))
-drone_g = np.interp(tt, [0, 1.0, 15.4, 16.0, 20.8, 28.4, 32.2, 37.5, DUR], [0.12, 0.22, 0.22, 0.3, 0.3, 0.2, 0.1, 0.18, 0])
+drone_g = np.interp(tt, [0, 1.0, 16.8, 17.4, 22.4, 29.4, 33.0, 38.5, DUR], [0.12, 0.22, 0.22, 0.3, 0.3, 0.2, 0.1, 0.18, 0])
 L += drone * drone_g
 R += drone * drone_g
 
 # ---------------- scene starts (frames) - Truck Owners ----------------
-HOOK, NIGHT, DRIVER, LOSS, PROD, SYS, HERO = 0, 110, 250, 469, 631, 700, 853
+HOOK, NIGHT, DRIVER, LOSS, PROD, SYS, HERO = 0, 160, 295, 503, 677, 740, 883
 
 # hook: heartbeat on the glow, lamps, slow pull-back, flare on "yeh"
-for k in range(5):
-    put(thud(48, 30, 0.35, 0.0), F(HOOK + 1 + k * 18.5), 0.45 - k * 0.05)
-    put(thud(42, 28, 0.3, 0.0), F(HOOK + 1 + k * 18.5) + 0.16, 0.26 - k * 0.03)
+for k in range(7):
+    put(thud(48, 30, 0.35, 0.0), F(HOOK + 1 + k * 18.5), 0.42 - k * 0.04)
+    put(thud(42, 28, 0.3, 0.0), F(HOOK + 1 + k * 18.5) + 0.16, 0.24 - k * 0.025)
 put(clank() * 0.5, F(HOOK + 14), 0.16, 0.4)
 put(thud(70, 40, 0.35), F(HOOK + 14), 0.4)
-put(whoosh(2.6, 90, 2500, 0.55), F(HOOK + 20), 0.38)
-put(boom(1.8), F(HOOK + 70), 0.6)  # "...yeh ho sakta hai"
+put(whoosh(3.8, 90, 2500, 0.55), F(HOOK + 24), 0.36)
+put(boom(1.8), F(HOOK + 126), 0.6)  # "...yeh ho sakta hai"
 
 # night highway + thermal
 rt = t_(4.8)
@@ -184,9 +184,9 @@ rumble = norm(rumble + 0.4 * np.sin(2 * np.pi * 42 * rt)) * adsr(len(rt), 0.4, 0
 put(rumble, F(NIGHT) - 0.1, 0.32)
 for k in range(3):  # passing streetlights
     put(whoosh(0.9, 200, 3000, 0.5), F(NIGHT + 10 + k * 22), 0.12, 0.6)
-put(thud(60, 36, 0.6), F(NIGHT + 4), 0.5)
-put(whoosh(1.9, 120, 2500, 0.85), F(NIGHT + 62), 0.35)
-put(thud(60, 36, 0.5), F(NIGHT + 86), 0.42)  # HEAT BADH
+put(thud(60, 36, 0.6), F(NIGHT + 6), 0.5)
+put(whoosh(1.9, 120, 2500, 0.85), F(NIGHT + 66), 0.35)
+put(thud(60, 36, 0.5), F(NIGHT + 97), 0.42)  # HEAT BADH
 put(beep(1320, 0.06), F(NIGHT + 100), 0.1, 0.3)
 sw = t_(0.75)
 put(np.sin(2 * np.pi * np.cumsum(500 + 2200 * (sw / 0.75)) / SR) * adsr(len(sw), 0.05, 0.2), F(NIGHT + 104), 0.06, 0.2)
@@ -201,55 +201,55 @@ while hb < F(LOSS) - 0.4:
     put(thud(52, 32, 0.3, 0.05), hb, 0.34)
     put(thud(46, 30, 0.3, 0.05), hb + 0.17, 0.24)
     hb += 0.62
-for k, at in enumerate([66, 102, 138, 177]):
+for k, at in enumerate([69, 101, 131, 167]):
     put(whoosh(0.4, 400, 7000, 0.6), F(DRIVER + at) - 0.15, 0.26, 0.5 - k * 0.3)
     put(tick(2200, 0.04), F(DRIVER + at) + 0.2, 0.07)
 for k in range(5):
-    put(beep(1000, 0.06), F(DRIVER + 74) + k * 0.2, 0.05, -0.2)
-put(clank(), F(DRIVER + 102 + 45), 0.16)
-put(clank(), F(DRIVER + 138 + 14), 0.22, 0.3)
-put(hiss(0.9), F(DRIVER + 177 + 12), 0.12, -0.2)
+    put(beep(1000, 0.06), F(DRIVER + 77) + k * 0.2, 0.05, -0.2)
+put(clank(), F(DRIVER + 101 + 45), 0.16)
+put(clank(), F(DRIVER + 131 + 14), 0.22, 0.3)
+put(hiss(0.9), F(DRIVER + 167 + 12), 0.12, -0.2)
 put(whoosh(0.7, 200, 6000, 0.95), F(LOSS) - 0.6, 0.35)
 
 # loss re-hook: pad out, clock pulse, pull back to the cargo
 put(boom(1.6), F(LOSS + 4), 0.55)
-for k in range(13):
+for k in range(14):
     put(tick(900, 0.06), F(LOSS + 8) + k * 0.36, 0.08 + k * 0.005)
-put(whoosh(1.6, 100, 2500, 0.6), F(LOSS + 66), 0.35)
-put(thud(56, 34, 0.7, 0.2), F(LOSS + 112), 0.5)  # MAAL AUR KAMAAI
-put(riser(1.4), F(LOSS + 120), 0.3)
+put(whoosh(1.6, 100, 2500, 0.6), F(LOSS + 70), 0.35)
+put(thud(56, 34, 0.7, 0.2), F(LOSS + 124), 0.5)  # MAAL AUR KAMAAI
+put(riser(1.4), F(LOSS + 130), 0.3)
 
 # product answer
 put(whoosh(1.0, 150, 4000, 0.7), F(PROD) - 0.1, 0.35)
 mt2 = t_(1.6)
 put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.6) ** 1.5 * adsr(len(mt2), 0.01, 0.3), F(PROD + 6), 0.14)
-put(thud(56, 34, 0.7, 0.1), F(PROD + 38), 0.42)
+put(thud(56, 34, 0.7, 0.1), F(PROD + 33), 0.42)
 
 # system steps
-put(tick(1800, 0.05), F(SYS + 3), 0.1)
+put(tick(1800, 0.05), F(SYS + 4), 0.1)
 for k in range(3):
     put(tick(2400, 0.035), F(SYS + 7 + k * 5), 0.07, 0.2)
-put(beep(880), F(SYS + 18), 0.14)
-put(beep(1320), F(SYS + 18) + 0.13, 0.14)
+put(beep(880), F(SYS + 14), 0.14)
+put(beep(1320), F(SYS + 14) + 0.13, 0.14)
 for k in range(6):
-    put(beep(740 if k % 2 == 0 else 980, 0.16), F(SYS + 36) + k * 0.2, 0.07, 0.25)
-put(hiss(2.4), F(SYS + 63), 0.18)
-put(thud(50, 32, 0.8, 0.0), F(SYS + 63), 0.36)
+    put(beep(740 if k % 2 == 0 else 980, 0.16), F(SYS + 32) + k * 0.2, 0.07, 0.25)
+put(hiss(2.2), F(SYS + 70), 0.18)
+put(thud(50, 32, 0.8, 0.0), F(SYS + 70), 0.36)
 
 # hero + logo + CTA
 put(whoosh(2.0, 100, 3000, 0.3), F(HERO) - 0.2, 0.3)
 put(thud(56, 34, 0.7, 0.1), F(HERO + 56), 0.36)  # BHAROSE
 mt = t_(1.6)
 metal = sum(np.sin(2 * np.pi * f * mt) * g for f, g in [(147, 1), (220.5, 0.5), (293, 0.35), (441, 0.15)])
-put(norm(metal) * (mt / 1.6) ** 2 * adsr(len(mt), 0.01, 0.15), F(HERO + 96), 0.12)
-put(boom(3.0), F(HERO + 112), 0.85)
-put(thud(52, 30, 1.2, 0.2), F(HERO + 112), 0.45)
+put(norm(metal) * (mt / 1.6) ** 2 * adsr(len(mt), 0.01, 0.15), F(HERO + 76), 0.12)
+put(boom(3.0), F(HERO + 92), 0.85)
+put(thud(52, 30, 1.2, 0.2), F(HERO + 92), 0.45)
 et = t_(5.0)
 tone = (np.sin(2 * np.pi * 73.4 * et) + 0.5 * np.sin(2 * np.pi * 110 * et) + 0.25 * np.sin(2 * np.pi * 146.8 * et)) * adsr(len(et), 0.4, 2.8)
-put(norm(tone), F(HERO + 112), 0.28)
-put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(HERO + 124), 0.05, 0.3)
-put(beep(1568, 0.08), F(HERO + 222), 0.08, 0.2)  # CTA chime
-put(beep(2093, 0.12), F(HERO + 222) + 0.09, 0.08, 0.2)
+put(norm(tone), F(HERO + 92), 0.28)
+put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), F(HERO + 104), 0.05, 0.3)
+put(beep(1568, 0.08), F(HERO + 164), 0.08, 0.2)  # CTA chime
+put(beep(2093, 0.12), F(HERO + 164) + 0.09, 0.08, 0.2)
 
 # ---------------- out ----------------
 mix = np.stack([L, R], axis=1)

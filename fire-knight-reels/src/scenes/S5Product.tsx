@@ -4,7 +4,7 @@ import { C, E, SAFE, ip, prog } from "../fk/theme";
 import { Display, Label, Stack, TypeOn } from "../fk/ui";
 
 /** Product | 18.60-21.07 s - the answer. VO: "Yahin kaam aata hai Ranger." 18.86-20.69 (local 8-63) */
-export const S5Product: React.FC = () => {
+export const S5Product: React.FC<{ lineAt?: number; hitAt?: number }> = ({ lineAt = 8, hitAt = 38 }) => {
   const f = useCurrentFrame();
   const pr = prog(f, 0, 20, E.out);
   const sweep = ip(f, [34, 66], [-40, 140], E.inOut);
@@ -54,8 +54,8 @@ export const S5Product: React.FC = () => {
       </div>
 
       <Stack top={380}>
-        <TypeOn words={["Yahin", "kaam", "aata", "hai"]} at={8} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "RANGER.", c: C.gold }]} at={38} />
+        <TypeOn words={["Yahin", "kaam", "aata", "hai"]} at={lineAt} perLetter={0.8} color={C.fa} />
+        <Display words={[{ w: "RANGER.", c: C.gold }]} at={hitAt} />
       </Stack>
     </AbsoluteFill>
   );

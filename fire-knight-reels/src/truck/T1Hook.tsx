@@ -24,17 +24,17 @@ const ring = (cx: number, cy: number, r: number, t: number, seed: number) => {
 
 export const T1Hook: React.FC = () => {
   const f = useCurrentFrame();
-  const pull = prog(f, 20, 104, E.cam);
+  const pull = prog(f, 24, 150, E.cam);
   const cam = {
-    z: ip(pull, [0, 1], [TIGHT.z + prog(f, 0, 20) * 0.03, 1.1]),
+    z: ip(pull, [0, 1], [TIGHT.z + prog(f, 0, 24) * 0.03, 1.1]),
     cx: ip(pull, [0, 1], [TIGHT.cx, 560]),
     cy: ip(pull, [0, 1], [TIGHT.cy, 1010]),
     ax: 540,
     ay: ip(pull, [0, 1], [TIGHT.ay, 1010]),
   };
   const lamps = f < 14 ? 0 : f < 16 ? 0.9 : f < 19 ? 0.15 : 1;
-  const lift = ip(f, [0, 16, 80], [0.3, 0.32, 1], E.out);
-  const flare = 1 + 0.35 * prog(f, 70, 80, E.out) * (1 - prog(f, 80, 100)); // "yeh" ...
+  const lift = ip(f, [0, 16, 110], [0.3, 0.32, 1], E.out);
+  const flare = 1 + 0.35 * prog(f, 125, 135, E.out) * (1 - prog(f, 135, 155)); // flares on "yeh" (4.25 s)
   const pulse = (0.72 + 0.28 * Math.pow(Math.abs(Math.sin(f * 0.17)), 3)) * flare;
   const gx = 540 + (TBAY_W.x - cam.cx) * cam.z;
   const gy = cam.ay + (TBAY_W.y - cam.cy) * cam.z;
@@ -50,7 +50,7 @@ export const T1Hook: React.FC = () => {
         headlights={lamps}
         rim={ip(f, [0, 60], [0.6, 0.9], E.out)}
         heat={0.55}
-        towers={ip(f, [30, 70], [0, 1])}
+        towers={ip(f, [40, 100], [0, 1])}
         dust={ip(f, [16, 60], [0, 1])}
       />
       <AbsoluteFill
@@ -58,7 +58,7 @@ export const T1Hook: React.FC = () => {
           background: `radial-gradient(ellipse ${ip(lift, [0.3, 1], [520, 1400])}px ${ip(lift, [0.3, 1], [380, 950])}px at ${gx}px ${gy}px, rgba(0,0,0,${ip(lift, [0.3, 1], [0.45, 0])}) 0%, rgba(0,0,0,${ip(lift, [0.3, 1], [0.86, 0.3])}) 100%)`,
         }}
       />
-      <svg width={1080} height={1920} style={{ position: "absolute", inset: 0, opacity: ip(f, [0, 60, 110], [1, 1, 0.55]), mixBlendMode: "screen" }}>
+      <svg width={1080} height={1920} style={{ position: "absolute", inset: 0, opacity: ip(f, [0, 100, 160], [1, 1, 0.55]), mixBlendMode: "screen" }}>
         <defs>
           <radialGradient id="tmysteryG">
             <stop offset="0" stopColor={REAL.fireCore} stopOpacity="1" />
@@ -75,17 +75,17 @@ export const T1Hook: React.FC = () => {
             fill="none"
             stroke={i === 2 ? REAL.fireYellow : i === 1 ? REAL.fireOrange : REAL.fireRed}
             strokeWidth={1.8}
-            opacity={(0.3 + i * 0.15) * ip(f, [0, 60, 110], [1, 1, 0.4])}
+            opacity={(0.3 + i * 0.15) * ip(f, [0, 100, 160], [1, 1, 0.4])}
           />
         ))}
       </svg>
 
       {/* poster: first half on screen at frame 0, the twist types on */}
       <Stack top={380}>
-        <TypeOn words={["Truck", "owners,", "aapka", "sabse", "bada"]} at={-40} out={101} color={C.fa} />
-        <Display words={[{ w: "NUKSAAN", c: C.gold }]} at={-40} out={101} />
-        <TypeOn words={["accident", "nahi..."]} at={44} out={101} perLetter={0.8} color={C.fa} />
-        <TypeOn words={["yeh", "ho", "sakta", "hai."]} at={68} out={101} perLetter={0.8} color={C.white} />
+        <TypeOn words={["Truck", "owners,", "aapka", "sabse", "bada"]} at={-40} out={150} color={C.fa} />
+        <Display words={[{ w: "NUKSAAN", c: C.gold }]} at={-40} out={150} />
+        <TypeOn words={["accident", "nahi..."]} at={78} out={150} perLetter={0.8} color={C.fa} />
+        <TypeOn words={["yeh", "ho", "sakta", "hai."]} at={126} out={150} perLetter={0.6} color={C.white} />
       </Stack>
     </AbsoluteFill>
   );
