@@ -25,6 +25,8 @@ type Props = {
   beams?: boolean;
   /** 'heat' draws only the heat signature (so a filtered body can't desaturate it). */
   layer?: "all" | "body" | "heat";
+  /** Unused on the dumper (truck-only in-cab alarm). */
+  cabAlarm?: number;
 };
 
 const Wheel: React.FC<{ cx: number; cy: number; angle: number; id: string }> = ({

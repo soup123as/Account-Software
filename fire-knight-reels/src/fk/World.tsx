@@ -157,6 +157,8 @@ export type WorldProps = {
   machine?: "dumper" | "truck";
   /** Background world. */
   setting?: "mine" | "highway";
+  /** Truck only: the in-cab alarm / emergency light (0..1). */
+  cabAlarm?: number;
 };
 
 export const World: React.FC<WorldProps> = ({
@@ -178,6 +180,7 @@ export const World: React.FC<WorldProps> = ({
   truckFilter,
   machine = "dumper",
   setting = "mine",
+  cabAlarm = 0,
 }) => {
   const Machine = machine === "truck" ? Truck : Dumper;
   const highway = setting === "highway";
@@ -362,6 +365,7 @@ export const World: React.FC<WorldProps> = ({
             bob={bob}
             overlay={truckFilter ? undefined : overlay}
             layer={truckFilter ? "body" : "all"}
+            cabAlarm={cabAlarm}
           />
         </div>
         {truckFilter && (

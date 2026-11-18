@@ -1,6 +1,7 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { TBAY_W as BAY_W, World } from "../fk/World";
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
+import { TBAY_W as BAY_W, TRUCK, World } from "../fk/World";
+import { TRUCK_CABIN } from "../fk/Truck";
 import { C, E, FONT, REAL, SAFE, ip, prog, rand } from "../fk/theme";
 import { Label, Reticle, TypeOn } from "../fk/ui";
 
@@ -22,11 +23,11 @@ const STEPS = [
 
 /* ---------- engine bay overlay (truck coordinates) ---------- */
 const LOOP: [number, number][] = [
-  [772, 388],
-  [872, 388],
-  [872, 500],
-  [772, 500],
-  [772, 388],
+  [794, 344],
+  [850, 344],
+  [850, 480],
+  [794, 480],
+  [794, 344],
 ];
 const loopLen = LOOP.slice(1).reduce((s, p, i) => s + Math.hypot(p[0] - LOOP[i][0], p[1] - LOOP[i][1]), 0);
 const pointOnLoop = (u: number): [number, number] => {
@@ -40,16 +41,13 @@ const pointOnLoop = (u: number): [number, number] => {
   }
   return LOOP[0];
 };
-const NOZZLES = [800, 846];
-const NZ = 380; // nozzle y (truck coords)
-const BEACON = { x: 950, y: 158 };
+const NOZZLES = [810, 836];
+const NZ = 336; // nozzle y (truck coords), top of the engine compartment
 
 const BayOverlay: React.FC<{ f: number }> = ({ f }) => {
   const draw = prog(f, T[0] - 6, T[0] + 10, E.inOut);
   const pulseU = prog(f, T[0] + 4, T[0] + 24, E.inOut);
   const [px, py] = pointOnLoop(0.12 + pulseU * 0.3);
-  const alert = f >= T[1];
-  const beat = alert ? 0.5 + 0.5 * Math.sin((f - T[1]) * 0.6) : 0;
   const spray = prog(f, T[2], T[2] + 10);
   const d = LOOP.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join(" ");
   return (
@@ -86,11 +84,6 @@ const BayOverlay: React.FC<{ f: number }> = ({ f }) => {
             );
           }),
         )}
-      <g>
-        <rect x={BEACON.x - 6} y={BEACON.y + 4} width={12} height={8} fill="#3A4047" />
-        <path d={`M${BEACON.x - 7} ${BEACON.y + 4} A7 7 0 0 1 ${BEACON.x + 7} ${BEACON.y + 4} Z`} fill={alert ? REAL.beacon : "#4A5058"} />
-        {alert && <circle cx={BEACON.x} cy={BEACON.y} r={16 + beat * 6} fill={REAL.beacon} opacity={0.3 + beat * 0.35} filter="url(#soft)" />}
-      </g>
     </g>
   );
 };
@@ -250,11 +243,16 @@ export const T6System: React.FC = () => {
   };
   const heat = ip(f, [0, T[2], T[2] + 34], [0.85, 0.9, 0.3], E.inOut);
 
-  // screen positions of the bay and the beacon
+  // screen positions of the engine bay and the cab (the alarm sounds inside the cab)
   const bayX = 540 + (BAY_W.x - cam.cx) * cam.z;
   const bayY = cam.ay + (BAY_W.y - cam.cy) * cam.z;
-  const bx = 540 + (40 + BEACON.x - cam.cx) * cam.z;
-  const by = cam.ay + (790 + BEACON.y - cam.cy) * cam.z;
+  const bx = 540 + (TRUCK.x + TRUCK_CABIN.x - cam.cx) * cam.z;
+  const by = cam.ay + (TRUCK.y + TRUCK_CABIN.y - cam.cy) * cam.z;
+  const alarm = prog(f, T[1], T[1] + 4) * (1 - prog(f, T[2] + 40, T[2] + 60));
+  // callout into the cab: the real Ranger control panel, TRIGGERED, button lit
+  const co = prog(f, T[1] + 2, T[1] + 14, E.out) * (1 - prog(f, T[2] + 50, T[2] + 64, E.in));
+  const CO = { x: 330, y: 470, r: 150 };
+  const btn = 0.5 + 0.5 * Math.sin(f * 0.5);
   const lock = prog(f, T[0] + 14, T[0] + 26, E.out);
   const rw = ip(lock, [0, 1], [560, 300]);
   const rh = ip(lock, [0, 1], [380, 200]);
@@ -274,6 +272,7 @@ export const T6System: React.FC = () => {
         towers={0.4}
         truckFilter="brightness(0.85) contrast(1.05)"
         overlay={<BayOverlay f={f} />}
+        cabAlarm={alarm}
       />
       {f >= T[1] &&
         [0, 1, 2].map((i) => {
@@ -288,14 +287,55 @@ export const T6System: React.FC = () => {
                 width: 40 + q * 160,
                 height: 40 + q * 160,
                 borderRadius: "50%",
-                border: `2px solid ${REAL.beacon}`,
-                opacity: (1 - q) * 0.6 * (1 - prog(f, T[2] + 10, T[2] + 26)),
+                border: `2px solid ${i % 2 ? REAL.beacon : REAL.lampRed}`,
+                opacity: (1 - q) * 0.55 * alarm,
               }}
             />
           );
         })}
       {f >= T[0] + 14 && (
         <Reticle x={bayX - rw / 2} y={bayY - rh / 2} w={rw} h={rh} p={lock} color={f >= T[2] ? "rgba(250,250,250,0.85)" : C.gold} />
+      )}
+
+      {/* callout: inside the cab, the control panel shows TRIGGERED and sounds the alarm */}
+      {co > 0 && (
+        <>
+          <svg width={1080} height={1920} style={{ position: "absolute", inset: 0, opacity: co }}>
+            <line
+              x1={CO.x + CO.r * 0.9}
+              y1={CO.y + CO.r * 0.35}
+              x2={bx - 24}
+              y2={by}
+              stroke={C.gold}
+              strokeWidth={2}
+              strokeDasharray="6 6"
+            />
+            <circle cx={bx} cy={by} r={22} fill="none" stroke={C.gold} strokeWidth={2} />
+          </svg>
+          <div
+            style={{
+              position: "absolute",
+              left: CO.x - CO.r,
+              top: CO.y - CO.r,
+              width: CO.r * 2,
+              height: CO.r * 2,
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: `3px solid ${C.gold}`,
+              background: "#0B0C0E",
+              opacity: co,
+              scale: `${0.85 + 0.15 * co}`,
+              boxShadow: `0 0 ${30 * btn}px rgba(255,59,46,${0.35 * btn})`,
+            }}
+          >
+            <div style={{ position: "absolute", left: -30, top: 62, width: 360 }}>
+              <Img src={staticFile("product/ranger-panel.png")} style={{ width: "100%", display: "block" }} />
+              {/* red button + TRIGGERED LED pulsing */}
+              <div style={{ position: "absolute", left: "37%", top: "22%", width: "30%", height: "52%", borderRadius: 14, background: `rgba(255,59,46,${0.3 * btn})`, mixBlendMode: "screen" }} />
+              <div style={{ position: "absolute", left: "10.5%", top: "54%", width: 14, height: 14, borderRadius: 7, background: "#FF3B2E", opacity: 0.4 + 0.6 * btn, boxShadow: `0 0 ${12 * btn}px #FF3B2E` }} />
+            </div>
+          </div>
+        </>
       )}
 
       {/* lower field for the step chain */}
