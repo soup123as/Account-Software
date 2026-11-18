@@ -24,7 +24,7 @@ const ring = (cx: number, cy: number, r: number, t: number, seed: number) => {
 
 export const T1Hook: React.FC = () => {
   const f = useCurrentFrame();
-  const pull = prog(f, 24, 150, E.cam);
+  const pull = prog(f, 24, 148, E.cam);
   const cam = {
     z: ip(pull, [0, 1], [TIGHT.z + prog(f, 0, 24) * 0.03, 1.1]),
     cx: ip(pull, [0, 1], [TIGHT.cx, 560]),
@@ -34,7 +34,7 @@ export const T1Hook: React.FC = () => {
   };
   const lamps = f < 14 ? 0 : f < 16 ? 0.9 : f < 19 ? 0.15 : 1;
   const lift = ip(f, [0, 16, 110], [0.3, 0.32, 1], E.out);
-  const flare = 1 + 0.35 * prog(f, 125, 135, E.out) * (1 - prog(f, 135, 155)); // flares on "yeh" (4.25 s)
+  const flare = 1 + 0.35 * prog(f, 128, 138, E.out) * (1 - prog(f, 138, 156)); // flares on "yeh" (4.30 s)
   const pulse = (0.72 + 0.28 * Math.pow(Math.abs(Math.sin(f * 0.17)), 3)) * flare;
   const gx = 540 + (TBAY_W.x - cam.cx) * cam.z;
   const gy = cam.ay + (TBAY_W.y - cam.cy) * cam.z;
@@ -82,10 +82,10 @@ export const T1Hook: React.FC = () => {
 
       {/* poster: first half on screen at frame 0, the twist types on */}
       <Stack top={380}>
-        <TypeOn words={["Truck", "owners,", "aapka", "sabse", "bada"]} at={-40} out={150} color={C.fa} />
-        <Display words={[{ w: "NUKSAAN", c: C.gold }]} at={-40} out={150} />
-        <TypeOn words={["accident", "nahi..."]} at={78} out={150} perLetter={0.8} color={C.fa} />
-        <TypeOn words={["yeh", "ho", "sakta", "hai."]} at={126} out={150} perLetter={0.6} color={C.white} />
+        <TypeOn words={["Truck", "owners,", "aapka", "sabse", "bada"]} at={-40} out={148} color={C.fa} />
+        <Display words={[{ w: "NUKSAAN", c: C.gold }]} at={-40} out={148} />
+        <TypeOn words={["accident", "nahi..."]} at={78} out={148} perLetter={0.8} color={C.fa} />
+        <TypeOn words={["yeh", "ho", "sakta", "hai."]} at={128} out={148} perLetter={0.6} color={C.white} />
       </Stack>
     </AbsoluteFill>
   );

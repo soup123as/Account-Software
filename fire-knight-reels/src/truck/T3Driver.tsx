@@ -11,7 +11,7 @@ import { ShotAttempt, ShotExt, ShotGauges, ShotStop } from "../scenes/S3Operator
  *        "khatra dekhna" 10.50 | "truck rokna" 11.70 | "extinguisher lana" 12.90 | "aur aag se ladna" 14.20-15.30
  */
 const GRID = { x: SAFE.x0, y: 690, tw: 400, th: 300, gap: 20 };
-const TILE_AT = [69, 101, 131, 167]; // 12.11 / 13.18 / 14.18 / 15.39 s
+const TILE_AT = [69, 101, 131, 168]; // 11.96 / 13.02 / 14.03 / 15.26 s
 const TILE_LIFE = 60;
 const TASKS = ["Khatra dekhna", "Truck rokna", "Extinguisher lana", "Aag se ladna"];
 /** Truck cab in world coordinates (truck coords ~ (890, 300)). */
@@ -20,7 +20,7 @@ const CAB = { x: TRUCK.x + 890, y: TRUCK.y + 300 };
 export const T3Driver: React.FC = () => {
   const f = useCurrentFrame();
   const shake = f > 175 ? noise1(f * 2, 9) * 1.5 : 0;
-  const dive = prog(f, 195, 208, E.in);
+  const dive = prog(f, 194, 207, E.in);
   const cabOut = prog(f, 54, 70, E.inOut);
   const cabCam = { z: 1.8 + prog(f, 0, 70) * 0.08, cx: CAB.x, cy: CAB.y, ax: 540, ay: 1180 };
 
@@ -90,7 +90,7 @@ export const T3Driver: React.FC = () => {
 
       {/* the driver's cab at night - one light on, nobody else around */}
       <AbsoluteFill style={{ opacity: 1 - cabOut * 0.85, filter: cabOut > 0 ? `blur(${cabOut * 10}px)` : undefined }}>
-        <World t={f + 295} cam={cabCam} machine="truck" setting="highway" headlights={0.8} rim={0.8} heat={0.6} towers={0.7} />
+        <World t={f + 290} cam={cabCam} machine="truck" setting="highway" headlights={0.8} rim={0.8} heat={0.6} towers={0.7} />
         <div
           style={{
             position: "absolute",
@@ -107,8 +107,8 @@ export const T3Driver: React.FC = () => {
       </AbsoluteFill>
 
       <Stack top={380}>
-        <TypeOn words={["Aur", "driver", "ke", "paas"]} at={6} out={196} color={C.fa} />
-        <Display words={[{ w: "CHAAR", c: C.gold }, "KAAM."]} at={30} out={196} />
+        <TypeOn words={["Aur", "driver", "ke", "paas"]} at={6} out={194} color={C.fa} />
+        <Display words={[{ w: "CHAAR", c: C.gold }, "KAAM."]} at={30} out={194} />
       </Stack>
 
       <AbsoluteFill

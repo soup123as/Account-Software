@@ -43,7 +43,7 @@ export const TruckOwners: React.FC<TruckProps> = ({ showSafe, audio }) => (
         <MistWash />
       </TransitionSeries.Overlay>
       <TransitionSeries.Sequence name="5 Product" durationInFrames={T_SCENES.product}>
-        <S5Product lineAt={3} hitAt={33} />
+        <S5Product lineAt={7} hitAt={36} />
       </TransitionSeries.Sequence>
       <TransitionSeries.Overlay durationInFrames={16}>
         <Dip />
