@@ -292,10 +292,6 @@ export const Truck: React.FC<Props> = ({
         {/* rear lights */}
         <rect x={26} y={372} width={8} height={22} rx={2} fill={REAL.tailRed} opacity={0.95} />
 
-        {/* rear mudguards + mud flaps */}
-        <path d="M272 446 A 60 60 0 0 1 388 446" stroke="#0E0F11" strokeWidth={9} fill="none" />
-        <path d="M387 446 A 60 60 0 0 1 503 446" stroke="#0E0F11" strokeWidth={9} fill="none" />
-        <rect x={262} y={452} width={9} height={74} rx={2} fill="#0C0D0F" />
 
         {/* ---------- cab-over cab ---------- */}
         {/* cab body: high roof, raked windshield, stepped front */}
@@ -348,9 +344,6 @@ export const Truck: React.FC<Props> = ({
         <rect x={798} y={444} width={46} height={5} rx={2} fill="url(#tchromeG)" />
         <rect x={800} y={468} width={42} height={5} rx={2} fill="url(#tchromeG)" />
         <line x1={798} y1={440} x2={798} y2={474} stroke="#2C3136" strokeWidth={3} />
-        {/* front mudguard + mud flap */}
-        <path d="M842 446 A 60 60 0 0 1 958 446" stroke="#0E0F11" strokeWidth={9} fill="none" />
-        <rect x={845} y={452} width={8} height={66} rx={2} fill="#0C0D0F" />
       </g>
 
       <Wheel cx={330} angle={wheelAngle} id="r1" />
