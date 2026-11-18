@@ -6,7 +6,7 @@ import { Display, Label, Stack, TypeOn } from "../fk/ui";
 
 /**
  * Truck reel - Hero + logo + CTA | 28.43-40.03 s.
- * VO P7: "Kyunki aapka business ek driver ke bharose nahi chalna chahiye." 28.60-31.90 (local 5-104)
+ * Line (text only, VO removed): "Kyunki aapka business sirf regular safety ke bharose nahi chalna chahiye." (local 7-86)
  * VO P8: "The Fire Knight." 32.40 (local 119) | "Because every second matters." 33.60 (local 155) |
  *        "Free consultation ke liye WhatsApp karein." 35.90-38.20 (local 224-293)
  */
@@ -65,7 +65,7 @@ export const T7Hero: React.FC = () => {
       {/* the line */}
       <Stack top={380}>
         <TypeOn words={["Kyunki", "aapka", "business"]} at={7} out={86} perLetter={0.8} color={C.fa} />
-        <TypeOn words={["ek", "driver", "ke"]} at={36} out={86} perLetter={0.8} color={C.fa} />
+        <TypeOn words={["sirf", "regular", "safety", "ke"]} at={34} out={86} perLetter={0.7} color={C.fa} />
         <Display words={[{ w: "BHAROSE", c: C.gold }]} at={56} out={86} />
         <TypeOn words={["nahi", "chalna", "chahiye."]} at={68} out={86} perLetter={0.6} color={C.fa} />
       </Stack>
