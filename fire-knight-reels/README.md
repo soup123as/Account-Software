@@ -8,6 +8,7 @@ Premium 9:16 industrial reels for The Fire Knight, built as code so each new ree
 |---|---|---|
 | `OperatorAkela` | 20 s, 1080×1920, 30 fps | Mining dumper, night shift: "Fire plan? Sirf operator?" → thermal heat in the engine bay → one operator, four tasks → detection → alert → suppression response (conceptual) → the Ranger → logo end frame |
 | `OperatorAkela-Scenes/*` | per scene | Each scene on its own timeline for fast previews |
+| `TruckOwners` | 40 s, 1080×1920, 30 fps | Truck and fleet owners: "Truck owners, aapka sabse bada NUKSAAN accident nahi… yeh ho sakta hai." → night highway → driver's four tasks → loss re-hook → Ranger → steps → "ek driver ke BHAROSE nahi" → logo + WhatsApp CTA. Scenes in `src/truck/`, timing in `src/truck/timing.ts`, sound in `scripts/sound_truck.py` |
 
 ## Commands
 

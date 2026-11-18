@@ -22,7 +22,9 @@ export const TypeOn: React.FC<{
   const f = useCurrentFrame();
   const list = norm(words);
   const o = out !== undefined ? prog(f, out, out + 7, E.in) : 0;
-  if (f < at - 1 || o >= 1) return null;
+  if (f < at - 1) return null;
+  // after the exit, keep the line's space so the lines below never jump up
+  if (o >= 1) return <div style={{ fontSize: size, lineHeight: 1.16, visibility: "hidden", ...style }}>.</div>;
   let k = 0;
   return (
     <div
@@ -80,7 +82,8 @@ export const Display: React.FC<{
   const f = useCurrentFrame();
   const list = norm(words);
   const o = out !== undefined ? prog(f, out, out + 7, E.in) : 0;
-  if (f < at - 1 || o >= 1) return null;
+  if (f < at - 1) return null;
+  if (o >= 1) return <div style={{ fontFamily: FONT.display, fontSize: size, lineHeight: 1.02, visibility: "hidden", ...style }}>.</div>;
   return (
     <div
       style={{

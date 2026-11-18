@@ -59,7 +59,7 @@ const Gauge: React.FC<{ cx: number; cy: number; r: number; v: number; hot?: bool
   );
 };
 
-const ShotGauges: React.FC<{ p: number; f: number }> = ({ p, f }) => {
+export const ShotGauges: React.FC<{ p: number; f: number }> = ({ p, f }) => {
   const v = ip(p, [0, 1], [0.42, 0.93], E.inOut) + noise1(f * 0.8, 4) * 0.01;
   const blink = v > 0.74 && f % 10 < 6;
   return (
@@ -89,7 +89,7 @@ const ShotGauges: React.FC<{ p: number; f: number }> = ({ p, f }) => {
   );
 };
 
-const ShotStop: React.FC<{ p: number; f: number }> = ({ p, f }) => {
+export const ShotStop: React.FC<{ p: number; f: number }> = ({ p, f }) => {
   const v = ip(p, [0, 0.8], [0.55, 0], E.inOut);
   const parked = p > 0.72;
   return (
@@ -141,7 +141,7 @@ const Extinguisher: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s 
   </g>
 );
 
-const ShotExt: React.FC<{ p: number }> = ({ p }) => {
+export const ShotExt: React.FC<{ p: number }> = ({ p }) => {
   const strap = prog(p, 0.15, 0.35, E.out);
   const lift = prog(p, 0.35, 0.95, E.out);
   return (
@@ -174,7 +174,7 @@ const ShotExt: React.FC<{ p: number }> = ({ p }) => {
   );
 };
 
-const ShotAttempt: React.FC<{ p: number; f: number }> = ({ p, f }) => {
+export const ShotAttempt: React.FC<{ p: number; f: number }> = ({ p, f }) => {
   const glow = 0.75 + 0.25 * Math.sin(f * 0.6) + noise1(f * 0.9, 8) * 0.1;
   const spray = prog(p, 0.15, 0.35);
   return (

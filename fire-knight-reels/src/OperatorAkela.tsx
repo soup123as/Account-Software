@@ -26,7 +26,7 @@ export const VO_AT = STARTS.hero + 30;
 export const akelaDefaults: AkelaProps = { showSafe: false, logoSrc: null, audio: true, voSrc: null };
 
 /** The heat signature flares and whips us into the operator sequence. */
-const HeatFlash: React.FC = () => {
+export const HeatFlash: React.FC = () => {
   const f = useCurrentFrame();
   const { durationInFrames: d } = useVideoConfig();
   const a = ip(f, [0, d * 0.45, d], [0, 1, 0]);
@@ -41,13 +41,13 @@ const HeatFlash: React.FC = () => {
 
 /** A cool bloom: the panel dives into the engine bay schematic. */
 /** Soft dip to black between the product and the hero. */
-const Dip: React.FC = () => {
+export const Dip: React.FC = () => {
   const f = useCurrentFrame();
   const { durationInFrames: d } = useVideoConfig();
   return <AbsoluteFill style={{ background: `rgba(0,0,0,${ip(f, [0, d * 0.5, d], [0, 0.95, 0])})` }} />;
 };
 
-const Bloom: React.FC = () => {
+export const Bloom: React.FC = () => {
   const f = useCurrentFrame();
   const { durationInFrames: d } = useVideoConfig();
   const a = ip(f, [0, d * 0.5, d], [0, 0.85, 0]);
@@ -61,7 +61,7 @@ const Bloom: React.FC = () => {
 };
 
 /** Mist washes the frame as the camera pulls back to the hero. */
-const MistWash: React.FC = () => {
+export const MistWash: React.FC = () => {
   const f = useCurrentFrame();
   const { durationInFrames: d } = useVideoConfig();
   const a = ip(f, [0, d * 0.5, d], [0, 0.7, 0]);

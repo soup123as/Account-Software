@@ -1,0 +1,62 @@
+import React from "react";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { TBAY_W, TRUCK, World } from "../fk/World";
+import { C, E, ip, noise1, prog } from "../fk/theme";
+import { Display, Stack, TypeOn } from "../fk/ui";
+
+/**
+ * Re-hook + loss | 15.63-21.03 s.
+ * VO P4: "Lekin agar woh waqt par na pahunche..." 15.80-17.80 (local 5-65)
+ *        "toh nuksaan sirf truck ka nahi, maal aur kamaai ka bhi." 18.10-20.70 (local 74-152)
+ * Close on the unattended heat, then pull back so the whole truck and its cargo are at stake.
+ */
+const CLOSE = { z: 2.0, cx: TBAY_W.x, cy: TBAY_W.y, ay: 1300 };
+const WIDE = { z: 1.05, cx: TRUCK.x + 500, cy: TRUCK.y + 330, ay: 1140 };
+
+export const T4Loss: React.FC = () => {
+  const f = useCurrentFrame();
+  const pull = prog(f, 66, 112, E.cam);
+  const cam = {
+    z: ip(pull, [0, 1], [CLOSE.z + prog(f, 0, 66) * 0.12, WIDE.z]) + prog(f, 112, 162) * 0.03,
+    cx: ip(pull, [0, 1], [CLOSE.cx, WIDE.cx]),
+    cy: ip(pull, [0, 1], [CLOSE.cy, WIDE.cy]),
+    ax: 540,
+    ay: ip(pull, [0, 1], [CLOSE.ay, WIDE.ay]),
+    sx: noise1(f * 0.6, 4) * 1.5,
+    sy: noise1(f * 0.6, 7),
+  };
+  const heat = ip(f, [0, 162], [0.85, 1.2], E.in);
+  const flare = 0.85 + 0.15 * Math.sin(f * 0.5) + noise1(f * 0.9, 3) * 0.08;
+  const gx = 540 + (TBAY_W.x - cam.cx) * cam.z;
+  const gy = cam.ay + (TBAY_W.y - cam.cy) * cam.z;
+  const r = 300 * cam.z;
+
+  return (
+    <AbsoluteFill>
+      <World t={f + 469} cam={cam} machine="truck" setting="highway" headlights={0.7} rim={0.7} heat={heat} thermal={0.5} towers={0.6} />
+      <AbsoluteFill
+        style={{
+          background: `radial-gradient(ellipse ${r * flare}px ${r * 0.7 * flare}px at ${gx}px ${gy}px, rgba(255,106,26,${ip(f, [0, 162], [0.2, 0.36])}) 0%, rgba(226,54,26,0) 100%)`,
+          mixBlendMode: "screen",
+        }}
+      />
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.93) 0px, rgba(0,0,0,0.65) 620px, rgba(0,0,0,0) 860px)" }} />
+      <AbsoluteFill
+        style={{
+          boxShadow: `inset 0 0 160px 40px rgba(226,54,26,${0.1 + 0.1 * Math.max(0, Math.sin(f * 0.21))})`,
+          opacity: prog(f, 20, 50),
+        }}
+      />
+
+      <Stack top={380}>
+        <TypeOn words={["Lekin", "agar", "woh", "waqt", "par", "na"]} at={5} out={68} perLetter={0.8} color={C.fa} />
+        <Display words={[{ w: "PAHUNCHE...", c: C.gold }]} at={38} out={68} />
+      </Stack>
+      <Stack top={380}>
+        <TypeOn words={["Toh", "nuksaan", "sirf", "truck", "ka", "nahi,"]} at={74} out={154} perLetter={0.8} color={C.fa} />
+        <Display words={["MAAL", "AUR", { w: "KAMAAI", c: C.gold }]} at={112} out={154} size={112} />
+        <TypeOn words={["ka", "bhi."]} at={136} out={154} color={C.fa} />
+      </Stack>
+    </AbsoluteFill>
+  );
+};

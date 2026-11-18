@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { Dumper, BAY } from "./Dumper";
+import { Truck, TRUCK_BAY } from "./Truck";
 import { C, REAL, rand } from "./theme";
 
 /** Truck placement in world space (1080 x 1920 frame at camera zoom 1). */
@@ -8,6 +9,23 @@ export const TRUCK = { x: 40, y: 790, w: 1000, h: 560 };
 export const GROUND_Y = TRUCK.y + 540; // 1330
 /** Engine bay in world coordinates. */
 export const BAY_W = { x: TRUCK.x + BAY.x, y: TRUCK.y + BAY.y };
+/** Engine bay of the highway truck in world coordinates. */
+export const TBAY_W = { x: TRUCK.x + TRUCK_BAY.x, y: TRUCK.y + TRUCK_BAY.y };
+
+/** Highway streetlight on the far side of the road. */
+const StreetLight: React.FC<{ x: number; y: number; on: number; t: number; seed: number }> = ({ x, y, on, t, seed }) => {
+  const fl = 0.9 + 0.1 * Math.sin(t * 0.31 + seed);
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x={-3} y={-330} width={6} height={330} fill="#1C1F23" />
+      <path d="M0 -330 Q 4 -352 46 -350" stroke="#1C1F23" strokeWidth={5} fill="none" />
+      <rect x={36} y={-354} width={26} height={8} rx={3} fill="#2A2E33" />
+      <rect x={40} y={-347} width={18} height={4} rx={2} fill={REAL.sodium} opacity={on * fl} />
+      <circle cx={49} cy={-344} r={70} fill="url(#towerGlow)" opacity={on * 0.45 * fl} />
+      <polygon points="40,-344 58,-344 140,0 -40,0" fill="url(#towerCone)" opacity={on * 0.12 * fl} />
+    </g>
+  );
+};
 
 export type Camera = {
   z: number; // zoom
@@ -135,6 +153,10 @@ export type WorldProps = {
   /** 0..1 how much the background is crushed to black (thermal / schematic looks). */
   crush?: number;
   truckFilter?: string;
+  /** Which machine is the hero. */
+  machine?: "dumper" | "truck";
+  /** Background world. */
+  setting?: "mine" | "highway";
 };
 
 export const World: React.FC<WorldProps> = ({
@@ -154,7 +176,11 @@ export const World: React.FC<WorldProps> = ({
   overlay,
   crush = 0,
   truckFilter,
+  machine = "dumper",
+  setting = "mine",
 }) => {
+  const Machine = machine === "truck" ? Truck : Dumper;
+  const highway = setting === "highway";
   // dust motes drifting in the headlight beams (seeded, deterministic)
   const motes = Array.from({ length: 34 }, (_, i) => {
     const bx = 1030 + rand(i * 3.1) * 700;
@@ -190,7 +216,33 @@ export const World: React.FC<WorldProps> = ({
         />
       </Layer>
 
+      {/* far hills + distant village lights (highway) */}
+      {highway && (
+        <Layer cam={cam} d={0.12} style={{ opacity: 1 - crush }}>
+          <svg width={1080} height={1920} style={{ position: "absolute", overflow: "visible" }}>
+            <g transform={`translate(${-((scroll * 0.12) % 1600)} 0)`}>
+              {[-1, 0, 1, 2].map((k) => (
+                <g key={k}>
+                  <path
+                    d={`M${k * 1600} 2400 L${k * 1600} 980 ${Array.from({ length: 9 }, (_, i) => {
+                      const x = k * 1600 + (i + 1) * 200;
+                      const y = 980 - 60 * Math.sin((i + 1) * 0.9) - 40 * Math.sin((i + 1) * 2.3);
+                      return `Q ${x - 100} ${y - 30} ${x} ${y}`;
+                    }).join(" ")} L${(k + 1) * 1600} 2400 Z`}
+                    fill="#0E1013"
+                  />
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <circle key={i} cx={k * 1600 + 140 + i * 260 + rand(i * 7) * 80} cy={1000 + rand(i * 3) * 60} r={2.2} fill={REAL.sodium} opacity={(0.35 + rand(i) * 0.4) * towers} />
+                  ))}
+                </g>
+              ))}
+            </g>
+          </svg>
+        </Layer>
+      )}
+
       {/* far pit wall */}
+      {!highway && (
       <Layer cam={cam} d={0.15} style={{ opacity: 1 - crush }}>
         <Benches seed={1} y={800} steps={6} stepH={46} fill="#131619" edge="#262B30" scroll={scroll * 0.15} />
         <svg width={1080} height={1920} style={{ position: "absolute", overflow: "visible" }}>
@@ -204,6 +256,7 @@ export const World: React.FC<WorldProps> = ({
           </g>
         </svg>
       </Layer>
+      )}
 
       {/* haze band */}
       <AbsoluteFill
@@ -214,7 +267,21 @@ export const World: React.FC<WorldProps> = ({
         }}
       />
 
+      {/* streetlights on the far side of the highway */}
+      {highway && (
+        <Layer cam={cam} d={0.7} style={{ opacity: 1 - crush }}>
+          <svg width={1080} height={1920} style={{ position: "absolute", overflow: "visible" }}>
+            <g transform={`translate(${-((scroll * 0.7) % 760)} 0)`}>
+              {[-1, 0, 1, 2, 3].map((k) => (
+                <StreetLight key={k} x={k * 760 + 200} y={GROUND_Y - 60} on={towers} t={t} seed={k} />
+              ))}
+            </g>
+          </svg>
+        </Layer>
+      )}
+
       {/* mid pit wall */}
+      {!highway && (
       <Layer cam={cam} d={0.4} style={{ opacity: 1 - crush }}>
         <Benches seed={2} y={1000} steps={5} stepH={56} fill="#0F1113" edge="#1E2226" scroll={scroll * 0.4} period={1200} />
         <svg width={1080} height={1920} style={{ position: "absolute", overflow: "visible" }}>
@@ -225,6 +292,7 @@ export const World: React.FC<WorldProps> = ({
           </g>
         </svg>
       </Layer>
+      )}
 
       {/* road + berm */}
       <Layer cam={cam} d={1}>
@@ -236,18 +304,30 @@ export const World: React.FC<WorldProps> = ({
               <stop offset="1" stopColor="#0B0B0C" />
             </linearGradient>
           </defs>
-          {/* safety berm on far side */}
-          <path
+          {/* safety berm on far side (mine haul road only) */}
+          {!highway && <path
             d={`M-2000 ${GROUND_Y - 14} ${Array.from({ length: 40 }, (_, i) => {
               const x = -2000 + i * 160 - (scroll % 160);
               return `Q ${x + 80} ${GROUND_Y - 34} ${x + 160} ${GROUND_Y - 14}`;
             }).join(" ")} L 4400 ${GROUND_Y} L -2000 ${GROUND_Y} Z`}
             fill="#141619"
             opacity={1 - crush}
-          />
+          />}
           <rect x={-2000} y={GROUND_Y - 4} width={6400} height={1200} fill="url(#roadG)" />
           <line x1={-2000} y1={GROUND_Y - 3} x2={4400} y2={GROUND_Y - 3} stroke="#2A2E33" strokeWidth={2} />
           <ellipse cx={1180} cy={GROUND_Y + 30} rx={300} ry={40} fill="#FFF1DE" opacity={0.06 * headlights} />
+          {highway && (
+            <g>
+              {/* far road edge, lane divider dashes behind the truck, near edge line */}
+              <rect x={-2000} y={GROUND_Y - 70} width={6400} height={70} fill="#16181B" />
+              <line x1={-2000} y1={GROUND_Y - 70} x2={4400} y2={GROUND_Y - 70} stroke="#3A3F46" strokeWidth={3} />
+              {Array.from({ length: 40 }, (_, i) => {
+                const x = ((i * 180 - scroll) % 7200 + 7200) % 7200 - 2000;
+                return <rect key={i} x={x} y={GROUND_Y - 38} width={90} height={5} fill="#D8D8D4" opacity={0.55} />;
+              })}
+              <line x1={-2000} y1={GROUND_Y + 120} x2={4400} y2={GROUND_Y + 120} stroke="#C9C9C4" strokeWidth={4} opacity={0.35} />
+            </g>
+          )}
           {/* tyre tracks and gravel */}
           {Array.from({ length: 70 }, (_, i) => {
             const x = ((i * 97 - scroll) % 2200 + 2200) % 2200 - 600;
@@ -270,7 +350,7 @@ export const World: React.FC<WorldProps> = ({
             filter: truckFilter,
           }}
         >
-          <Dumper
+          <Machine
             t={t}
             wheelAngle={wheelAngle}
             headlights={headlights}
@@ -286,7 +366,7 @@ export const World: React.FC<WorldProps> = ({
         </div>
         {truckFilter && (
           <div style={{ position: "absolute", left: TRUCK.x, top: TRUCK.y, width: TRUCK.w, height: TRUCK.h }}>
-            <Dumper t={t} heat={heat} thermal={thermal} bob={bob} layer="heat" overlay={overlay} />
+            <Machine t={t} heat={heat} thermal={thermal} bob={bob} layer="heat" overlay={overlay} />
           </div>
         )}
         {/* dust in the beams */}

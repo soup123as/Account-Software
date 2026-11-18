@@ -9,6 +9,9 @@ import { S4System } from "./scenes/S4System";
 import { S4Rehook } from "./scenes/S4Rehook";
 import { S5Product } from "./scenes/S5Product";
 import { S5Hero } from "./scenes/S5Hero";
+import { T1Hook } from "./truck/T1Hook";
+import { TruckOwners, truckDefaults } from "./truck/TruckOwners";
+import { T_TOTAL } from "./truck/timing";
 import { FPS, H, SCENES, TOTAL, W } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
@@ -33,6 +36,7 @@ const s4b = scene(S4System);
 const s5 = scene(S5Product);
 const S6Only: React.FC = () => <S5Hero />;
 const s6 = scene(S6Only);
+const t1 = scene(T1Hook);
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -53,6 +57,10 @@ export const RemotionRoot: React.FC = () => (
       <Composition id="S5-Product" component={s5} durationInFrames={SCENES.product} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
       <Composition id="S6-System" component={s4b} durationInFrames={SCENES.system} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
       <Composition id="S7-Hero" component={s6} durationInFrames={SCENES.hero} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
+    </Folder>
+    <Composition id="TruckOwners" component={TruckOwners} durationInFrames={T_TOTAL} fps={FPS} width={W} height={H} defaultProps={truckDefaults} />
+    <Folder name="TruckOwners-Scenes">
+      <Composition id="T1-Hook" component={t1} durationInFrames={110} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
     </Folder>
   </>
 );
