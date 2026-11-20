@@ -3,7 +3,6 @@ import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { C, E, FONT, ip, noise1, prog } from "../fk/theme";
 import { Display, Stack, TypeOn } from "../fk/ui";
 import { Cam, CamView } from "./fx";
-import { Caller } from "./Caller";
 import { GaliTop } from "./GaliTop";
 import { BOARD, FRIDGE, INVERTER, Interior } from "./Interior";
 import { Phone } from "./Phone";
@@ -131,7 +130,7 @@ export const SH2Inside: React.FC = () => {
 };
 
 /* ------------------------------------------------------------------ */
-/* 3 CALL - 2 a.m., a stranger calls from outside the shop.             */
+/* 3 CALL - 2 a.m., an unknown number. Then the shop, smoking.        */
 /* L5 Raat ke do baje... kisi unknown number se call aata hai: "Bhai, aapki dukaan mein aag lagi hai!" */
 /* ------------------------------------------------------------------ */
 export const SH3Call: React.FC = () => {
@@ -141,22 +140,16 @@ export const SH3Call: React.FC = () => {
   const bhai = at("call", "bhai");
   const aag = at("call", "aag");
   const ph = prog(f, raat - 4, raat + 14, E.out);
-  const swap = prog(f, unk + 14, unk + 34, E.inOut);
-  const push = prog(f, unk + 14, 182, E.cam);
+  const swap = prog(f, bhai - 4, bhai + 14, E.inOut);
+  const push = prog(f, bhai - 4, 182, E.cam);
   const smoke = ip(f, [unk, aag, aag + 30], [0.5, 0.8, 1]);
   const fire = ip(f, [unk, aag, aag + 10], [0.45, 0.7, 1]);
-  const point = prog(f, bhai + 4, bhai + 22, E.out);
   return (
     <AbsoluteFill style={{ background: C.black }}>
-      {/* the street: shop smoking behind, the caller in front */}
+      {/* the shop, right now: smoke pouring from the shutter */}
       <AbsoluteFill style={{ opacity: swap }}>
-        <AbsoluteFill style={{ filter: "blur(4px)" }}>
-          <CamView cam={{ z: 0.8 + push * 0.06, cx: 470, cy: 1250, ax: 380, ay: 1330 }}>
-            <Shopfront t={f + 400} cool={0} green={0} fire={fire} smoke={smoke} heat={0.3 * fire} street={0.9} />
-          </CamView>
-        </AbsoluteFill>
-        <CamView cam={{ z: 1.45 + push * 0.08, cx: 660, cy: 1190, ax: 640, ay: 1290 }}>
-          <Caller t={f} fire={fire} point={point} />
+        <CamView cam={{ z: 1.05 - push * 0.06, cx: 540, cy: 1180, ay: 1330 }}>
+          <Shopfront t={f + 400} cool={0} green={0} fire={fire} smoke={smoke} heat={0.3 * fire} street={0.9} />
         </CamView>
         <TopFade to={880} />
       </AbsoluteFill>
