@@ -216,8 +216,8 @@ export const SH8System: React.FC = () => {
 };
 
 /* ------------------------------------------------------------------ */
-/* 9 ALERT - this time, not the neighbour.                              */
-/* L13 Is baar padosi ka phone nahi... alert seedha aapke phone par.     */
+/* 9 ALERT - this time, no stranger's call.                            */
+/* L13 Is baar kisi unknown call ka intezaar nahi... alert seedha aapke phone par. */
 /* ------------------------------------------------------------------ */
 export const SH9Alert: React.FC = () => {
   const f = useCurrentFrame();
@@ -247,8 +247,8 @@ export const SH9Alert: React.FC = () => {
         <Phone mode="alert" t={f} note={note} time="2:03" />
       </div>
       <Stack top={380}>
-        <TypeOn words={["Is", "baar", "padosi", "ka", "phone"]} at={ib} out={al - 6} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "NAHI...", c: C.gold }]} at={ib + 30} out={al - 6} />
+        <TypeOn words={["Is", "baar", "kisi", "unknown", "call", "ka"]} at={ib} out={al - 6} perLetter={0.8} color={C.fa} />
+        <Display words={["INTEZAAR", { w: "NAHI...", c: C.gold }]} at={ib + 36} out={al - 6} />
       </Stack>
       <Stack top={380}>
         <TypeOn words={["alert", "seedha"]} at={al} color={C.fa} />

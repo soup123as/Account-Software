@@ -41,8 +41,8 @@ export const Phone: React.FC<{ mode: "call" | "alert"; t: number; ring?: number;
         {mode === "call" ? (
           <>
             <div style={{ position: "absolute", top: 120, width: "100%", textAlign: "center", fontSize: 20, opacity: 0.6, letterSpacing: "0.04em" }}>incoming call</div>
-            <div style={{ position: "absolute", top: 156, width: "100%", textAlign: "center", fontSize: 46, fontWeight: 600, letterSpacing: "-0.02em" }}>Padosi</div>
-            <div style={{ position: "absolute", top: 220, width: "100%", textAlign: "center", fontSize: 22, opacity: 0.55 }}>Mobile · {time} AM</div>
+            <div style={{ position: "absolute", top: 156, width: "100%", textAlign: "center", fontSize: 40, fontWeight: 600, letterSpacing: "-0.02em" }}>Unknown number</div>
+            <div style={{ position: "absolute", top: 214, width: "100%", textAlign: "center", fontSize: 22, opacity: 0.55 }}>+91 9•••• •••47 · {time} AM</div>
             {/* avatar with ring pulse */}
             <div style={{ position: "absolute", top: 300, left: "50%", marginLeft: -70, width: 140, height: 140 }}>
               {[0, 1].map((i) => {
@@ -60,7 +60,12 @@ export const Phone: React.FC<{ mode: "call" | "alert"; t: number; ring?: number;
                   />
                 );
               })}
-              <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#3a4152", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56, fontWeight: 600 }}>P</div>
+              <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#3a4152", overflow: "hidden" }}>
+                <svg width={140} height={140} viewBox="0 0 140 140">
+                  <circle cx={70} cy={56} r={24} fill="#8792a8" />
+                  <path d="M22 140 C 26 100 46 88 70 88 C 94 88 114 100 118 140 Z" fill="#8792a8" />
+                </svg>
+              </div>
             </div>
             <div style={{ position: "absolute", bottom: 90, left: 52, width: 88, height: 88, borderRadius: "50%", background: "#E5383B", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <PhoneIcon rot={135} />

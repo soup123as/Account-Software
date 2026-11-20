@@ -11,7 +11,7 @@
  *  L2  Dukaan band hai... lekin andar sab kuch band nahi.
  *  L3  Fridge. Inverter. Aur ek board par... chaar plug.
  *  L4  Aur inmein se ek... raat bhar garam ho raha hai.
- *  L5  Raat ke do baje, padosi ka phone: "Bhai, aapke shutter se dhuaan nikal raha hai."
+ *  L5  Raat ke do baje... kisi unknown number se call aata hai: "Bhai, aapki dukaan mein aag lagi hai!"
  *  L6  Lekin asli jhatka... pahunchne ke baad lagta hai.
  *  L7  Shutter garmi se jam. Gali itni tang, ki fire brigade andar tak nahi aa paati.
  *  L8  Aur aag bujhne ke baad, insurance poochta hai: "Saboot kahan hai?"
@@ -19,7 +19,7 @@
  *  L10 Ceiling par, The Protector. Shutter girne ke baad bhi... jaagta hua.
  *  L11 Flame, heat aur gas sensors milkar confirm karte hain. Siren, light... aur suppression, apne aap.
  *  L12 Aur usse pehle... ek photo. Wahi saboot, jo insurance maangega.
- *  L13 Is baar padosi ka phone nahi... alert seedha aapke phone par.
+ *  L13 Is baar kisi unknown call ka intezaar nahi... alert seedha aapke phone par.
  *  L14 Kyunki taala chor ko rokta hai... aag ko nahi.
  *  L15 The Fire Knight. Yeh reel har us dukaandaar ko bhejiye... jo aaj raat shutter giraayega.
  */
@@ -41,65 +41,65 @@ export const CUE = {
   garam: 14.6,
   // L5
   raat: 16.6,
-  padosi: 18.0,
-  bhai: 19.0,
-  dhuaan: 20.6,
+  unknown: 17.9,
+  bhai: 19.9,
+  aag: 21.2,
   // L6
-  asli: 22.0,
-  pahunch: 23.3,
+  asli: 22.6,
+  pahunch: 23.9,
   // L7
-  jam: 25.2,
-  gali: 26.9,
-  brigade: 28.2,
+  jam: 25.8,
+  gali: 27.5,
+  brigade: 28.8,
   // L8
-  bujhne: 30.4,
-  insurance: 31.7,
-  saboot: 32.9,
+  bujhne: 31.0,
+  insurance: 32.3,
+  saboot: 33.5,
   // L9
-  sochiye: 34.6,
-  jaag: 36.0,
+  sochiye: 35.2,
+  jaag: 36.6,
   // L10
-  ceiling: 38.4,
-  protector: 39.3,
-  girne: 40.4,
-  jaagta: 41.6,
+  ceiling: 39.0,
+  protector: 39.9,
+  girne: 41.0,
+  jaagta: 42.2,
   // L11
-  flame: 42.8,
-  heat: 43.3,
-  gas: 43.9,
-  confirm: 44.7,
-  siren: 46.0,
-  light: 46.6,
-  suppression: 47.4,
+  flame: 43.4,
+  heat: 43.9,
+  gas: 44.5,
+  confirm: 45.3,
+  siren: 46.6,
+  light: 47.2,
+  suppression: 48.0,
   // L12
-  pehle: 49.0,
-  photo: 50.2,
-  wahiSaboot: 51.1,
+  pehle: 49.6,
+  photo: 50.8,
+  wahiSaboot: 51.7,
   // L13
-  isBaar: 53.2,
-  alert: 55.0,
+  isBaar: 53.8,
+  alert: 56.1,
   // L14
-  taala: 57.0,
-  aagKo: 58.8,
+  taala: 58.1,
+  aagKo: 59.9,
   // L15
-  fk: 60.2,
-  bhejiye: 61.4,
-  end: 65.0,
+  fk: 61.3,
+  bhejiye: 62.5,
+  end: 66.1,
 } as const;
 
 /** Scene cut points (seconds); every cut sits in a VO pause. */
 const CUTS = {
-  hook: 0,
+  hook: 0.0,
   inside: 5.2,
   call: 16.35,
-  arrive: 21.8,
-  proof: 30.15,
-  turn: 34.4,
-  product: 38.15,
-  system: 42.55,
-  alert: 52.95,
-  hero: 56.8,
-  end: 66.5,
+  arrive: 22.4,
+  proof: 30.75,
+  turn: 35.0,
+  product: 38.75,
+  system: 43.15,
+  alert: 53.55,
+  hero: 57.9,
+  end: 67.6,
 } as const;
 
 type K = Exclude<keyof typeof CUTS, "end">;

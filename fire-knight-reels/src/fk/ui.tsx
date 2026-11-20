@@ -1,6 +1,19 @@
 import React from "react";
 import { AbsoluteFill, staticFile, useCurrentFrame } from "remotion";
+import { measureText } from "@remotion/layout-utils";
 import { C, E, FONT, SAFE, TYPE, ip, prog, rand } from "./theme";
+
+/** Caption lines never leave the safe box: shrink this line's font size until it fits. */
+const MAX_W = SAFE.x1 - SAFE.x0;
+const fitSize = (text: string, size: number, fontFamily: string, fontWeight: number, letterSpacingEm: number, maxW = MAX_W) => {
+  try {
+    const { width } = measureText({ text, fontFamily, fontSize: size, fontWeight: String(fontWeight), letterSpacing: `${letterSpacingEm * size}px` });
+    const w = width * 1.03; // per-letter spans + rounding
+    return w > maxW ? Math.floor((size * maxW) / w) : size;
+  } catch {
+    return size;
+  }
+};
 
 export type Word = { w: string; c?: string };
 const norm = (words: (string | Word)[]) => words.map((x) => (typeof x === "string" ? { w: x } : x));
@@ -18,9 +31,11 @@ export const TypeOn: React.FC<{
   color?: string;
   perLetter?: number; // frames between letters
   style?: React.CSSProperties;
-}> = ({ words, at, out, size = TYPE.lead, weight = 600, color = C.white, perLetter = 1.05, style }) => {
+  maxWidth?: number;
+}> = ({ words, at, out, size: size0 = TYPE.lead, weight = 600, color = C.white, perLetter = 1.05, style, maxWidth }) => {
   const f = useCurrentFrame();
   const list = norm(words);
+  const size = fitSize(list.map((x) => x.w).join(" "), size0, FONT.sans, weight, -0.02, maxWidth);
   const o = out !== undefined ? prog(f, out, out + 7, E.in) : 0;
   if (f < at - 1) return null;
   // after the exit, keep the line's space so the lines below never jump up
@@ -78,9 +93,12 @@ export const Display: React.FC<{
   stagger?: number;
   color?: string;
   style?: React.CSSProperties;
-}> = ({ words, at, out, size = TYPE.display, stagger = 3, color = C.white, style }) => {
+  maxWidth?: number;
+}> = ({ words, at, out, size: size0 = TYPE.display, stagger = 3, color = C.white, style, maxWidth }) => {
   const f = useCurrentFrame();
   const list = norm(words);
+  // Anton caps; word gaps are 0.22em margins (~ a space)
+  const size = fitSize(list.map((x) => x.w.toUpperCase()).join("  "), size0, FONT.display, 400, 0.01, maxWidth);
   const o = out !== undefined ? prog(f, out, out + 7, E.in) : 0;
   if (f < at - 1) return null;
   if (o >= 1) return <div style={{ fontFamily: FONT.display, fontSize: size, lineHeight: 1.02, visibility: "hidden", ...style }}>.</div>;

@@ -248,7 +248,7 @@ put(boom(1.6), S("call") + 0.05, 0.5)
 for k in range(3):
     put(ring(1.6), Q["raat"] + k * 1.6, 0.16 - k * 0.02, -0.1)
 put(whoosh(0.9, 100, 3000, 0.7), Q["bhai"] - 0.2, 0.3)
-put(thud(60, 36, 0.5), Q["dhuaan"], 0.45)
+put(thud(60, 36, 0.5), Q["aag"], 0.45)
 put(crackle(S("arrive") - Q["bhai"], 30), Q["bhai"], 0.06)
 
 # ---------------- 4 arrive ----------------

@@ -3,7 +3,8 @@ import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { C, E, FONT, ip, noise1, prog } from "../fk/theme";
 import { Display, Stack, TypeOn } from "../fk/ui";
 import { Cam, CamView } from "./fx";
-import { Gali } from "./Gali";
+import { Caller } from "./Caller";
+import { GaliMouth } from "./GaliMouth";
 import { BOARD, FRIDGE, INVERTER, Interior } from "./Interior";
 import { Phone } from "./Phone";
 import { Shopfront, VISION } from "./Shopfront";
@@ -130,28 +131,36 @@ export const SH2Inside: React.FC = () => {
 };
 
 /* ------------------------------------------------------------------ */
-/* 3 CALL - 2 a.m., the neighbour.                                      */
-/* L5 Raat ke do baje, padosi ka phone: "Bhai, aapke shutter se dhuaan nikal raha hai." */
+/* 3 CALL - 2 a.m., a stranger calls from outside the shop.             */
+/* L5 Raat ke do baje... kisi unknown number se call aata hai: "Bhai, aapki dukaan mein aag lagi hai!" */
 /* ------------------------------------------------------------------ */
 export const SH3Call: React.FC = () => {
   const f = useCurrentFrame();
   const raat = at("call", "raat");
-  const pad = at("call", "padosi");
+  const unk = at("call", "unknown");
   const bhai = at("call", "bhai");
-  const dh = at("call", "dhuaan");
+  const aag = at("call", "aag");
   const ph = prog(f, raat - 4, raat + 14, E.out);
-  const swap = prog(f, bhai - 2, bhai + 18, E.inOut);
-  const cam: Cam = { z: 1.05 - prog(f, bhai, 170) * 0.08, cx: 540, cy: 1180, ay: 1330 };
+  const swap = prog(f, unk + 14, unk + 34, E.inOut);
+  const push = prog(f, unk + 14, 182, E.cam);
+  const smoke = ip(f, [unk, aag, aag + 30], [0.5, 0.8, 1]);
+  const fire = ip(f, [unk, aag, aag + 10], [0.45, 0.7, 1]);
+  const point = prog(f, bhai + 4, bhai + 22, E.out);
   return (
     <AbsoluteFill style={{ background: C.black }}>
-      {/* the shop, right now */}
+      {/* the street: shop smoking behind, the caller in front */}
       <AbsoluteFill style={{ opacity: swap }}>
-        <CamView cam={cam}>
-          <Shopfront t={f + 400} cool={0} green={0} fire={0.45} smoke={ip(f, [bhai, dh + 10], [0.4, 1])} heat={0.25} street={0.9} />
+        <AbsoluteFill style={{ filter: "blur(4px)" }}>
+          <CamView cam={{ z: 0.8 + push * 0.06, cx: 470, cy: 1250, ax: 380, ay: 1330 }}>
+            <Shopfront t={f + 400} cool={0} green={0} fire={fire} smoke={smoke} heat={0.3 * fire} street={0.9} />
+          </CamView>
+        </AbsoluteFill>
+        <CamView cam={{ z: 1.08 + push * 0.08, cx: 700, cy: 1320, ax: 720, ay: 1320 + push * 10 }}>
+          <Caller t={f} fire={fire} point={point} />
         </CamView>
         <TopFade to={880} />
       </AbsoluteFill>
-      {/* the phone on the bedside */}
+      {/* the owner's phone, ringing on the bedside */}
       <AbsoluteFill
         style={{
           opacity: ph * (1 - swap),
@@ -164,20 +173,19 @@ export const SH3Call: React.FC = () => {
         </div>
       </AbsoluteFill>
       <Stack top={380}>
-        <Display words={["RAAT", "KE", { w: "2", c: C.gold }, "BAJE."]} at={raat} out={bhai - 6} />
-        <TypeOn words={["Padosi", "ka", "phone:"]} at={pad} out={bhai - 6} color={C.fa} />
+        <Display words={["RAAT", "KE", { w: "2", c: C.gold }, "BAJE..."]} at={raat} out={bhai - 6} />
+        <TypeOn words={["kisi", { w: "unknown", c: C.gold }, "number", "se", "call:"]} at={unk} out={bhai - 6} perLetter={0.8} color={C.fa} />
       </Stack>
       <Stack top={380}>
-        <TypeOn words={["“Bhai,", "aapke", "shutter", "se"]} at={bhai} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "DHUAAN", c: C.gold }]} at={dh} />
-        <TypeOn words={["nikal", "raha", "hai.”"]} at={dh + 14} color={C.fa} />
+        <TypeOn words={["\u201CBhai,", "aapki", "dukaan", "mein"]} at={bhai} perLetter={0.8} color={C.fa} />
+        <Display words={[{ w: "AAG", c: C.gold }, "LAGI", "HAI!\u201D"]} at={aag} />
       </Stack>
     </AbsoluteFill>
   );
 };
 
 /* ------------------------------------------------------------------ */
-/* 4 ARRIVE - the real shock: jammed shutter, a lane too narrow.        */
+/* 4 ARRIVE - the real shock: jammed shutter, a lane the tender can't enter. */
 /* L6 Lekin asli jhatka... pahunchne ke baad lagta hai.                  */
 /* L7 Shutter garmi se jam. Gali itni tang, ki fire brigade andar tak nahi aa paati. */
 /* ------------------------------------------------------------------ */
@@ -194,10 +202,14 @@ export const SH4Arrive: React.FC = () => {
   const J: Cam = { z: 2.4, cx: 540, cy: 1360, ay: 1260 };
   let cam = lerpCam(A, B, run);
   cam = lerpCam(cam, J, prog(f, jam - 4, jam + 14, E.out));
-  const shake = f < gali ? (2 + 4 * prog(f, jam, jam + 6) * (1 - prog(f, jam + 6, jam + 30))) : 0;
+  const shake = f < gali ? 2 + 4 * prog(f, jam, jam + 6) * (1 - prog(f, jam + 6, jam + 30)) : 0;
   cam.sx = noise1(f * 0.5, 1) * shake + Math.sin(f * 0.45) * 2 * (1 - prog(f, jam - 10, jam));
   cam.sy = noise1(f * 0.5, 2) * shake + Math.abs(Math.sin(f * 0.45)) * 4 * (1 - prog(f, jam - 10, jam));
   const toLane = prog(f, gali - 8, gali + 8, E.inOut);
+  const creep = prog(f, gali, brig + 6, E.out); // the tender noses in, then stops
+  const stop = f > brig + 6 ? Math.max(0, 1 - (f - brig - 6) / 12) : 0;
+  const bars = prog(f, brig + 16, brig + 40, E.out);
+  const laneZoom = 1 + prog(f, gali, 260) * 0.05;
   return (
     <AbsoluteFill style={{ background: C.black }}>
       <AbsoluteFill style={{ opacity: 1 - toLane }}>
@@ -205,9 +217,9 @@ export const SH4Arrive: React.FC = () => {
           <Shopfront t={f + 560} cool={0} green={0} fire={0.9} smoke={1} heat={ip(f, [0, jam], [0.5, 1])} street={0.8} />
         </CamView>
       </AbsoluteFill>
-      <AbsoluteFill style={{ opacity: toLane }}>
+      <AbsoluteFill style={{ opacity: toLane, scale: `${laneZoom}`, transformOrigin: "540px 1100px" }}>
         <svg width={1080} height={1920} style={{ position: "absolute", inset: 0 }}>
-          <Gali t={f} push={prog(f, gali, 250)} smoke={0.5} />
+          <GaliMouth t={f} creep={creep} jolt={stop} bars={bars} smoke={0.35} />
         </svg>
       </AbsoluteFill>
       <TopFade to={860} />
