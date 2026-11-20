@@ -14,6 +14,9 @@ import { TruckOwners, truckDefaults } from "./truck/TruckOwners";
 import { T_TOTAL } from "./truck/timing";
 import { TruckThumbnail } from "./truck/TruckThumbnail";
 import { Still } from "remotion";
+import { ShopOwners, shopDefaults } from "./shop/ShopOwners";
+import { S_TOTAL } from "./shop/timing";
+import { ShopThumbnail } from "./shop/ShopThumbnail";
 import { FPS, H, SCENES, TOTAL, W } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
@@ -62,6 +65,8 @@ export const RemotionRoot: React.FC = () => (
     </Folder>
     <Composition id="TruckOwners" component={TruckOwners} durationInFrames={T_TOTAL} fps={FPS} width={W} height={H} defaultProps={truckDefaults} />
     <Still id="TruckThumbnail" component={TruckThumbnail} width={W} height={H} />
+    <Composition id="ShopOwners" component={ShopOwners} durationInFrames={S_TOTAL} fps={FPS} width={W} height={H} defaultProps={shopDefaults} />
+    <Still id="ShopThumbnail" component={ShopThumbnail} width={W} height={H} />
     <Folder name="TruckOwners-Scenes">
       <Composition id="T1-Hook" component={t1} durationInFrames={110} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
     </Folder>
