@@ -11,8 +11,8 @@ import { Shopfront } from "./Shopfront";
  */
 export const ShopThumbnail: React.FC = () => (
   <AbsoluteFill style={{ background: C.black }}>
-    <CamView cam={{ z: 1.5, cx: 540, cy: 1250, ay: 1330 }}>
-      <Shopfront t={52} cool={0.2} green={0} fire={0.75} smoke={0.7} heat={0.35} street={0.9} />
+    <CamView cam={{ z: 1.2, cx: 540, cy: 1210, ay: 1150 }}>
+      <Shopfront t={52} cool={0} green={0} fire={1} smoke={1} heat={0.2} street={0.9} />
     </CamView>
     <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.95) 0px, rgba(0,0,0,0.86) 760px, rgba(0,0,0,0) 960px)" }} />
     <AbsoluteFill style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.92) 0px, rgba(0,0,0,0.55) 300px, rgba(0,0,0,0) 470px)" }} />
@@ -29,7 +29,7 @@ export const ShopThumbnail: React.FC = () => (
         chal raha hai…
       </div>
     </div>
-    <div style={{ position: "absolute", left: 0, right: 0, top: 1500, display: "flex", alignItems: "center", justifyContent: "center", gap: 18 }}>
+    <div style={{ position: "absolute", left: 0, right: 0, top: 1560, display: "flex", alignItems: "center", justifyContent: "center", gap: 18 }}>
       <Img src={staticFile("brand/emblem.png")} style={{ height: 84 }} />
       <Img src={staticFile("brand/wordmark-light.png")} style={{ height: 34 }} />
     </div>
