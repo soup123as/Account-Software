@@ -22,39 +22,58 @@ export const SH7Product: React.FC = () => {
   const p = prog(f, 0, 22, E.out);
   const sweep = ip(f, [pr - 4, pr + 30], [-30, 130], E.inOut);
   const src = staticFile("product/protector.webp");
-  const W = 1240;
+  const CW = 840;
+  const CH = 560;
+  const CT = 860;
+  const W = 900;
   const Hh = (W * 1920) / 2560;
   return (
     <AbsoluteFill style={{ background: C.black }}>
+      {/* studio card: the real render on its own light-grey backdrop, framed like a product shot */}
       <div
         style={{
           position: "absolute",
-          left: 540 - W / 2,
-          top: 1180 - Hh / 2,
-          width: W,
-          height: Hh,
+          left: 540 - CW / 2,
+          top: CT,
+          width: CW,
+          height: CH,
+          borderRadius: 28,
+          overflow: "hidden",
+          background: "#d6d6d6",
+          boxShadow: "0 40px 120px rgba(0,0,0,0.75), 0 0 0 1px rgba(250,250,250,0.08)",
           opacity: p,
-          scale: `${1.04 - 0.04 * p + prog(f, 0, 132) * 0.04}`,
-          filter: p < 1 ? `blur(${(1 - p) * 14}px)` : undefined,
-          WebkitMaskImage: "radial-gradient(ellipse 50% 46% at 50% 50%, #000 40%, transparent 100%)",
+          translate: `0 ${(1 - p) * 60}px`,
+          scale: `${0.96 + 0.04 * p}`,
+          filter: p < 1 ? `blur(${(1 - p) * 12}px)` : undefined,
         }}
       >
-        <Img src={src} style={{ width: "100%", height: "100%", display: "block", filter: "brightness(0.82) contrast(1.08)" }} />
+        <Img
+          src={src}
+          style={{
+            position: "absolute",
+            left: (CW - W) / 2,
+            top: (CH - Hh) / 2 + 10,
+            width: W,
+            height: Hh,
+            scale: `${1 + prog(f, 0, 132) * 0.035}`,
+          }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.12) 100%)" }} />
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background: `linear-gradient(110deg, rgba(255,255,255,0) ${sweep - 10}%, rgba(255,255,255,0.22) ${sweep}%, rgba(255,255,255,0) ${sweep + 10}%)`,
+            background: `linear-gradient(110deg, rgba(255,255,255,0) ${sweep - 10}%, rgba(255,255,255,0.28) ${sweep}%, rgba(255,255,255,0) ${sweep + 10}%)`,
             mixBlendMode: "screen",
           }}
         />
       </div>
-      <div style={{ position: "absolute", left: SAFE.x0, top: 1470, opacity: prog(f, pr + 10, pr + 22) }}>
+      <div style={{ position: "absolute", left: 120, top: CT + CH + 34, opacity: prog(f, pr + 10, pr + 22) }}>
         <Label style={{ color: C.silver }}>
           The Protector <span style={{ color: C.gold }}>·</span> fire suppression aid
         </Label>
       </div>
-      <TopFade to={780} o={0.9} />
+      
       <Stack top={380}>
         <TypeOn words={["Ceiling", "par,"]} at={ce} out={gi - 6} color={C.fa} />
         <Display words={[{ w: "PROTECTOR.", c: C.gold }]} at={pr} out={gi - 6} />

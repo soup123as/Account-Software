@@ -370,8 +370,8 @@ export const Interior: React.FC<InteriorProps> = ({
     <g>
       <defs>
         <linearGradient id="inWall" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#8fae9b" />
-          <stop offset="1" stopColor="#6f8f7c" />
+          <stop offset="0" stopColor="#2a3330" />
+          <stop offset="1" stopColor="#1d2422" />
         </linearGradient>
         <filter id="inPlasterF" x="0" y="0" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="3" seed={11} />
@@ -381,21 +381,21 @@ export const Interior: React.FC<InteriorProps> = ({
           <rect width="500" height="500" filter="url(#inPlasterF)" />
         </pattern>
         <linearGradient id="inFloor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#bcae97" />
-          <stop offset="1" stopColor="#8e826f" />
+          <stop offset="0" stopColor="#2b2824" />
+          <stop offset="1" stopColor="#121110" />
         </linearGradient>
         <linearGradient id="inCeil" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#d8d4cc" />
-          <stop offset="1" stopColor="#bdb8ae" />
+          <stop offset="0" stopColor="#151514" />
+          <stop offset="1" stopColor="#262624" />
         </linearGradient>
         {/* night: everything falls off away from the cooler */}
         <radialGradient id="inDark" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(670 1180) scale(${700 + 260 * cool} ${820 + 260 * cool})`}>
-          <stop offset="0" stopColor="#020406" stopOpacity={0.62 - 0.32 * cool} />
-          <stop offset="0.6" stopColor="#020406" stopOpacity={0.8 - 0.12 * cool} />
-          <stop offset="1" stopColor="#020406" stopOpacity="0.9" />
+          <stop offset="0" stopColor="#020304" stopOpacity={0.55 - 0.45 * cool} />
+          <stop offset="0.45" stopColor="#020304" stopOpacity={0.72 - 0.25 * cool} />
+          <stop offset="1" stopColor="#020304" stopOpacity="0.93" />
         </radialGradient>
         <radialGradient id="inCool" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(670 1180) scale(520 620)">
-          <stop offset="0" stopColor="#BFE3FF" stopOpacity="0.32" />
+          <stop offset="0" stopColor="#BFE3FF" stopOpacity="0.4" />
           <stop offset="1" stopColor="#BFE3FF" stopOpacity="0" />
         </radialGradient>
         <radialGradient id="inFire" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${BOARD.hot} 1560) scale(700 600)`}>
@@ -414,8 +414,13 @@ export const Interior: React.FC<InteriorProps> = ({
           <stop offset="0" stopColor="#050403" stopOpacity="0.95" />
           <stop offset="1" stopColor="#050403" stopOpacity="0.6" />
         </linearGradient>
+        <linearGradient id="inRackLight" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stopColor="#BFE3FF" stopOpacity="0.28" />
+          <stop offset="0.5" stopColor="#BFE3FF" stopOpacity="0.06" />
+          <stop offset="1" stopColor="#BFE3FF" stopOpacity="0" />
+        </linearGradient>
         <linearGradient id="inRefl" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#CFE8FF" stopOpacity="0.35" />
+          <stop offset="0" stopColor="#CFE8FF" stopOpacity="0.5" />
           <stop offset="1" stopColor="#CFE8FF" stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -424,19 +429,19 @@ export const Interior: React.FC<InteriorProps> = ({
       <polygon points="-400,420 1480,420 1000,700 80,700" fill="url(#inCeil)" />
       <polygon points="-120,470 1200,470 960,672 120,672" fill="none" stroke="#000" strokeWidth={2} opacity={0.15} />
       <rect x={80} y={700} width={920} height={765} fill="url(#inWall)" />
-      <rect x={80} y={700} width={920} height={765} fill="url(#inPlaster)" opacity={0.3} />
-      <polygon points="80,700 80,1465 -400,1920 -400,420" fill="#6c8a78" />
-      <polygon points="1000,700 1000,1465 1480,1920 1480,420" fill="#62806e" />
+      
+      <polygon points="80,700 80,1465 -400,1920 -400,420" fill="#18201d" />
+      <polygon points="1000,700 1000,1465 1480,1920 1480,420" fill="#141a18" />
       <polygon points="80,700 80,1465 -400,1920 -400,420" fill="#000" opacity={0.3} />
       <polygon points="1000,700 1000,1465 1480,1920 1480,420" fill="#000" opacity={0.38} />
       <polygon points="80,1465 1000,1465 1480,1920 -400,1920" fill="url(#inFloor)" />
       {Array.from({ length: 9 }).map((_, i) => (
-        <line key={i} x1={80 + i * 115} y1={1465} x2={-400 + i * 235} y2={1920} stroke="#5d5345" strokeWidth={2} opacity={0.6} />
+        <line key={i} x1={80 + i * 115} y1={1465} x2={-400 + i * 235} y2={1920} stroke="#000" strokeWidth={2} opacity={0.5} />
       ))}
       {[1528, 1610, 1720, 1860].map((y) => (
-        <line key={y} x1={-400} y1={y} x2={1480} y2={y} stroke="#5d5345" strokeWidth={2} opacity={0.55} />
+        <line key={y} x1={-400} y1={y} x2={1480} y2={y} stroke="#000" strokeWidth={2} opacity={0.45} />
       ))}
-      <rect x={80} y={1438} width={920} height={27} fill="#7b7466" />
+      <rect x={80} y={1438} width={920} height={27} fill="#2c2a27" />
       <rect x={80} y={1438} width={920} height={3} fill="#cfc6b6" opacity={0.5} />
       {/* tube light (off), wall clock at 2:03, switchboard */}
       <rect x={366} y={724} width={348} height={16} rx={4} fill="#e9ecee" />
@@ -456,10 +461,14 @@ export const Interior: React.FC<InteriorProps> = ({
       <rect x={66} y={1480} width={12} height={20} rx={2} fill="#d8d4ca" />
 
       <Rack burnt={burnt} />
+      <rect x={96} y={672} width={436} height={800} fill="url(#inRackLight)" style={{ mixBlendMode: "screen" }} opacity={cool} />
       <Cooler on={fridge} t={t} burnt={burnt} />
       <Power led={led} t={t} burnt={burnt} />
       {/* cooler light on the floor tiles */}
-      <polygon points="574,1470 766,1470 820,1720 520,1720" fill="url(#inRefl)" opacity={cool} style={{ mixBlendMode: "screen" }} />
+      <polygon points="574,1470 766,1470 820,1760 520,1760" fill="url(#inRefl)" opacity={cool} style={{ mixBlendMode: "screen" }} />
+      <g transform="translate(0 2932) scale(1 -1)" opacity={0.12 * cool}>
+        <rect x={574} y={1180} width={192} height={220} fill="#DCEFFF" />
+      </g>
       <Board heat={boardHeat} t={t} burnt={burnt} />
 
       {protector > 0 && (

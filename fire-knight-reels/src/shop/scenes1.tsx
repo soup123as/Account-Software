@@ -4,7 +4,7 @@ import { C, E, FONT, ip, noise1, prog } from "../fk/theme";
 import { Display, Stack, TypeOn } from "../fk/ui";
 import { Cam, CamView } from "./fx";
 import { Caller } from "./Caller";
-import { GaliMouth } from "./GaliMouth";
+import { GaliTop } from "./GaliTop";
 import { BOARD, FRIDGE, INVERTER, Interior } from "./Interior";
 import { Phone } from "./Phone";
 import { Shopfront, VISION } from "./Shopfront";
@@ -155,7 +155,7 @@ export const SH3Call: React.FC = () => {
             <Shopfront t={f + 400} cool={0} green={0} fire={fire} smoke={smoke} heat={0.3 * fire} street={0.9} />
           </CamView>
         </AbsoluteFill>
-        <CamView cam={{ z: 1.08 + push * 0.08, cx: 700, cy: 1320, ax: 720, ay: 1320 + push * 10 }}>
+        <CamView cam={{ z: 1.45 + push * 0.08, cx: 660, cy: 1190, ax: 640, ay: 1290 }}>
           <Caller t={f} fire={fire} point={point} />
         </CamView>
         <TopFade to={880} />
@@ -209,7 +209,7 @@ export const SH4Arrive: React.FC = () => {
   const creep = prog(f, gali, brig + 6, E.out); // the tender noses in, then stops
   const stop = f > brig + 6 ? Math.max(0, 1 - (f - brig - 6) / 12) : 0;
   const bars = prog(f, brig + 16, brig + 40, E.out);
-  const laneZoom = 1 + prog(f, gali, 260) * 0.05;
+  const laneZoom = prog(f, gali, brig + 30, E.cam);
   return (
     <AbsoluteFill style={{ background: C.black }}>
       <AbsoluteFill style={{ opacity: 1 - toLane }}>
@@ -217,10 +217,10 @@ export const SH4Arrive: React.FC = () => {
           <Shopfront t={f + 560} cool={0} green={0} fire={0.9} smoke={1} heat={ip(f, [0, jam], [0.5, 1])} street={0.8} />
         </CamView>
       </AbsoluteFill>
-      <AbsoluteFill style={{ opacity: toLane, scale: `${laneZoom}`, transformOrigin: "540px 1100px" }}>
-        <svg width={1080} height={1920} style={{ position: "absolute", inset: 0 }}>
-          <GaliMouth t={f} creep={creep} jolt={stop} bars={bars} smoke={0.35} />
-        </svg>
+      <AbsoluteFill style={{ opacity: toLane }}>
+        <CamView cam={{ z: 1.75 - 0.3 * laneZoom, cx: 540, cy: 980 + 330 * prog(f, gali, brig + 20, E.cam), ay: 1250 }}>
+          <GaliTop t={f} creep={creep} jolt={stop} bars={bars} />
+        </CamView>
       </AbsoluteFill>
       <TopFade to={860} />
       <Stack top={380}>

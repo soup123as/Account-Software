@@ -32,7 +32,7 @@ const Shutter: React.FC<{ id: string; x0: number; x1: number; y0: number; y1: nu
   x1,
   y0,
   y1,
-  tint = "#8f969d",
+  tint = "#9aa1a8",
   paint = 0,
 }) => {
   const w = x1 - x0;
@@ -42,8 +42,8 @@ const Shutter: React.FC<{ id: string; x0: number; x1: number; y0: number; y1: nu
       <defs>
         {/* slat profile: rolled crest highlight, flat face, crease shadow */}
         <linearGradient id={`${id}Slat`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
-          <stop offset="0.12" stopColor="#ffffff" stopOpacity="0.18" />
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.7" />
+          <stop offset="0.1" stopColor="#ffffff" stopOpacity="0.22" />
           <stop offset="0.45" stopColor="#000000" stopOpacity="0" />
           <stop offset="0.82" stopColor="#000000" stopOpacity="0.28" />
           <stop offset="0.92" stopColor="#000000" stopOpacity="0.75" />
@@ -53,16 +53,16 @@ const Shutter: React.FC<{ id: string; x0: number; x1: number; y0: number; y1: nu
           <rect width="40" height="14" fill={`url(#${id}Slat)`} />
         </pattern>
         {/* light falloff: street light from the left, darker to the right and at the bottom */}
-        <linearGradient id={`${id}Fall`} x1="0" y1="0" x2="1" y2="0.4">
-          <stop offset="0" stopColor="#ffd9a0" stopOpacity="0.22" />
-          <stop offset="0.55" stopColor="#000" stopOpacity="0" />
-          <stop offset="1" stopColor="#000" stopOpacity="0.45" />
+        <linearGradient id={`${id}Fall`} x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0" stopColor="#ffe2b8" stopOpacity="0.18" />
+          <stop offset="0.45" stopColor="#000" stopOpacity="0.05" />
+          <stop offset="1" stopColor="#000" stopOpacity="0.62" />
         </linearGradient>
         <linearGradient id={`${id}Grime`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1c140c" stopOpacity="0.35" />
-          <stop offset="0.12" stopColor="#1c140c" stopOpacity="0" />
-          <stop offset="0.78" stopColor="#2a1b0e" stopOpacity="0" />
-          <stop offset="1" stopColor="#2a1b0e" stopOpacity="0.55" />
+          <stop offset="0" stopColor="#000" stopOpacity="0.45" />
+          <stop offset="0.1" stopColor="#000" stopOpacity="0" />
+          <stop offset="0.85" stopColor="#000" stopOpacity="0" />
+          <stop offset="1" stopColor="#000" stopOpacity="0.35" />
         </linearGradient>
         <filter id={`${id}Dirt`} x="0" y="0" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9 0.012" numOctaves="3" seed={7} />
@@ -72,13 +72,9 @@ const Shutter: React.FC<{ id: string; x0: number; x1: number; y0: number; y1: nu
       <rect x={x0} y={y0} width={w} height={h} fill={tint} />
       {paint > 0 && <rect x={x0} y={y0} width={w} height={h} fill="#2b1a10" opacity={paint} />}
       <rect x={x0} y={y0} width={w} height={h} fill={`url(#${id}Pat)`} />
-      <rect x={x0} y={y0} width={w} height={h} filter={`url(#${id}Dirt)`} opacity={0.55} />
+      
       <rect x={x0} y={y0} width={w} height={h} fill={`url(#${id}Grime)`} />
       <rect x={x0} y={y0} width={w} height={h} fill={`url(#${id}Fall)`} />
-      {/* rust runs from the guide rails */}
-      {[0.08, 0.31, 0.62, 0.9].map((k, i) => (
-        <rect key={i} x={x0 + w * k} y={y0 + h * (0.2 + rand(i + 4) * 0.3)} width={3 + rand(i) * 4} height={h * (0.3 + rand(i + 1) * 0.4)} fill="#6b3a17" opacity={0.18} />
-      ))}
       {/* guide channels with depth */}
       <rect x={x0 - 14} y={y0 - 6} width={16} height={h + 6} fill="#2d3135" />
       <rect x={x0 - 14} y={y0 - 6} width={3} height={h + 6} fill="#8d949b" opacity={0.5} />
@@ -140,7 +136,7 @@ const Sign: React.FC<{ x0: number; x1: number; bg: string; ink: string; title: s
         <stop offset="1" stopColor="#000" stopOpacity="0.35" />
       </linearGradient>
     </defs>
-    <rect x={x0 - 14} y={822} width={x1 - x0 + 28} height={110} fill="#6d7378" />
+    <rect x={x0 - 14} y={822} width={x1 - x0 + 28} height={110} fill="#3c4045" />
     <rect x={x0 - 14} y={822} width={x1 - x0 + 28} height={3} fill="#d9dee2" opacity={0.6} />
     <rect x={x0 - 6} y={830} width={x1 - x0 + 12} height={94} fill={bg} />
     <rect x={x0 - 6} y={830} width={x1 - x0 + 12} height={94} fill={`url(#${id}Flex)`} />
@@ -157,9 +153,8 @@ const Sign: React.FC<{ x0: number; x1: number; bg: string; ink: string; title: s
 
 const Pillar: React.FC<{ x: number; w?: number }> = ({ x, w = 30 }) => (
   <g>
-    <rect x={x} y={812} width={w} height={660} fill="#5b4e3f" />
-    <rect x={x} y={812} width={w} height={660} fill="url(#sfPlaster)" opacity={0.5} />
-    <rect x={x} y={812} width={4} height={660} fill="#c9a77a" opacity={0.25} />
+    <rect x={x} y={812} width={w} height={660} fill="#24221f" />
+    <rect x={x} y={812} width={3} height={660} fill="#d9c3a2" opacity={0.28} />
     {/* granite cladding at the base */}
     <rect x={x - 2} y={1330} width={w + 4} height={140} fill="#2a2523" />
     <rect x={x - 2} y={1330} width={w + 4} height={2} fill="#9a8f86" opacity={0.6} />
@@ -186,9 +181,9 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
     <g>
       <defs>
         <linearGradient id="sfWall" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#0b0a09" />
-          <stop offset="0.72" stopColor="#3a3027" />
-          <stop offset="1" stopColor="#4a3d30" />
+          <stop offset="0" stopColor="#060606" />
+          <stop offset="0.7" stopColor="#141312" />
+          <stop offset="1" stopColor="#1d1b19" />
         </linearGradient>
         <filter id="sfPlasterF" x="0" y="0" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" seed={3} />
@@ -205,9 +200,9 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
           <rect width="64" height="40" fill="none" />
           <path d="M0 0 H64 M0 20 H64 M0 0 V20 M32 20 V40" stroke="#000" strokeWidth="2" opacity="0.4" />
         </pattern>
-        <radialGradient id="sfSodium" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-160 600) scale(1500 1300)">
-          <stop offset="0" stopColor={REAL.sodium} stopOpacity="0.42" />
-          <stop offset="0.5" stopColor={REAL.sodium} stopOpacity="0.12" />
+        <radialGradient id="sfSodium" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(240 760) scale(1100 1000)">
+          <stop offset="0" stopColor={REAL.sodium} stopOpacity="0.2" />
+          <stop offset="0.5" stopColor={REAL.sodium} stopOpacity="0.06" />
           <stop offset="1" stopColor={REAL.sodium} stopOpacity="0" />
         </radialGradient>
         <linearGradient id="sfInner" x1="0" y1="0" x2="1" y2="0">
@@ -232,6 +227,14 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
         <filter id="sfBloom" x="-50%" y="-200%" width="200%" height="500%">
           <feGaussianBlur stdDeviation="9" />
         </filter>
+        <linearGradient id="sfReflFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#141312" stopOpacity="0" />
+          <stop offset="1" stopColor="#141312" stopOpacity="1" />
+        </linearGradient>
+        <radialGradient id="sfPool" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(420 1560) scale(700 150)">
+          <stop offset="0" stopColor={REAL.sodium} stopOpacity="0.16" />
+          <stop offset="1" stopColor={REAL.sodium} stopOpacity="0" />
+        </radialGradient>
         <radialGradient id="sfPuddle" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#000" stopOpacity="0" />
           <stop offset="1" stopColor="#000" stopOpacity="0.6" />
@@ -240,10 +243,11 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
 
       {/* building and upper floor */}
       <rect x={-1400} y={-1400} width={3900} height={2900} fill="url(#sfWall)" />
-      <rect x={-1400} y={-1400} width={3900} height={2900} fill="url(#sfPlaster)" opacity={0.4} />
+      
       <rect x={-1400} y={790} width={3900} height={22} fill="#2b241d" />
       <rect x={-1400} y={790} width={3900} height={3} fill="#a08463" opacity={0.25} />
-      {/* window with MS grille + a curtain behind */}
+      {/* window with MS grille (in shadow) */}
+      <g opacity={0.35}>
       <rect x={326} y={536} width={428} height={228} fill="#3a3128" />
       <rect x={336} y={546} width={408} height={208} fill="#0b0c0d" />
       <rect x={336} y={546} width={408} height={208} fill="#3d2a24" opacity={0.35} />
@@ -252,8 +256,9 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
       ))}
       <rect x={336} y={648} width={408} height={5} fill="#2a2420" />
       <rect x={316} y={764} width={448} height={10} fill="#4a3f33" />
+      </g>
       {/* split-AC outdoor unit on a bracket */}
-      <g opacity={0.9}>
+      <g opacity={0.3}>
         <rect x={800} y={596} width={156} height={112} rx={6} fill="#a9aba6" />
         <rect x={800} y={596} width={156} height={112} rx={6} fill="#000" opacity={0.45} />
         <circle cx={852} cy={652} r={38} fill="#1d1e1f" />
@@ -265,7 +270,7 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
       </g>
 
       {/* neighbours */}
-      <g opacity={neighbours}>
+      <g opacity={neighbours * 0.55}>
         <Unit x0={-560} x1={140} id="nL" sign={["#E3B81D", "#1d1606", "SAI MOBILE", "REPAIR · ACCESSORIES"]} tint="#557a5e" paint={0.15} />
         <Unit x0={940} x1={1640} id="nR" sign={["#8E1D18", "#f6ead2", "NEW FASHION", "LADIES · KIDS WEAR"]} tint="#4f6f92" paint={0.15} />
       </g>
@@ -312,24 +317,27 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
 
       {/* kota-stone plinth + interlocking footpath */}
       <rect x={-1400} y={1468} width={3900} height={34} fill="#5e5850" />
-      <rect x={-1400} y={1468} width={3900} height={34} fill="url(#sfPlaster)" opacity={0.5} />
+      
       <rect x={-1400} y={1468} width={3900} height={3} fill="#a79c8f" opacity={0.6} />
       <rect x={-1400} y={1498} width={3900} height={4} fill="#000" opacity={0.6} />
       <rect x={-1400} y={1502} width={3900} height={1300} fill="url(#sfPath)" />
-      <rect x={-1400} y={1502} width={3900} height={1300} fill="url(#sfPavers)" />
-      <rect x={-1400} y={1502} width={3900} height={1300} fill="url(#sfPlaster)" opacity={0.6} />
+      <rect x={-1400} y={1502} width={3900} height={1300} fill="url(#sfPavers)" opacity={0.35} />
+      <g transform="translate(0 3006) scale(1 -1)" opacity={0.16}>
+        <rect x={SHOP.x0} y={1260} width={SHOP.x1 - SHOP.x0} height={208} fill="#9aa1a8" />
+      </g>
+      <rect x={SHOP.x0 - 40} y={1502} width={SHOP.x1 - SHOP.x0 + 80} height={260} fill="url(#sfReflFade)" />
       {/* puddle catching the light from under the shutter */}
       <ellipse cx={560} cy={1590} rx={300} ry={26} fill={REAL.fireOrange} opacity={flick * 0.22} filter="url(#sfBloom)" style={{ mixBlendMode: "screen" }} />
       <ellipse cx={560} cy={1600} rx={250} ry={30} fill="#BFE3FF" opacity={cool * 0.1} style={{ mixBlendMode: "screen" }} />
 
       {/* electricity pole with junction box, meters and the wire tangle */}
-      <rect x={1000} y={-600} width={24} height={2110} fill="#46484a" />
-      <rect x={1000} y={-600} width={6} height={2110} fill="#8a8c8e" opacity={0.5} />
+      <rect x={1000} y={-600} width={24} height={2110} fill="#1f2022" />
+      <rect x={1000} y={-600} width={3} height={2110} fill="#c9ccce" opacity={0.35} />
       <rect x={1018} y={-600} width={6} height={2110} fill="#000" opacity={0.4} />
-      <rect x={984} y={736} width={56} height={76} rx={4} fill="#5a5d60" />
+      <rect x={984} y={736} width={56} height={76} rx={4} fill="#2a2c2e" />
       <rect x={984} y={736} width={56} height={4} fill="#b9bdc0" opacity={0.4} />
       <ellipse cx={1012} cy={1505} rx={40} ry={8} fill="#000" opacity={0.5} />
-      <g stroke="#090909" fill="none" strokeWidth={3}>
+      <g stroke="#020202" fill="none" strokeWidth={2.2} opacity={0.85}>
         {Array.from({ length: 13 }).map((_, i) => (
           <path key={i} d={wire(-1400, 620 + rand(i) * 140, 1012, 690 + rand(i + 9) * 130, 60 + rand(i + 3) * 100)} />
         ))}
@@ -339,12 +347,13 @@ export const Shopfront: React.FC<ShopfrontProps> = ({ t, cool = 0.5, green = 1, 
         <path d={wire(1012, 790, 560, 935, 40)} strokeWidth={4} />
         <path d={wire(1012, 800, 880, 980, 20)} strokeWidth={3} />
       </g>
-      <g stroke="#3a3a3a" fill="none" strokeWidth={1.2} opacity={0.6}>
+      <g stroke="#3a3a3a" fill="none" strokeWidth={1.2} opacity={0}>
         {Array.from({ length: 6 }).map((_, i) => (
           <path key={i} d={wire(-1400, 660 + rand(i + 40) * 120, 1012, 720 + rand(i + 50) * 100, 80)} />
         ))}
       </g>
 
+      <rect x={-1400} y={1502} width={3900} height={600} fill="url(#sfPool)" opacity={street} style={{ mixBlendMode: "screen" }} />
       {/* sodium street light wash */}
       <rect x={-1400} y={-1400} width={3900} height={4200} fill="url(#sfSodium)" opacity={street} style={{ mixBlendMode: "screen" }} />
 

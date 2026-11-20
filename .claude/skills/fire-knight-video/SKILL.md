@@ -148,12 +148,23 @@ Machines available: `Dumper.tsx` (100-t haul truck, mine setting) and `Truck.tsx
 **Shop / retail world** (`src/shop/`, the Protector), all in frame coordinates through `CamView` (`fx.tsx`: `Cam {z, cx, cy, ax, ay, sx, sy}`):
 - `Shopfront`: an Indian market shopfront at night. Galvanised rolling shutter, perforated vision strip, brass padlock (`LOCK`), unlit flex sign, neighbours, a pole and wire tangle, sodium street light. Props: `cool` / `green` / `fire` / `strobe` light leaking through the gaps, `smoke`, and `heat` (shimmer, buckle, orange glow).
 - `Interior`: the closed shop. Stock shelves, a glass-door cooler, an inverter and tubular battery, and a 4-socket extension board on the floor (`BOARD.hot` overheats). The Protector is drawn as a black oval ceiling plate with two nozzles and a status LED. Props: `boardHeat`, `flame`, `protector`, `awake`, `sense` rings, `strobe`, `mist`, `flash` (camera), `burnt` aftermath, `smoke`, and `highlight` + `hl` to spotlight one object.
-- `GaliMouth`: inside a narrow gali looking out at the main road. Scooters (rear view: skirt, tail lamp, plate, seat, small mirrors) are parked on both walls, with shop steps and a low wire mat. A head-on Indian fire tender (red cab, FIRE header, red/blue light bar, mirrors on arms) noses in (`creep`), stops (`jolt`), and `bars` draws the gold available-gap hairline against the white tender-width hairline.
+- `GaliTop`: a night drone shot straight down into the gali (100 px = 1 m). Top-view scooters sit on both sides under blue tarp and tin awnings, with black water tanks on the roofs and thin overhead wires. A top-view fire tender (FIRE roof marking, red/blue light bar, ladder) noses into the mouth (`creep`) and stops (`jolt`). `bars` draws the gold available-gap hairline against the white tender-width hairline. Fire glows up the lane. Top view beats perspective for anything about width, and the vehicles are recognisable from above.
 - `Caller`: the stranger on the street, phone at his ear and pointing at the shop, rim-lit by the fire.
 - `Phone`: an incoming call ("Padosi", 2:04 AM) or a lock-screen fire alert.
 - `fx.tsx` also has `Smoke`, `Flame` and `Mist`, all in real colours.
 
-**Captions always fit:** `TypeOn` and `Display` measure their line (`@remotion/layout-utils` `measureText`) and shrink only that line's font size when it would pass the 820 px safe width. Never let a caption clip or run past x 950.
+**Captions always fit:** `TypeOn` and `Display` measure their line from the fonts' own glyph advances (`src/fk/metrics.ts`, extracted with fontTools) and shrink only that line's font size when it would pass the 820 px safe width. Never let a caption clip or run past x 950. Never use DOM `measureText` for this: render tabs that measure before the font loads cache a different width, and the caption size flickers frame to frame.
+
+**Lighting like the truck reel (the client's benchmark):**
+- near-black backgrounds
+- one motivated key light (a street lamp, the cooler, the fire) with everything else falling off to dark
+- clean gradient materials with crisp highlight lines
+- soft ground reflections
+- small coloured accent glows
+
+No noisy plaster or dirt textures, no evenly lit sets, no saturated clutter.
+
+**Product presentation:** show the real render on a rounded light-grey studio card (its own backdrop) with a shadow and a light sweep. Never use a radial white vignette circle.
 
 **Pre-VO cue sheet:** when the script is approved before the VO exists, put every beat in `CUE` (seconds) in `timing.ts`. Scenes read their beats with `at(scene, cue)` and `sound_shop.py` parses the same file. Re-syncing to the real VO is then a data edit plus a sound rerun.
 
@@ -217,3 +228,4 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 | 2026-11-18 | Truck Owners final (40.4 s, VO v2) | as v3 | as v3 | **Posted version.** Closing line changed to "Kyunki aapka business sirf regular safety ke BHAROSE nahi chalna chahiye."; whole reel re-synced to the client's VO v2 (38.77 s). Mudguard arcs and mud flaps removed from the truck at the client's request. |
 | 2026-11-20 | Shop Owners preview (66.5 s, no VO yet) | Shop and showroom owners / Protector | Poster hook on the locked shutter ("Shutter gira ke GHAR JAATE HO? / Andar abhi bhi KYA CHAL RAHA HAI?") → Inside the closed shop, one object at a time (01 FRIDGE / 02 INVERTER / 03 CHAAR PLUG, board heats) → 2 a.m. neighbour call + smoking shutter → Re-hook (asli JHATKA) + jammed shutter + narrow gali → Insurance survey card ("SABOOT kahan hai?") → Rewind + "khud JAAG rahi hoti?" (Protector LED wakes) → Real Protector render → Flame/Heat/Gas chips, CONFIRM, siren + light, SUPPRESSION, pre-activation photo → Phone alert ("AAPKE PHONE") → Padlock punch ("TAALA chor ko rokta hai… AAG ko nahi.") + logo + share CTA | Open loops close later (which plug? → board; saboot? → photo; padosi call → own phone). Diya and Diwali stock dropped (season over). Timing is estimated in `src/shop/timing.ts` until the client VO arrives. |
 | 2026-11-20 | Shop Owners v2 (67.6 s, no VO yet) | as preview | as preview, but the 2 a.m. call is now from an **unknown number** (phone, then the caller on the street pointing at the smoking shop) and the gali is the new `GaliMouth` (realistic scooters, a tender that can't fit, gap vs width hairlines) | Client feedback: more realistic graphics (textured plaster, slat profiles + grime, granite cladding, pavers, slotted-angle racks, 3D stock, visi-cooler with depth, piggyback adapter on the board), captions auto-fit, padosi replaced by an unknown caller (L5, L13). |
+| 2026-11-20 | Shop Owners v3 (67.6 s, no VO yet) | as v2 | as v2; gali beat is now the `GaliTop` drone shot | Client feedback: caption size flicker fixed (glyph-metric fitting); truck-reel lighting on every set; realistic caller (real proportions, profile, three-light shading, medium shot); top-view scooters; product on a studio card instead of a white circle. |
