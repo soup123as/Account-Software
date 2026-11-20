@@ -53,7 +53,7 @@ export const SH1Hook: React.FC = () => {
       </Stack>
       <Stack top={380}>
         <TypeOn words={["Andar", "abhi", "bhi"]} at={andar} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "KYA", c: C.gold }, "CHAL", "RAHA", "HAI?"]} at={andar + 16} size={112} />
+        <Display words={[{ w: "KYA", c: C.gold }, "CHAL", "RAHA", "HAI?"]} at={andar + 20} size={112} />
         <TypeOn words={["Kabhi", "socha", "hai?"]} at={kabhi} perLetter={0.8} weight={500} color={C.fa} />
       </Stack>
     </AbsoluteFill>
@@ -111,7 +111,7 @@ export const SH2Inside: React.FC = () => {
       <Stack top={380}>
         <TypeOn words={["Dukaan", "band", "hai..."]} at={band} out={fr - 8} color={C.fa} />
         <TypeOn words={["lekin", "andar", "sab", "kuch"]} at={lekin} out={fr - 8} perLetter={0.8} color={C.fa} />
-        <Display words={["BAND", { w: "NAHI.", c: C.gold }]} at={lekin + 26} out={fr - 8} />
+        <Display words={["BAND", { w: "NAHI.", c: C.gold }]} at={lekin + 32} out={fr - 8} />
       </Stack>
       {chip("01", "FRIDGE.", fr, inv - 4)}
       {chip("02", "INVERTER.", inv, bd - 4)}
@@ -218,18 +218,18 @@ export const SH4Arrive: React.FC = () => {
       <TopFade to={860} />
       <Stack top={380}>
         <TypeOn words={["Lekin", "asli"]} at={asli} out={jam - 6} color={C.fa} />
-        <Display words={[{ w: "JHATKA...", c: C.gold }]} at={asli + 14} out={jam - 6} />
+        <Display words={[{ w: "JHATKA...", c: C.gold }]} at={asli + 18} out={jam - 6} />
         <TypeOn words={["pahunchne", "ke", "baad", "lagta", "hai."]} at={pah} out={jam - 6} perLetter={0.8} color={C.fa} />
       </Stack>
       <Stack top={380}>
         <TypeOn words={["Shutter", "garmi", "se"]} at={jam} out={gali - 6} color={C.fa} />
-        <Display words={[{ w: "JAM.", c: C.gold }]} at={jam + 14} out={gali - 6} />
+        <Display words={[{ w: "JAM.", c: C.gold }]} at={jam + 24} out={gali - 6} />
       </Stack>
       <Stack top={380}>
         <TypeOn words={["Gali", "itni"]} at={gali} color={C.fa} />
-        <Display words={[{ w: "TANG,", c: C.gold }]} at={gali + 10} />
+        <Display words={[{ w: "TANG,", c: C.gold }]} at={gali + 18} />
         <TypeOn words={["ki", "fire", "brigade", "andar", "tak"]} at={brig} perLetter={0.7} color={C.fa} />
-        <TypeOn words={["nahi", "aa", "paati."]} at={brig + 30} color={C.fa} />
+        <TypeOn words={["nahi", "aa", "paati."]} at={brig + 40} color={C.fa} />
       </Stack>
     </AbsoluteFill>
   );

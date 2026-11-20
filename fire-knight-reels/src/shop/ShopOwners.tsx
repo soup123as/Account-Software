@@ -10,7 +10,7 @@ import { SH1Hook, SH2Inside, SH3Call, SH4Arrive, SH5Proof, SH6Turn } from "./sce
 import { SH10Hero, SH7Product, SH8System, SH9Alert } from "./scenes2";
 
 export type ShopProps = { showSafe: boolean; audio: string | null };
-export const shopDefaults: ShopProps = { showSafe: false, audio: "audio/shop-mix.wav" };
+export const shopDefaults: ShopProps = { showSafe: false, audio: "audio/shop-mix-vo.wav" };
 
 /** "Shop Owners" reel - curiosity hook for shop and showroom owners, product: the Protector. */
 export const ShopOwners: React.FC<ShopProps> = ({ showSafe, audio }) => (

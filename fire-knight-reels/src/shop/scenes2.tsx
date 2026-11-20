@@ -219,7 +219,7 @@ export const SH8System: React.FC = () => {
         <Display words={["LIGHT..."]} at={li} out={pe - 8} />
         <TypeOn words={["aur"]} at={su - 6} out={pe - 8} color={C.fa} />
         <Display words={[{ w: "SUPPRESSION,", c: C.gold }]} at={su} out={pe - 8} size={112} />
-        <TypeOn words={["apne", "aap."]} at={su + 18} out={pe - 8} color={C.fa} />
+        <TypeOn words={["apne", "aap."]} at={su + 30} out={pe - 8} color={C.fa} />
       </Stack>
       <Stack top={380}>
         <TypeOn words={["Aur", "usse", "pehle..."]} at={pe} out={ws - 6} color={C.fa} />
