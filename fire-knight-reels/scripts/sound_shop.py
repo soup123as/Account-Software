@@ -5,6 +5,8 @@ Then loudness-normalise with ffmpeg (see scripts/render.sh).
 """
 import re
 import sys
+
+SFX_ONLY = "--sfx-only" in sys.argv  # no music: drop the pad, drone and tonal swells
 import wave
 import numpy as np
 
@@ -207,13 +209,15 @@ pad_g = np.interp(
     [0, 1.5, S("call") - 0.2, S("call"), S("arrive"), S("proof") - 0.3, S("proof"), S("turn"), S("turn") + 1, S("product"), S("hero"), S("hero") + 2, Q["fk"], DUR],
     [0.12, 0.35, 0.5, 0.0, 0.0, 0.55, 0.15, 0.15, 0.0, 0.5, 0.6, 0.35, 0.7, 0],
 )
-L += pad * pad_g * 0.32
-R += pad * pad_g * 0.32
+if not SFX_ONLY:
+    L += pad * pad_g * 0.32
+    R += pad * pad_g * 0.32
 
 drone = norm(np.sin(2 * np.pi * 36.7 * tt) + 0.5 * np.sin(2 * np.pi * 55 * tt + 0.7))
 drone_g = np.interp(tt, [0, 1, S("arrive"), S("proof"), S("turn"), S("product"), Q["fk"], DUR], [0.14, 0.22, 0.3, 0.32, 0.12, 0.18, 0.1, 0])
-L += drone * drone_g
-R += drone * drone_g
+if not SFX_ONLY:
+    L += drone * drone_g
+    R += drone * drone_g
 
 # heartbeat pulse through the problem half
 hb = 5.4
@@ -284,7 +288,8 @@ put(riser(1.4), S("product") - 1.5, 0.28)
 # ---------------- 7 product ----------------
 put(whoosh(1.0, 150, 4000, 0.7), S("product") - 0.1, 0.35)
 mt2 = t_(1.6)
-put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.6) ** 1.5 * adsr(len(mt2), 0.01, 0.3), Q["ceiling"], 0.14)
+if not SFX_ONLY:
+    put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.6) ** 1.5 * adsr(len(mt2), 0.01, 0.3), Q["ceiling"], 0.14)
 put(thud(56, 34, 0.7, 0.1), Q["protector"], 0.45)
 put(thud(56, 34, 0.6, 0.1), Q["jaagta"], 0.35)
 
@@ -318,7 +323,8 @@ put(boom(3.0), Q["fk"], 0.85)
 put(thud(52, 30, 1.2, 0.2), Q["fk"], 0.45)
 et = t_(5.0)
 tone = (np.sin(2 * np.pi * 73.4 * et) + 0.5 * np.sin(2 * np.pi * 110 * et) + 0.25 * np.sin(2 * np.pi * 146.8 * et)) * adsr(len(et), 0.4, 2.8)
-put(norm(tone), Q["fk"], 0.28)
+if not SFX_ONLY:
+    put(norm(tone), Q["fk"], 0.28)
 put(beep(2637, 0.5) * np.exp(-t_(0.5) * 6), Q["fk"] + 0.4, 0.05, 0.3)
 put(beep(1568, 0.08), Q["bhejiye"], 0.08, 0.2)
 put(beep(2093, 0.12), Q["bhejiye"] + 0.09, 0.08, 0.2)
@@ -331,9 +337,9 @@ fade[-fo:] = np.linspace(1, 0, fo)
 mix *= fade[:, None]
 mix /= max(1e-6, np.max(np.abs(mix))) / 0.89
 pcm = (mix * 32767).astype("<i2")
-with wave.open(sys.argv[1], "wb") as w:
+with wave.open([a for a in sys.argv[1:] if not a.startswith("--")][0], "wb") as w:
     w.setnchannels(2)
     w.setsampwidth(2)
     w.setframerate(SR)
     w.writeframes(pcm.tobytes())
-print("wrote", sys.argv[1], round(DUR, 2), "s")
+print("wrote", [a for a in sys.argv[1:] if not a.startswith("--")][0], round(DUR, 2), "s", "(sfx only)" if SFX_ONLY else "")
