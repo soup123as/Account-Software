@@ -5,12 +5,24 @@ import { FONT, REAL } from "../fk/theme";
  * A phone on the bedside at night (HTML, 1:1 frame pixels). Mode "call": the neighbour calling
  * at 2 a.m. Mode "alert": a lock-screen fire alert notification. Width 380 x 780.
  */
-export const Phone: React.FC<{ mode: "call" | "alert"; t: number; ring?: number; note?: number; time?: string }> = ({
+export const Phone: React.FC<{
+  mode: "call" | "alert";
+  t: number;
+  ring?: number;
+  note?: number;
+  time?: string;
+  app?: string;
+  title?: string;
+  body?: string;
+}> = ({
   mode,
   t,
   ring = 1,
   note = 1,
   time = "2:04",
+  app = "PROTECTOR",
+  title = "Fire alert: aapki dukaan",
+  body = "Fire detected · tap to view",
 }) => {
   const buzz = ring > 0 && mode === "call" ? Math.sin(t * 2.6) * 3 * (Math.sin(t * 0.21) > 0 ? 1 : 0) * ring : 0;
   return (
@@ -97,10 +109,10 @@ export const Phone: React.FC<{ mode: "call" | "alert"; t: number; ring?: number;
                 <div style={{ width: 26, height: 26, borderRadius: 7, background: "#0b0b0b", border: "1px solid rgba(255,255,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <div style={{ width: 10, height: 10, borderRadius: "50%", background: REAL.lampRed }} />
                 </div>
-                PROTECTOR · now
+                {app} · now
               </div>
-              <div style={{ marginTop: 10, fontSize: 25, fontWeight: 700 }}>Fire alert: aapki dukaan</div>
-              <div style={{ marginTop: 4, fontSize: 20, opacity: 0.75, lineHeight: 1.3 }}>Fire detected · tap to view</div>
+              <div style={{ marginTop: 10, fontSize: 25, fontWeight: 700 }}>{title}</div>
+              <div style={{ marginTop: 4, fontSize: 20, opacity: 0.75, lineHeight: 1.3 }}>{body}</div>
             </div>
           </>
         )}

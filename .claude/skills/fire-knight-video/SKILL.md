@@ -165,6 +165,14 @@ No noisy plaster or dirt textures, no evenly lit sets, no saturated clutter.
 
 **Product presentation:** show the real render on a rounded light-grey studio card (its own backdrop) with a shadow and a light sweep. Never use a radial white vignette circle.
 
+**Bus world** (`src/bus/`, the Sentinel). `Bus.tsx` is an Indian intercity AC coach in side view, front left (100 px = 1 m, 12 m long). It has:
+- a rear engine bay with louvres, a battery box behind the front wheel, luggage bays, a front door and an AC pod
+- the red extinguisher behind the driver's seat (`EXT`)
+- props: `xray` (seats, driver seat, batteries, engine block), `sentinel` (a module per zone, an SS cylinder in the bay, braided hoses), `sense` cones, `fire` and `mist` (engine zone only), `hazard`, `door`, `extGlow`
+- `ZONE` / `MOD` coordinates
+
+`BusWorld` sets it on a night highway. Sentinel renders on the site are only 400×284, so `public/product/sentinel-*.png` are 2× Lanczos upscales.
+
 **Pre-VO cue sheet:** when the script is approved before the VO exists, put every beat in `CUE` (seconds) in `timing.ts`. Scenes read their beats with `at(scene, cue)` and `sound_shop.py` parses the same file. Re-syncing to the real VO is then a data edit plus a sound rerun.
 
 ## 6. Language and copy
@@ -230,3 +238,4 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 | 2026-11-20 | Shop Owners v3 (67.6 s, no VO yet) | as v2 | as v2; gali beat is now the `GaliTop` drone shot | Client feedback: caption size flicker fixed (glyph-metric fitting); truck-reel lighting on every set; realistic caller (real proportions, profile, three-light shading, medium shot); top-view scooters; product on a studio card instead of a white circle. |
 | 2026-11-20 | Shop Owners v4 (67.6 s, no VO yet) | as v3 | as v3, the call beat is the phone ("Unknown number") dissolving into the smoking shutter | Client: "remove the person part, everything else is perfect." Approved look. |
 | 2026-11-20 | Shop Owners final (70.8 s, VO) | Shop and showroom owners / Protector | as v4 | **Final.** Synced to the client's ElevenLabs VO (69.25 s). Cue sheet in `src/shop/timing.ts` holds the VO timecodes, and every cut sits in a pause. Mix at −14.1 LUFS, peak −1.4 dB (`public/audio/shop-mix-vo.wav`). |
+| 2026-11-21 | Bus Owners preview (39.2 s, no VO yet) | Bus and coach fleet owners / Sentinel | Hook on the night highway ("Passengers ki safety ka POORA KHAYAL… par engine aur battery ki SAFETY KA KYA?") → X-ray reveal of the red cylinder behind the driver's seat → distance line + three zones (ENGINE BAY / BATTERY BOX / CABIN) → Sentinel on a studio card → modules per zone, NAZAR, fire at engine, discharge only there, dashboard button callout, phone alert → bus stops, hazards, door opens (PASSENGERS KO utaarna hai… cylinder dhoondhna nahi) → question + logo + comment CTA | Ask: comment. Timing estimated in `src/bus/timing.ts` until the VO arrives. Battery zone: site says EV battery compartments, so confirm for diesel buses. |
