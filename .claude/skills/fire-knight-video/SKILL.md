@@ -173,6 +173,17 @@ No noisy plaster or dirt textures, no evenly lit sets, no saturated clutter.
 
 `BusWorld` sets it on a night highway. Sentinel renders on the site are only 400×284, so `public/product/sentinel-*.png` are 2× Lanczos upscales.
 
+**Cinematic sets** (`src/bus/cine.tsx`), used when the client asks for "realistic automotive cinematography":
+- `DriverPOV`: the night road through the windscreen, cluster glow, steering wheel, hands at ten-to-two, under-lit.
+- `Aisle`: one-point perspective down a coach aisle. Passengers are heads above the white headrest covers, seen from behind. It has racks, reading lights, blue mood light, window streaks, and the driver's partition with the red extinguisher behind the driver's seat. Props: `dolly`, `ext`, `smoke`, `dim`.
+- `EngineClose` and `BatteryClose`: close-ups lit by the fire, with turbulence-displaced flames, embers, sparks and smoke.
+- `DashPress`: a guarded red dashboard button and the driver's finger.
+- `Walker`: backlit evacuation silhouettes.
+
+`Tilt` (CSS `perspective` + `rotateX/Y` on a CamView layer) gives the 2D sets a real 3D camera angle (low-angle, cutaway). Product cutouts on dark come from flood-filling the white render background (`sentinel-*-cut.png`).
+
+People rule: only when the client asks, and never with faces (hands, backs of heads, silhouettes).
+
 **Pre-VO cue sheet:** when the script is approved before the VO exists, put every beat in `CUE` (seconds) in `timing.ts`. Scenes read their beats with `at(scene, cue)` and `sound_shop.py` parses the same file. Re-syncing to the real VO is then a data edit plus a sound rerun.
 
 ## 6. Language and copy
@@ -239,3 +250,4 @@ In a cloud container, Remotion cannot download Chrome, so `remotion.config.ts` p
 | 2026-11-20 | Shop Owners v4 (67.6 s, no VO yet) | as v3 | as v3, the call beat is the phone ("Unknown number") dissolving into the smoking shutter | Client: "remove the person part, everything else is perfect." Approved look. |
 | 2026-11-20 | Shop Owners final (70.8 s, VO) | Shop and showroom owners / Protector | as v4 | **Final.** Synced to the client's ElevenLabs VO (69.25 s). Cue sheet in `src/shop/timing.ts` holds the VO timecodes, and every cut sits in a pause. Mix at −14.1 LUFS, peak −1.4 dB (`public/audio/shop-mix-vo.wav`). |
 | 2026-11-21 | Bus Owners preview (39.2 s, no VO yet) | Bus and coach fleet owners / Sentinel | Hook on the night highway ("Passengers ki safety ka POORA KHAYAL… par engine aur battery ki SAFETY KA KYA?") → X-ray reveal of the red cylinder behind the driver's seat → distance line + three zones (ENGINE BAY / BATTERY BOX / CABIN) → Sentinel on a studio card → modules per zone, NAZAR, fire at engine, discharge only there, dashboard button callout, phone alert → bus stops, hazards, door opens (PASSENGERS KO utaarna hai… cylinder dhoondhna nahi) → question + logo + comment CTA | Ask: comment. Timing estimated in `src/bus/timing.ts` until the VO arrives. Battery zone: site says EV battery compartments, so confirm for diesel buses. |
+| 2026-11-21 | Bus Owners cinematic (43 s, no VO yet) | Bus and coach fleet owners / Sentinel | Client's 7-scene direction: low-angle highway → driver's hands → passengers → push in (hook) / aisle dolly to the red extinguisher / fast cuts engine fire → battery smoke → smoky cabin / smoke → dark studio Sentinel orbit with red scan + tech overlays → installed in the bus / 3D cutaway, engine zone red + discharge only there / button press → phone alert (red) / evacuation silhouettes → open highway → product + logo + THE SENTINEL + comment CTA | Replaces the motion-graphics preview. Red used as a controlled alarm accent at the client's request. |

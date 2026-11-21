@@ -14,6 +14,7 @@ export const Phone: React.FC<{
   app?: string;
   title?: string;
   body?: string;
+  danger?: boolean;
 }> = ({
   mode,
   t,
@@ -23,6 +24,7 @@ export const Phone: React.FC<{
   app = "PROTECTOR",
   title = "Fire alert: aapki dukaan",
   body = "Fire detected · tap to view",
+  danger = false,
 }) => {
   const buzz = ring > 0 && mode === "call" ? Math.sin(t * 2.6) * 3 * (Math.sin(t * 0.21) > 0 ? 1 : 0) * ring : 0;
   return (
@@ -98,8 +100,9 @@ export const Phone: React.FC<{
                 right: 18,
                 padding: "18px 20px",
                 borderRadius: 26,
-                background: "rgba(255,255,255,0.13)",
-                border: "1px solid rgba(255,255,255,0.12)",
+                background: danger ? "rgba(227,40,28,0.16)" : "rgba(255,255,255,0.13)",
+                border: danger ? "1.5px solid rgba(227,40,28,0.85)" : "1px solid rgba(255,255,255,0.12)",
+                boxShadow: danger ? "0 0 40px rgba(227,40,28,0.35)" : undefined,
                 opacity: note,
                 translate: `0 ${(1 - note) * -40}px`,
                 scale: `${0.92 + 0.08 * note}`,

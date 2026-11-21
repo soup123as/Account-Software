@@ -14,42 +14,43 @@
  *  L8 Kyunki driver ka pehla kaam passengers ko utaarna hai... cylinder dhoondhna nahi.
  *  L9 Aapki bus mein kitne zone covered hain? Comment kijiye.
  */
+/** Scene windows follow the client's visual direction (0-5 / 5-10 / 10-16 / 16-23 / 23-29 / 29-35 / 35-43 s). */
 export const CUE = {
   hook: 0.0,
-  kya: 3.8,
-  jawab: 6.9,
-  seat: 8.1,
-  cylinder: 9.6,
-  lekin: 11.0,
-  dekh: 12.6,
-  engine: 14.2,
-  battery: 15.5,
-  cabin: 16.8,
-  sentinel: 19.0,
-  nazar: 21.1,
-  aag: 23.2,
-  discharge: 24.6,
-  button: 26.4,
-  alert: 28.3,
-  kyunki: 30.0,
-  dhoondhna: 32.9,
-  comment: 34.6,
-  end: 37.4,
+  kya: 3.0,
+  jawab: 5.4,
+  seat: 6.6,
+  cylinder: 8.4,
+  lekin: 10.3,
+  dekh: 11.6,
+  engine: 12.8,
+  battery: 13.9,
+  cabin: 14.9,
+  sentinel: 16.6,
+  nazar: 19.5,
+  aag: 23.4,
+  discharge: 25.0,
+  button: 29.4,
+  alert: 31.6,
+  kyunki: 35.3,
+  dhoondhna: 37.6,
+  comment: 39.2,
+  end: 41.2,
 } as const;
 
 const CUTS = {
   hook: 0.0,
-  answer: 6.7,
-  zones: 10.8,
-  product: 18.85,
-  system: 21.0,
-  punch: 29.85,
-  hero: 34.45,
-  end: 39.2,
+  passenger: 5.0,
+  danger: 10.0,
+  sentinel: 16.0,
+  zones: 23.0,
+  driver: 29.0,
+  payoff: 35.0,
+  end: 43.0,
 } as const;
 
 type K = Exclude<keyof typeof CUTS, "end">;
-const ORDER: K[] = ["hook", "answer", "zones", "product", "system", "punch", "hero"];
+const ORDER: K[] = ["hook", "passenger", "danger", "sentinel", "zones", "driver", "payoff"];
 const fr = (s: number) => Math.round(s * 30);
 export const B_START = Object.fromEntries(ORDER.map((k) => [k, fr(CUTS[k])])) as Record<K, number>;
 export const B_LEN = Object.fromEntries(

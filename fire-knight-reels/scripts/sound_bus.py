@@ -204,24 +204,24 @@ for b in range(int(DUR / BAR) + 1):
         pad[i : i + len(x)] += x
 pad = norm(band(pad, 40, 1800))
 tt = np.arange(N) / SR
-pad_g = np.interp(tt, [0, 1.5, S("answer"), S("zones") - 0.2, S("zones") + 0.3, S("product"), S("system"), S("punch"), S("punch") + 0.4, S("hero"), Q["comment"] + 2.2, DUR],
+pad_g = np.interp(tt, [0, 1.5, S("passenger"), S("danger") - 0.2, S("danger") + 0.3, S("sentinel"), S("zones"), S("payoff"), S("payoff") + 0.4, S("payoff") + 3.6, Q["comment"] + 2.2, DUR],
                   [0.15, 0.4, 0.45, 0.5, 0.0, 0.55, 0.5, 0.6, 0.2, 0.45, 0.7, 0])
 if not SFX_ONLY:
     L += pad * pad_g * 0.32
     R += pad * pad_g * 0.32
 drone = norm(np.sin(2 * np.pi * 36.7 * tt) + 0.5 * np.sin(2 * np.pi * 55 * tt + 0.7))
-drone_g = np.interp(tt, [0, 1, S("zones"), S("product"), S("system"), S("punch"), DUR], [0.14, 0.22, 0.3, 0.15, 0.25, 0.15, 0])
+drone_g = np.interp(tt, [0, 1, S("danger"), S("sentinel"), S("zones"), S("payoff"), DUR], [0.14, 0.22, 0.3, 0.15, 0.25, 0.15, 0])
 if not SFX_ONLY:
     L += drone * drone_g
     R += drone * drone_g
 
 # ---------------- bus on the road: diesel rumble + tyre hiss (stops in the punch) ----------------
-rt = t_(S("punch") + 1.4)
+rt = t_(S("payoff") + 1.4)
 rum = band(rng.standard_normal(len(rt)), 30, 180) * (1 + 0.25 * np.sin(2 * np.pi * 7 * rt))
 rum = norm(rum + 0.35 * np.sin(2 * np.pi * 38 * rt)) * adsr(len(rt), 0.6, 1.4)
 put(rum, 0.0, 0.2)
 put(norm(band(rng.standard_normal(len(rt)), 800, 5000)) * adsr(len(rt), 0.6, 1.4), 0.0, 0.035)
-for k in range(int(S("punch") / 2.6)):
+for k in range(int(S("payoff") / 2.6)):
     put(whoosh(0.9, 200, 3000, 0.5), 1.0 + k * 2.6, 0.07, 0.6)  # passing poles
 
 # ---------------- 1 hook ----------------
@@ -238,8 +238,13 @@ put(norm(band(rng.standard_normal(int(0.8 * SR)), 300, 6000)) * adsr(int(0.8 * S
 put(thud(60, 36, 0.6), Q["cylinder"] + 0.1, 0.5)
 put(clank() * 0.6, Q["cylinder"] + 0.12, 0.12, -0.3)
 
-# ---------------- 3 zones ----------------
-put(boom(1.4), S("zones") + 0.05, 0.4)
+# ---------------- 3 hidden danger: engine fire, battery sparks, smoky cabin ----------------
+put(boom(1.4), S("danger") + 0.05, 0.4)
+put(crackle(Q["battery"] - S("danger"), 60), S("danger") + 0.3, 0.14)
+put(norm(band(rng.standard_normal(int(2.6 * SR)), 60, 700)) * adsr(int(2.6 * SR), 0.6, 0.4), S("danger") + 0.6, 0.18)  # fire roar
+for k in range(6):
+    put(click(5000, 0.015), Q["battery"] + 0.1 + k * 0.13, 0.2, 0.3)  # sparks
+put(hiss(1.0), Q["battery"] + 0.1, 0.08)
 put(riser(1.2), Q["dekh"] - 0.2, 0.22)
 put(thud(56, 34, 0.6), Q["dekh"] + 0.4, 0.42)
 for k in ("engine", "battery", "cabin"):
@@ -249,7 +254,7 @@ for k in ("engine", "battery", "cabin"):
 put(crackle(2.6, 18), Q["engine"] + 0.4, 0.05)
 
 # ---------------- 4 product ----------------
-put(whoosh(1.0, 150, 4000, 0.7), S("product") - 0.1, 0.35)
+put(whoosh(1.0, 150, 4000, 0.7), S("sentinel") - 0.1, 0.35)
 mt2 = t_(1.6)
 if not SFX_ONLY:
     put(norm(sum(np.sin(2 * np.pi * f * mt2) * g for f, g in [(196, 1), (294, 0.5), (392, 0.3)])) * (mt2 / 1.6) ** 1.5 * adsr(len(mt2), 0.01, 0.3), Q["sentinel"], 0.14)
@@ -270,15 +275,17 @@ put(thud(80, 50, 0.2, 0.4), Q["button"] + 0.5, 0.3)
 put(beep(1568, 0.1), Q["alert"] + 0.35, 0.12, -0.1)
 put(beep(2093, 0.16), Q["alert"] + 0.46, 0.12, -0.1)
 
-# ---------------- 6 punch: air brakes, hazards, door ----------------
-put(norm(band(rng.standard_normal(int(1.0 * SR)), 1500, 8000)) * np.exp(-t_(1.0) * 3), S("punch") + 0.9, 0.18)  # air brake psst
-for k in range(int((S("hero") + 2 - S("punch")) / 0.75)):
-    put(tick(1500, 0.03), S("punch") + 0.3 + k * 0.75, 0.06, 0.3)  # hazard relay
+# ---------------- 6 driver + alert / 7 payoff: air brakes, hazards, door, footsteps ----------------
+for k in range(14):
+    put(thud(120, 70, 0.1, 0.5), S("payoff") + 0.4 + k * 0.36, 0.1, (k % 2) * 0.4 - 0.2)
+put(norm(band(rng.standard_normal(int(1.0 * SR)), 1500, 8000)) * np.exp(-t_(1.0) * 3), S("payoff") + 0.9, 0.18)  # air brake psst
+for k in range(int((S("payoff") + 3.6 + 2 - S("payoff")) / 0.75)):
+    put(tick(1500, 0.03), S("payoff") + 0.3 + k * 0.75, 0.06, 0.3)  # hazard relay
 put(norm(band(rng.standard_normal(int(0.7 * SR)), 400, 4000)) * adsr(int(0.7 * SR), 0.05, 0.4), Q["kyunki"] + 0.7, 0.12, -0.2)  # door
 put(thud(56, 34, 0.6), Q["kyunki"] + 1.0, 0.42)  # PASSENGERS
 
 # ---------------- 7 hero ----------------
-put(whoosh(1.6, 100, 3000, 0.3), S("hero") - 0.2, 0.25)
+put(whoosh(1.6, 100, 3000, 0.3), S("payoff") + 3.6 - 0.2, 0.25)
 put(thud(56, 34, 0.6), Q["comment"] + 0.6, 0.35)
 LG = Q["comment"] + 2.2
 put(boom(3.0), LG, 0.8)
