@@ -276,7 +276,7 @@ function say(c,at,out,{bigAt}={}){const dir=[[-1,0],[0,1],[1,0],[0,-1]][door++%4
   c.lines.forEach(l=>{l.ch=l.ch||splitChars(l.e);
     tl.fromTo(l.ch,{opacity:0,xPercent:dir[0]*55,yPercent:dir[1]*70},{opacity:1,xPercent:0,yPercent:0,duration:.5,ease:'power4.out',stagger:.016,...IR},t);
     blurTween(tl,l.e,t,dir[0]?34:22,0,.55,dir[0]?{}:{ax:.1,ay:1});t+=.42;});
-  if(c.b){const w=$$('.bw>span',c.b),bt=bigAt??(at+.38);
+  if(c.b){const w=$$('.bw>span',c.b),bt=bigAt??(at+(c.n?.06:.38));
     tl.fromTo(w,{yPercent:110},{yPercent:0,duration:.6,ease:'expo.out',stagger:.07,...IR},bt);blurTween(tl,c.b,bt,18,0,.5,{ax:.1,ay:1});}
   /* exit: lift and blur, faster than the entry */
   tl.to(c.c,{opacity:0,y:-26,duration:.28,ease:'power2.in'},out);blurTween(tl,c.c,out,0,22,.3,{ease:'power2.in',ax:.1,ay:1});
@@ -320,7 +320,7 @@ say(cap(null,'ENGINE BAY',{n:'01'}),11.6,12.7);
 shot(12.75,.55,4.2,372,266,'power2.inOut',1450);tl.to(S,{spark:1,duration:.3},12.9);
 say(cap(null,'BATTERY BOX',{n:'02'}),12.95,13.9);
 shot(13.95,.6,2.3,600,140,'power2.inOut',1200);tl.to(S,{spark:0,duration:.4},14.0);show('#haze',14.05,.7,.55);
-say(cap(null,'CABIN',{n:'03'}),14.1,15.1);
+say(cap(null,'CABIN',{n:'03'}),14.1,15.25);
 
 /* 15.2-20.2  THE SENTINEL — the line becomes the hose; cylinder, hoses and modules assemble in place */
 hide('#haze',15.1,.6);tl.to(S,{fire:0,duration:.5},15.1);hide('#heat',15.1,.5);hide('#goldtip',15.2,.3);
