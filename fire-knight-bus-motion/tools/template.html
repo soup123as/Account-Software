@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<!-- Made with the Bang Motion skill by Bang Tutorial (https://youtube.com/bangtutorial) - MIT -->
+<head>
+<meta charset="utf-8">
+<title>The Fire Knight — Bus Owners × The Sentinel</title>
+<!--
+  STYLE BRIEF
+  Theme / feeling   : bus fleet fire safety — calm, watchful, premium
+  Concept           : one continuous shot (candidates: problem -> gone, macro product). The bus is the map.
+  Fingerprint       : continuous shot · 1 world · bus (cabin, cylinder, engine, battery, Sentinel) ·
+                      opens already close on the lit cabin · closes on a pull-back under the logo
+  Palette (brand)   : black #000 / #080808, text #fff + #fafafa, accent gold #f0b242 (thefireknight.in brief).
+                      Objects keep real colours; red only on the extinguisher and the fire zone.
+  Fonts (brand)     : DM Sans (sentences) + Anton (caps hits) — the client's fixed brand system.
+  Background        : cinematic dark; night highway that keeps flowing, sodium glow, living grain (>= 2 layers)
+  Signature motion  : one gold line that draws itself and travels (distance -> hose)
+  Special moment    : the camera passes through the bus wall; the body turns x-ray as it crosses
+  Deterministic     : everything is a pure function of tl.time(); no clocks, no Math.random in render
+-->
+<script src="lib/gsap.min.js"></script>
+<style>
+/*__FONTS__*/
+:root{--gold:#F0B242;--fa:#FAFAFA;--base:#000}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:"FK DM Sans",system-ui,sans-serif;color:#fff}
+#filters{position:fixed;width:0;height:0;opacity:0;pointer-events:none}
+#stage{position:fixed;left:50%;top:50%;width:1080px;height:1920px;transform:translate(-50%,-50%) scale(1);overflow:hidden;background:#000}
+#world{position:absolute;left:0;top:0;width:1px;height:1px;transform-origin:0 0;will-change:transform}
+#world svg{position:absolute;left:0;top:0;overflow:visible}
+/* initial hidden states live in CSS (tweens use immediateRender:false) */
+.h0{opacity:0}
+.zl{font-family:"FK DM Sans";font-weight:700;font-size:19px;letter-spacing:1.2px}
+/* HUD: captions sit in the dark pocket above the bus (brand rule: never on an object) */
+#shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.96) 0,rgba(0,0,0,.9) 600px,rgba(0,0,0,0) 860px)}
+.cap{position:absolute;left:130px;top:380px;width:820px;visibility:hidden}
+.cap .s{font-weight:600;font-size:52px;line-height:1.16;letter-spacing:-.02em;color:var(--fa);white-space:nowrap}
+.cap .b{font-family:"FK Anton";font-size:120px;line-height:1.04;letter-spacing:.01em;text-transform:uppercase;white-space:nowrap;margin-top:2px}
+.cap .b.m{font-size:104px}
+.cap .n{font-weight:600;font-size:40px;color:var(--gold)}
+.g{color:var(--gold)}
+.wd{display:inline-block;white-space:nowrap}
+.ch{display:inline-block;opacity:0;will-change:transform,opacity}
+.bw{display:inline-block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em;margin-right:.22em;vertical-align:top}
+.bw>span{display:inline-block}
+#insert{position:absolute;left:120px;top:690px;width:840px;padding:70px 60px 60px;opacity:0;transform-origin:50% 100%;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(4,5,6,.96) 55%,rgba(4,5,6,0) 100%)}
+#insert img{width:100%;display:block;filter:drop-shadow(0 24px 30px rgba(0,0,0,.85))}
+#btn{position:absolute;left:590px;top:580px;width:220px;height:220px;opacity:0}
+#phone{position:absolute;left:610px;top:590px;width:300px;height:540px;opacity:0;border-radius:44px;
+  background:linear-gradient(135deg,#3a3d42,#15171a 40%,#0b0c0e);box-shadow:0 30px 70px rgba(0,0,0,.8),inset 0 0 0 2px rgba(255,255,255,.08)}
+#phone .scr{position:absolute;inset:9px;border-radius:36px;overflow:hidden;background:linear-gradient(180deg,#141820,#07080b)}
+#phone .isl{position:absolute;left:50%;top:10px;width:84px;height:24px;margin-left:-42px;border-radius:14px;background:#000}
+#phone .tm{position:absolute;top:74px;width:100%;text-align:center;font-weight:500;font-size:84px;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+#note{position:absolute;left:14px;right:14px;top:210px;padding:14px 16px;border-radius:20px;opacity:0;
+  background:rgba(227,40,28,.16);border:1.5px solid rgba(227,40,28,.85);box-shadow:0 0 34px rgba(227,40,28,.35)}
+#note .a{font-size:14px;letter-spacing:.04em;opacity:.8;display:flex;align-items:center;gap:8px}
+#note .a i{width:9px;height:9px;border-radius:50%;background:#E3281C;display:inline-block}
+#note .t{margin-top:7px;font-weight:700;font-size:21px}
+#note .d{margin-top:3px;font-size:16px;opacity:.78}
+#end{position:absolute;inset:0;pointer-events:none}
+#emblem{position:absolute;left:435px;top:380px;width:210px;opacity:0}
+#wordmark{position:absolute;left:340px;top:668px;width:400px;opacity:0}
+#prod{position:absolute;left:0;width:1080px;top:738px;text-align:center;font-family:"FK Anton";font-size:60px;letter-spacing:.05em;color:var(--gold);opacity:0}
+#q{position:absolute;left:0;width:1080px;top:868px;text-align:center;font-weight:600;font-size:46px;letter-spacing:-.02em;color:var(--fa);opacity:0}
+#cta{position:absolute;left:50%;top:960px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:16px 34px;border-radius:999px;
+  border:2px solid var(--gold);background:rgba(240,178,66,.1);font-weight:600;font-size:34px;white-space:nowrap;opacity:0}
+#grain{position:absolute;inset:-60px;pointer-events:none;filter:url(#grainf);opacity:.2;mix-blend-mode:overlay}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 70% at 50% 58%,transparent 42%,rgba(0,0,0,.55) 88%,rgba(0,0,0,.88) 100%)}
+#ui{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:none;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;
+  background:rgba(14,16,22,.92);border:1px solid rgba(255,255,255,.1);font-size:13px;color:#A0A6B4;z-index:50}
+#ui.on{display:flex}
+#ui button{background:#262A34;color:#fff;border:none;padding:7px 14px;border-radius:8px;font:inherit;cursor:pointer}
+#scrub{width:300px;accent-color:var(--gold)}
+#clock{font-variant-numeric:tabular-nums;min-width:5.6ch;text-align:right}
+</style>
+</head>
+<body>
+<svg id="filters"><defs>
+  <filter id="grainf" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+</defs></svg>
+
+<div id="stage">
+  <div id="world">
+    <svg width="1" height="1">
+      <defs>
+        <linearGradient id="wSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020203"/><stop offset=".8" stop-color="#0b0e11"/><stop offset="1" stop-color="#151b21"/></linearGradient>
+        <linearGradient id="wRoad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1e20"/><stop offset="1" stop-color="#060707"/></linearGradient>
+        <radialGradient id="wPole"><stop offset="0" stop-color="#FFBE6A" stop-opacity=".55"/><stop offset="1" stop-color="#FFBE6A" stop-opacity="0"/></radialGradient>
+        <radialGradient id="wHeat"><stop offset="0" stop-color="#FFB33A" stop-opacity=".95"/><stop offset=".4" stop-color="#FF6A1A" stop-opacity=".55"/><stop offset="1" stop-color="#E2361A" stop-opacity="0"/></radialGradient>
+        <radialGradient id="wHaz"><stop offset="0" stop-color="#FFA41A" stop-opacity=".6"/><stop offset="1" stop-color="#FFA41A" stop-opacity="0"/></radialGradient>
+        <radialGradient id="wExt"><stop offset="0" stop-color="#EE4A3A" stop-opacity=".6"/><stop offset="1" stop-color="#C61F1A" stop-opacity="0"/></radialGradient>
+        <linearGradient id="wCyl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f4f6"/><stop offset=".5" stop-color="#a9b0b6"/><stop offset="1" stop-color="#5d6368"/></linearGradient>
+        <linearGradient id="wDoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdca6" stop-opacity=".34"/><stop offset="1" stop-color="#ffdca6" stop-opacity="0"/></linearGradient>
+        <filter id="wSoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+        <filter id="wHaze" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+      </defs>
+      <!-- night: sky, far town, sodium poles, road -->
+      <rect x="-5000" y="-4000" width="11200" height="4382" fill="url(#wSky)"/>
+      <g id="town"></g>
+      <rect x="-5000" y="262" width="11200" height="120" fill="#07090b"/>
+      <g id="poles"></g>
+      <rect x="-5000" y="382" width="11200" height="3000" fill="url(#wRoad)"/>
+      <rect x="-5000" y="382" width="11200" height="3" fill="#3a3d40"/>
+      <g id="dashes"></g>
+      <g id="busbob">
+        <g id="L0">__XRAY__</g>
+        <g id="L2">__DOOR__</g>
+        <g id="L1">__BODY__</g>
+        <!-- light from the open door -->
+        <polygon id="doorlight" class="h0" points="92,330 148,330 250,430 -30,430" fill="url(#wDoor)"/>
+        <!-- the red cylinder's halo -->
+        <circle id="extglow" class="h0" cx="112" cy="160" r="46" fill="url(#wExt)"/>
+        <!-- signature: the gold line -->
+        <path id="gold" d="M112 190 L112 218 L990 218 Q1050 218 1098 268" fill="none" stroke="#F0B242" stroke-width="3" stroke-linecap="round" class="h0"/>
+        <circle id="goldtip" class="h0" r="6" fill="#F0B242"/>
+        <!-- zones -->
+        <g id="zEng" class="h0"><rect x="998" y="206" width="200" height="124" rx="10" fill="none" stroke="#F0B242" stroke-width="2.6"/><text class="zl" x="998" y="198" fill="#F0B242">ENGINE</text></g>
+        <g id="zEngR" class="h0"><rect x="998" y="206" width="200" height="124" rx="10" fill="rgba(227,40,28,.16)" stroke="#E3281C" stroke-width="3.4"/><text class="zl" x="998" y="198" fill="#E3281C">ENGINE · ACTIVE</text></g>
+        <g id="zBat" class="h0"><rect x="314" y="222" width="108" height="104" rx="10" fill="none" stroke="#F0B242" stroke-width="2.6"/><text class="zl" x="314" y="350" fill="#F0B242">BATTERY</text></g>
+        <g id="zCab" class="h0"><rect x="144" y="54" width="858" height="158" rx="10" fill="none" stroke="#F0B242" stroke-width="2.6"/><text class="zl" x="150" y="32" fill="#F0B242">CABIN</text></g>
+        <!-- danger -->
+        <ellipse id="heat" class="h0" cx="1098" cy="272" rx="170" ry="100" fill="url(#wHeat)" style="mix-blend-mode:screen"/>
+        <g id="flame" filter="url(#wSoft)"></g>
+        <g id="sparks"></g>
+        <g id="haze" class="h0" filter="url(#wHaze)"><ellipse id="hz1" cx="420" cy="150" rx="150" ry="34" fill="#8a8a90"/><ellipse id="hz2" cx="640" cy="120" rx="190" ry="40" fill="#75757b"/><ellipse id="hz3" cx="840" cy="160" rx="140" ry="30" fill="#8a8a90"/></g>
+        <!-- the Sentinel: cylinder in the bay, braided hoses, one module per zone -->
+        <g id="hoses" fill="none" stroke="#c3c9cf" stroke-width="2.6" stroke-linecap="round">
+          <path class="hose h0" d="M520 300 C470 300 400 262 368 244"/>
+          <path class="hose h0" d="M600 300 C800 300 1000 240 1096 228"/>
+          <path class="hose h0" d="M548 290 C548 200 470 120 430 74"/>
+          <path class="hose h0" d="M572 290 C600 200 720 120 760 74"/>
+        </g>
+        <g id="cyl" class="h0"><rect x="490" y="288" width="140" height="24" rx="12" fill="url(#wCyl)"/><rect x="490" y="288" width="140" height="5" rx="2.5" fill="#fff" opacity=".6"/><rect x="536" y="286" width="5" height="28" fill="#6b7177"/><rect x="580" y="286" width="5" height="28" fill="#6b7177"/></g>
+        <g id="mods"></g>
+        <g id="cones"></g>
+        <polygon id="mcone" points="1090,228 1102,228 1176,322 1016,322" fill="#E9F3FA" filter="url(#wHaze)" opacity="0"/><g id="mist"></g>
+        <!-- alert leaving the bus -->
+        <g id="sig" fill="none" stroke="#E3281C" stroke-width="3" stroke-linecap="round"></g>
+        <g id="hazard" style="mix-blend-mode:screen"><circle cx="14" cy="268" r="7" fill="#FFC460"/><circle cx="14" cy="268" r="60" fill="url(#wHaz)"/><circle cx="1194" cy="236" r="7" fill="#FFC460"/><circle cx="1194" cy="236" r="60" fill="url(#wHaz)"/></g>
+      </g>
+    </svg>
+  </div>
+
+  <div id="shade"></div>
+
+  <!-- HUD -->
+  <div id="insert"><img src="assets/sentinel-front-cut.png" alt=""></div>
+  <svg id="link" width="1080" height="1920" style="position:absolute;inset:0;pointer-events:none"><path id="link1" class="h0" d="M540 1040 L540 1440" stroke="#F0B242" stroke-width="2.5" fill="none"/><path id="link2" class="h0" d="M660 786 Q 520 940 392 1228" stroke="#F0B242" stroke-width="2.5" fill="none"/><circle id="link2d" class="h0" cx="392" cy="1234" r="7" fill="#F0B242"/></svg>
+  <svg id="btn" viewBox="-110 -110 220 220">
+    <defs><radialGradient id="bG" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ff7a66"/><stop offset=".5" stop-color="#d4231a"/><stop offset="1" stop-color="#6e0d09"/></radialGradient></defs>
+    <circle r="108" fill="#0d0e10" stroke="#F0B242" stroke-width="3"/>
+    <rect x="-76" y="-76" width="152" height="152" rx="22" fill="#17191c" stroke="#3a3d41" stroke-width="2"/>
+    <circle r="56" fill="none" stroke="#e2b322" stroke-width="5"/>
+    <circle id="btncap" r="46" fill="url(#bG)"/>
+    <ellipse cx="-14" cy="-17" rx="17" ry="9" fill="#fff" opacity=".35"/>
+    <circle id="btnled" cx="56" cy="-56" r="7" fill="#3BEA6A"/>
+  </svg>
+  <div id="phone"><div class="scr"><div class="isl"></div><div class="tm">11:42</div>
+    <div id="note"><div class="a"><i></i>SENTINEL · now</div><div class="t">Fire alert · Bus 07</div><div class="d">Engine zone · suppression active</div></div></div></div>
+
+  <div id="caps"></div>
+
+  <div id="end">
+    <img id="emblem" src="assets/emblem.png" alt="">
+    <img id="wordmark" src="assets/wordmark-light.png" alt="">
+    <div id="prod">THE SENTINEL</div>
+    <div id="q">Aapki bus mein kitne <span class="g">zone</span> covered hain?</div>
+    <div id="cta"><svg width="32" height="32" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="#F0B242" stroke-width="2" stroke-linejoin="round"/></svg><span>Comment <span class="g">kijiye</span></span></div>
+  </div>
+
+  <div id="grain"></div>
+  <div id="vig"></div>
+</div>
+
+<audio id="snd" src="audio/bus-motion-mix.mp3" preload="auto"></audio>
+<div id="ui"><button id="btn-play">Pause</button><button id="btn-restart">Restart</button><input id="scrub" type="range" min="0" max="1000" value="0"><span id="clock">0.00s</span></div>
+
+<script>
+/* ============ UTIL ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg', W=1080, H=1920;
+const el=(n,a={},p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const rnd=s=>{const x=Math.sin(s*127.1+311.7)*43758.5453;return x-Math.floor(x);};        // seed-time only
+const noise=(t,s=0)=>{const i=Math.floor(t),f=t-i,a=rnd(i+s*101)*2-1,b=rnd(i+1+s*101)*2-1,u=f*f*(3-2*f);return a+(b-a)*u;};
+const defs=$('#filters defs');let fc=0;
+function makeBlur(){const id='mb'+(fc++);const f=el('filter',{id,x:'-70%',y:'-70%',width:'240%',height:'240%'},defs);
+  const g=el('feGaussianBlur',{stdDeviation:'0 0'},f);return{url:`url(#${id})`,node:g};}
+function blurTween(tl,targets,at,from,to,dur,{ease='power3.out',ax=1,ay=.08}={}){const b=makeBlur(),o={v:from};
+  tl.set(targets,{filter:b.url},at);
+  tl.to(o,{v:to,duration:dur,ease,onUpdate(){b.node.setAttribute('stdDeviation',`${(o.v*ax).toFixed(2)} ${(o.v*ay).toFixed(2)}`);}},at);
+  tl.set(targets,{filter:'none'},at+dur);}
+function splitChars(e){const words=(e.textContent||'').split(' ');e.textContent='';const out=[];
+  words.forEach((w,i)=>{const wr=document.createElement('span');wr.className='wd';
+    for(const c of w){const s=document.createElement('span');s.className='ch';s.textContent=c;wr.appendChild(s);out.push(s);}
+    e.appendChild(wr);if(i<words.length-1){const sp=document.createElement('span');sp.className='ch';sp.innerHTML='&nbsp;';e.appendChild(sp);out.push(sp);}});return out;}
+
+/* ============ WORLD DRESSING (seeded once at load) ============ */
+{const g=$('#town');for(let i=0;i<120;i++)el('circle',{cx:-4800+i*88+rnd(i)*60,cy:262-20-rnd(i+3)*70,r:1.4+rnd(i+5)*1.8,fill:rnd(i+7)>.5?'#FFBE6A':'#d8e6f0',opacity:.22+rnd(i+9)*.35},g);}
+{const g=$('#poles');for(let i=0;i<9;i++){const x=-3000+i*900;el('rect',{x,y:-138,width:6,height:520,fill:'#15181b'},g);
+  el('path',{d:`M${x+3} -138 q4 -20 46 -18`,stroke:'#15181b','stroke-width':5,fill:'none'},g);el('rect',{x:x+38,y:-160,width:26,height:8,rx:3,fill:'#2a2e33'},g);
+  el('circle',{cx:x+50,cy:-152,r:130,fill:'url(#wPole)'},g);el('ellipse',{cx:x+60,cy:412,rx:260,ry:30,fill:'#FFBE6A',opacity:.08},g);}}
+{const g=$('#dashes');for(let i=0;i<50;i++)el('rect',{x:-5000+i*220,y:502,width:110,height:8,fill:'#d9d9d9',opacity:.4},g);}
+const MODS=[[1096,220],[368,236],[430,66],[760,66]];
+{const g=$('#mods');MODS.forEach(([x,y])=>{const m=el('g',{class:'mod h0'},g);m.dataset.o=`${x}px ${y}px`;
+  el('rect',{x:x-11,y:y-6,width:22,height:14,rx:6,fill:'#cfd5da'},m);el('circle',{cx:x,cy:y+1,r:3.6,fill:'#0b0b0b'},m);el('circle',{cx:x+6,cy:y+5,r:1.4,fill:'#e8e8e8'},m);});
+ const c=$('#cones');MODS.forEach(([x,y])=>el('polygon',{class:'cone h0',points:`${x-6},${y+8} ${x+6},${y+8} ${x+70},${y+110} ${x-70},${y+110}`,fill:'#e9f3fa'},c));}
+const FL=[1,.82,.58,.32].map((k,i)=>el('path',{fill:['#E2361A','#FF6A1A','#FFB33A','#FFF4DC'][i],opacity:[.85,.95,1,1][i]},$('#flame')));
+const SP=[...Array(9)].map((_,i)=>el('circle',{r:1.6,fill:'#ffd27a'},$('#sparks')));
+const MI=[...Array(120)].map((_,i)=>el('circle',{fill:'#E9F3FA'},$('#mist')));
+const SG=[0,1,2].map(i=>el('path',{},$('#sig')));
+
+/* ============ CAPTIONS (HUD) ============ */
+const caps=$('#caps');
+function cap(small,big,{n,m}={}){const c=document.createElement('div');c.className='cap';
+  if(n){const e=document.createElement('div');e.className='n';e.textContent=n;c.appendChild(e);}
+  const lines=[].concat(small||[]).map(t=>{const e=document.createElement('div');e.className='s';e.textContent=t;c.appendChild(e);return{e,ch:null};});
+  let b=null;if(big){b=document.createElement('div');b.className='b'+(m?' m':'');
+    big.split(' ').forEach(w=>{const gold=w.startsWith('*');const o=document.createElement('span');o.className='bw';const i=document.createElement('span');
+      i.textContent=gold?w.slice(1):w;if(gold)i.className='g';o.appendChild(i);b.appendChild(o);});c.appendChild(b);}
+  caps.appendChild(c);if(b)gsap.set(b.querySelectorAll('.bw>span'),{yPercent:110});return{c,lines,b,n:c.querySelector('.n')};}
+
+/* ============ STATE + CAMERA ============ */
+const S={flow:0,xray:0,door:0,fire:0,mist:0,spark:0,sig:0,haz:0,bob:1};
+const CAM={s:2.6,fx:430,fy:130,ay:1200};
+const world=$('#world'),L0=$('#L0'),L1=$('#L1'),L2=$('#L2'),WH=$$('.whl'),grain=$('#grain'),bob=$('#busbob');
+function render(t){
+  /* camera: world point (fx,fy) lands on screen (540, ay); a slow breath rides on top */
+  const s=CAM.s*(1+.008*Math.sin(t*.7));
+  world.style.transform=`translate(${(540-CAM.fx*s).toFixed(2)}px,${(CAM.ay-CAM.fy*s).toFixed(2)}px) scale(${s.toFixed(4)})`;
+  /* the road flows as a DISTANCE (S.flow), never as accumulated speed */
+  $('#dashes').setAttribute('transform',`translate(${-(S.flow%220)} 0)`);
+  $('#poles').setAttribute('transform',`translate(${-((S.flow*.6)%900)} 0)`);
+  $('#town').setAttribute('transform',`translate(${-((S.flow*.06)%1056)} 0)`);
+  const wa=`rotate(${(S.flow*.64)%360})`;for(const w of WH)w.setAttribute('transform',wa);
+  bob.setAttribute('transform',`translate(0 ${(Math.sin(t*9)*.5*S.bob).toFixed(2)})`);
+  L1.style.opacity=(1-S.xray)*(1-S.door);L2.style.opacity=(1-S.xray)*S.door;
+  /* fire in the engine bay */
+  const h=S.fire*72;
+  FL.forEach((p,i)=>{const k=[1,.82,.58,.32][i],hh=h*k*(.85+.25*noise(t*10+i*3,i)),ww=h*.45*k,lean=noise(t*7+i,i+4)*ww*.5,x=1080,y=318;
+    p.setAttribute('d',h<1?'':`M${x-ww} ${y} C${x-ww} ${y-hh*.45} ${x-ww*.2+lean} ${y-hh*.6} ${x+lean} ${y-hh} C${x+ww*.25+lean} ${y-hh*.6} ${x+ww} ${y-hh*.42} ${x+ww} ${y}Z`);});
+  /* sparks at the battery terminal */
+  SP.forEach((c,i)=>{const a=(t*1.6+rnd(i))%1;c.setAttribute('cx',370+(rnd(i+3)-.5)*30+a*(rnd(i+5)-.5)*60);c.setAttribute('cy',246-a*54);c.setAttribute('opacity',S.spark*(1-a));});
+  /* suppression: only under the engine module */
+  MI.forEach((c,i)=>{const sp=.6+rnd(i)*.6,a=(t*1.05*sp+rnd(i+1))%1,d=(rnd(i+2)-.5)*2;
+    c.setAttribute('cx',1096+d*80*a);c.setAttribute('cy',228+a*94*Math.min(1,S.mist*1.3));c.setAttribute('r',1.1+rnd(i+3)*1.7);c.setAttribute('opacity',.6*(1-a*.6)*Math.min(1,S.mist*1.5));});
+  /* the alert travelling up from the roof */
+  SG.forEach((p,i)=>{const a=(t*.9+i/3)%1,r=20+a*90;p.setAttribute('d',`M${300-r} ${30-r*.55} A${r} ${r} 0 0 1 ${300+r} ${30-r*.55}`);p.setAttribute('opacity',S.sig*(1-a));});
+  $('#mcone').setAttribute('opacity',.3*S.mist);
+  $('#hazard').style.opacity=S.haz*(Math.sin(t*5.2)>0?1:.08);
+  $('#hz1').setAttribute('cx',420+Math.sin(t*.5)*40);$('#hz2').setAttribute('cx',640+Math.sin(t*.4+1)*50);$('#hz3').setAttribute('cx',840+Math.sin(t*.45+2)*36);
+  const tip=$('#gold'),L=tip.getTotalLength(),o=parseFloat(tip.style.strokeDashoffset||L),pt=tip.getPointAtLength(Math.max(0,L-o));
+  $('#goldtip').setAttribute('cx',pt.x);$('#goldtip').setAttribute('cy',pt.y);
+  const k=Math.floor(t*12);grain.style.transform=`translate(${k*37%60-30}px,${k*61%60-30}px)`;
+}
+
+/* ============ TIMELINE — the only place time is written (absolute seconds) ============ */
+const Q=new URLSearchParams(location.search);
+const DURATION=37;
+const tl=gsap.timeline({paused:true});
+const IR={immediateRender:false};
+const shot=(at,dur,s,fx,fy,ease='power2.inOut',ay)=>tl.to(CAM,Object.assign({s,fx,fy,duration:dur,ease},ay?{ay}:{}),at);
+const show=(q,at,d=.4,o=1)=>tl.fromTo(q,{opacity:0},{opacity:o,duration:d,ease:'power2.out',...IR},at);
+const hide=(q,at,d=.35)=>tl.to(q,{opacity:0,duration:d,ease:'power2.in'},at);
+
+/* caption doors: the small line types on with directional blur, the Anton line rises from a mask.
+   Entry direction alternates so no two neighbours arrive the same way. */
+let door=0;
+function say(c,at,out,{bigAt}={}){const dir=[[-1,0],[0,1],[1,0],[0,-1]][door++%4];
+  tl.set(c.c,{visibility:'visible'},at);
+  if(c.n)tl.fromTo(c.n,{opacity:0,x:-20},{opacity:1,x:0,duration:.3,ease:'power3.out',...IR},at);
+  let t=at;
+  c.lines.forEach(l=>{l.ch=l.ch||splitChars(l.e);
+    tl.fromTo(l.ch,{opacity:0,xPercent:dir[0]*55,yPercent:dir[1]*70},{opacity:1,xPercent:0,yPercent:0,duration:.5,ease:'power4.out',stagger:.016,...IR},t);
+    blurTween(tl,l.e,t,dir[0]?34:22,0,.55,dir[0]?{}:{ax:.1,ay:1});t+=.42;});
+  if(c.b){const w=$$('.bw>span',c.b),bt=bigAt??(at+.38);
+    tl.fromTo(w,{yPercent:110},{yPercent:0,duration:.6,ease:'expo.out',stagger:.07,...IR},bt);blurTween(tl,c.b,bt,18,0,.5,{ax:.1,ay:1});}
+  /* exit: lift and blur, faster than the entry */
+  tl.to(c.c,{opacity:0,y:-26,duration:.28,ease:'power2.in'},out);blurTween(tl,c.c,out,0,22,.3,{ease:'power2.in',ax:.1,ay:1});
+  tl.set(c.c,{visibility:'hidden'},out+.3);}
+
+/* ---- opening state ---- */
+const gold=$('#gold'),GL=gold.getTotalLength();gold.style.strokeDasharray=GL;gold.style.strokeDashoffset=GL;
+$$('.hose').forEach(p=>{const l=p.getTotalLength();p.style.strokeDasharray=l;p.style.strokeDashoffset=l;});
+tl.set(S,{flow:0},0);
+tl.to(S,{flow:9300,duration:29.6,ease:'none'},0);                 // cruising
+tl.to(S,{flow:9590,duration:1.9,ease:'power2.out'},29.6);         // braking to a stop
+
+/* 0.0-5.0  HOOK — born close on the lit cabin, glide back to the dark engine */
+shot(0,2.9,2.6,720,130,'sine.inOut');
+shot(2.8,.9,3.0,1094,266,'power2.inOut',1400);
+shot(3.7,1.3,3.25,1094,266,'sine.out',1400);
+show('#heat',3.4,1.2,.35);
+say(cap('Passengers ki safety ka','POORA *KHAYAL'),.05,2.75);
+say(cap('par engine aur battery ki','SAFETY KA *KYA?'),3.0,4.95);
+
+/* 5.0-9.2  THROUGH THE WALL — the body turns x-ray, travel forward to the red cylinder */
+shot(5.0,.55,4.7,1094,266,'power2.in');
+tl.to(S,{xray:1,duration:.55,ease:'power1.inOut'},5.3);
+hide('#heat',5.3,.4);
+shot(5.55,1.85,3.3,118,170,'power3.inOut',1300);
+show('#extglow',7.5,.5);
+tl.to('#extglow',{scale:1.25,transformOrigin:'112px 160px',duration:.8,ease:'sine.inOut',yoyo:true,repeat:1},7.9);
+shot(7.4,1.8,3.6,118,170,'sine.inOut');
+say(cap(['Shayad jawab hai…','driver ki seat ke peeche'],'EK *LAAL CYLINDER',{m:1}),5.9,8.95,{bigAt:7.6});
+
+/* 9.2-15.2  THE GOLD LINE — it leaves the cylinder and the camera rides it to where nobody looks */
+shot(9.2,.9,2.5,210,200,'power2.inOut',1250);
+show('#gold',9.5,.2);show('#goldtip',9.5,.2);
+tl.to(gold,{strokeDashoffset:GL*.9,duration:.7,ease:'power2.in'},9.5);
+tl.to(gold,{strokeDashoffset:0,duration:1.25,ease:'power2.inOut'},10.2);
+shot(10.2,1.25,3.0,1090,262,'power2.inOut',1400);
+hide('#extglow',10.0);
+say(cap(['Lekin aag wahan lagti hai,','jahan koi'],'*DEKH NAHI RAHA',{m:1}),9.25,11.35,{bigAt:10.35});
+show('#heat',11.3,.5,.8);tl.to(S,{fire:.35,duration:.8,ease:'power2.out'},11.5);
+say(cap(null,'ENGINE BAY',{n:'01'}),11.6,12.7);
+shot(12.75,.55,4.2,372,266,'power2.inOut',1450);tl.to(S,{spark:1,duration:.3},12.9);
+say(cap(null,'BATTERY BOX',{n:'02'}),12.95,13.9);
+shot(13.95,.6,2.3,600,140,'power2.inOut',1200);tl.to(S,{spark:0,duration:.4},14.0);show('#haze',14.05,.7,.55);
+say(cap(null,'CABIN',{n:'03'}),14.1,15.1);
+
+/* 15.2-20.2  THE SENTINEL — the line becomes the hose; cylinder, hoses and modules assemble in place */
+hide('#haze',15.1,.6);tl.to(S,{fire:0,duration:.5},15.1);hide('#heat',15.1,.5);hide('#goldtip',15.2,.3);
+shot(15.2,.75,3.0,560,280,'power2.inOut',1400);
+tl.fromTo('#cyl',{opacity:0,x:-90},{opacity:1,x:0,duration:.6,ease:'expo.out',...IR},15.45);
+tl.fromTo('#insert',{opacity:0,scale:.25,y:230},{opacity:1,scale:1,y:0,duration:.7,ease:'expo.out',...IR},15.8);
+show('#link1',16.0,.3);
+say(cap('The Fire Knight ka','*SENTINEL'),15.4,17.75);
+tl.to('#insert',{opacity:0,scale:.3,y:230,duration:.45,ease:'power3.in'},17.2);hide('#link1',17.15,.25);
+shot(16.9,1.1,1.62,610,215,'power2.inOut',1250);
+tl.to(gold,{stroke:'#c3c9cf',duration:.4},16.6);tl.to(gold,{opacity:0,duration:.7,ease:'power2.in'},16.9);
+tl.to('.hose',{strokeDashoffset:0,opacity:1,duration:.8,ease:'power2.inOut',stagger:.1},16.9);
+$$('.mod').forEach((m,i)=>tl.fromTo(m,{opacity:0,scale:.2,transformOrigin:m.dataset.o},{opacity:1,scale:1,duration:.5,ease:'back.out(2.2)',...IR},17.5+i*.12));
+tl.fromTo('.cone',{opacity:0},{opacity:.13,duration:.5,stagger:.08,...IR},18.0);
+show('#zEng',18.1,.35);show('#zBat',18.22,.35);show('#zCab',18.34,.35);
+shot(18.0,2.2,1.7,650,215,'sine.inOut');
+say(cap('har zone par','*NAZAR'),18.0,20.1);
+
+/* 20.2-26.0  ONE ZONE ONLY — fire in the engine; that zone turns red and is the only one to discharge */
+shot(20.2,.75,2.7,1050,250,'power2.inOut',1380);
+show('#heat',20.4,.6,.85);tl.to(S,{fire:.85,duration:1.0,ease:'power2.in'},20.4);
+say(cap('Aag jis zone mein'),20.45,21.85);
+tl.to('#zEng',{opacity:0,duration:.15},21.5);show('#zEngR',21.5,.15);
+tl.to(['#zBat','#zCab'],{opacity:.3,duration:.4},21.5);tl.to('.cone',{opacity:.04,duration:.4},21.5);
+tl.to(S,{mist:1,duration:.5,ease:'power2.out'},22.0);
+tl.to(S,{fire:0,duration:1.5,ease:'power2.inOut'},22.3);hide('#heat',22.6,1.2);
+say(cap('sirf usi zone mein','*DISCHARGE'),22.0,25.75);
+shot(23.9,1.3,1.62,690,215,'power2.inOut',1250);
+tl.to(S,{mist:0,duration:.8},25.0);
+
+/* 26.0-30.0  BUTTON + ALERT — both lift out of the bus as objects */
+tl.to(['#zEngR','#zBat','#zCab','.cone'],{opacity:0,duration:.4},25.7);
+shot(26.0,.75,3.0,80,170,'power2.inOut',1300);
+tl.fromTo('#btn',{opacity:0,scale:.2,x:-250,y:420},{opacity:1,scale:1,x:0,y:0,duration:.6,ease:'back.out(1.5)',...IR},26.5);
+show('#link2',26.8,.3);show('#link2d',26.8,.3);
+tl.to('#btncap',{attr:{r:41},duration:.12,ease:'power2.in'},27.35);tl.to('#btncap',{attr:{r:46},duration:.25,ease:'back.out(3)'},27.5);
+tl.to('#btnled',{attr:{fill:'#E3281C'},duration:.05},27.4);
+say(cap('Driver ke paas','DASHBOARD *BUTTON',{m:1}),26.3,28.0);
+tl.to('#btn',{opacity:0,scale:.6,duration:.3,ease:'power2.in'},27.95);hide(['#link2','#link2d'],27.9,.25);
+shot(28.0,.7,2.2,300,60,'power2.inOut',1200);
+tl.to(S,{sig:1,duration:.3},28.2);
+tl.fromTo('#phone',{opacity:0,x:260,rotate:8},{opacity:1,x:0,rotate:0,duration:.6,ease:'expo.out',...IR},28.3);
+tl.fromTo('#note',{opacity:0,y:-30,scale:.9},{opacity:1,y:0,scale:1,duration:.4,ease:'back.out(1.8)',...IR},28.75);
+say(cap('Aapke phone par','*ALERT'),28.2,29.95);
+tl.to('#phone',{opacity:0,x:260,duration:.35,ease:'power2.in'},29.9);tl.to(S,{sig:0,duration:.3},29.8);
+
+/* 30.0-33.4  PASSENGERS FIRST — the body returns, the bus stops, hazards, the door opens */
+tl.to(S,{xray:0,duration:.8,ease:'power1.inOut'},30.0);
+tl.to(['.hose','#cyl','.mod'],{opacity:0,duration:.6},30.0);
+shot(30.0,1.0,2.3,190,225,'power2.inOut',1250);
+tl.to(S,{haz:1,duration:.2},30.8);tl.to(S,{bob:0,duration:.6},31.2);
+tl.to(S,{door:1,duration:.7,ease:'power2.inOut'},31.4);show('#doorlight',31.6,.6);
+shot(31.0,2.4,2.5,170,230,'sine.inOut',1280);
+say(cap('Driver ka pehla kaam','*PASSENGERS KO',{m:1}),30.3,32.45);
+say(cap('utaarna hai…','CYLINDER DHOONDHNA *NAHI',{m:1}),32.55,33.6,{bigAt:32.7});
+
+/* 33.4-37.0  PULL BACK — the bus settles low in the frame under the logo and the question */
+shot(33.4,1.5,.84,600,191,'power3.inOut',1500);
+tl.to('#shade',{opacity:.55,duration:1},33.4);
+tl.fromTo('#emblem',{opacity:0,y:40,scale:.92},{opacity:1,y:0,scale:1,duration:.6,ease:'power3.out',...IR},34.2);blurTween(tl,'#emblem',34.2,14,0,.6,{ax:.1,ay:1});
+tl.fromTo('#wordmark',{opacity:1,clipPath:'inset(0% 100% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:.5,ease:'power3.inOut',...IR},34.6);
+tl.fromTo('#prod',{opacity:0,letterSpacing:'.2em'},{opacity:1,letterSpacing:'.05em',duration:.6,ease:'power3.out',...IR},34.9);
+tl.fromTo('#q',{opacity:0,y:24},{opacity:1,y:0,duration:.5,ease:'power3.out',...IR},35.3);blurTween(tl,'#q',35.3,16,0,.5,{ax:.1,ay:1});
+tl.fromTo('#cta',{opacity:0,y:24},{opacity:1,y:0,duration:.5,ease:'back.out(1.6)',...IR},35.6);
+tl.to('#cta',{boxShadow:'0 0 26px rgba(240,178,66,.45)',duration:.6,ease:'sine.inOut',yoyo:true,repeat:1},36.0);
+shot(34.9,2.1,.87,600,191,'sine.out',1500);
+tl.to({},{duration:.01},DURATION);
+
+/* ============ GLUE ============ */
+const stage=$('#stage');
+const fit=()=>{const s=Math.min(innerWidth/W,innerHeight/H);stage.style.transform=`translate(-50%,-50%) scale(${s})`;};
+addEventListener('resize',fit);fit();
+const clock=$('#clock'),scrub=$('#scrub'),btnP=$('#btn-play'),snd=$('#snd');let scrubbing=false;
+(function frame(){const t=tl.time();render(t);clock.textContent=t.toFixed(2)+'s';if(!scrubbing)scrub.value=String(t/DURATION*1000);requestAnimationFrame(frame);})();
+const CLEAN=Q.has('clean');
+const syncSnd=()=>{if(CLEAN)return;try{snd.currentTime=tl.time();if(tl.paused())snd.pause();else snd.play().catch(()=>{});}catch(e){}};
+const toggle=()=>{if(tl.paused()||tl.progress()>=1){if(tl.progress()>=1)tl.progress(0);tl.play();btnP.textContent='Pause';}else{tl.pause();btnP.textContent='Play';}syncSnd();};
+btnP.onclick=toggle;$('#btn-restart').onclick=()=>{tl.pause(0);tl.play();syncSnd();};
+scrub.addEventListener('pointerdown',()=>{scrubbing=true;tl.pause();syncSnd();});addEventListener('pointerup',()=>scrubbing=false);
+scrub.addEventListener('input',()=>{tl.pause();tl.time(scrub.value/1000*DURATION);});
+addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();toggle();}if(/^[rR]$/.test(e.key)){tl.pause(0);tl.play();syncSnd();}if(/^[hH]$/.test(e.key))$('#ui').classList.toggle('on');});
+if(Q.has('debug'))$('#ui').classList.add('on');
+tl.eventCallback('onComplete',()=>{tl.play(0);syncSnd();});          // loop, sound restarts with it
+const seek=t=>{tl.pause();tl.time(t,false);if(gsap.ticker.tick)gsap.ticker.tick();render(t);};
+window.OPENER={tl,DURATION,seek,W,H,ready:false};
+document.fonts.ready.then(()=>{
+  $$('.cap .b,.cap .s').forEach(e=>{let fs=parseFloat(getComputedStyle(e).fontSize);while(e.scrollWidth>820&&fs>24){fs-=2;e.style.fontSize=fs+'px';}});
+  window.OPENER.ready=true;render(0);
+  if(CLEAN)return;
+  /* start together with the sound; if autoplay is blocked, hold on frame 0 until the first gesture */
+  snd.play().then(()=>{tl.play(0);}).catch(()=>{const go=()=>{removeEventListener('pointerdown',go);removeEventListener('keydown',go);snd.play().catch(()=>{});tl.play(0);};
+    addEventListener('pointerdown',go);addEventListener('keydown',go);});
+});
+</script>
+</body>
+</html>

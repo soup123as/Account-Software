@@ -12,7 +12,8 @@ import numpy as np
 
 SR = 48000
 # ---- read the cue sheet straight from the Remotion timing file ----
-_ts = open(__file__.replace("scripts/sound_bus.py", "src/bus/timing.ts")).read()
+import os
+_ts = open(os.environ.get("BUS_TIMING") or __file__.replace("scripts/sound_bus.py", "src/bus/timing.ts")).read()  # BUS_TIMING: cue sheet of another cut
 def _block(name):
     body = re.search(name + r" = \{(.*?)\} as const", _ts, re.S).group(1)
     return {k: float(v) for k, v in re.findall(r"(\w+): ([0-9.]+)", body)}
@@ -276,7 +277,7 @@ put(beep(1568, 0.1), Q["alert"] + 0.35, 0.12, -0.1)
 put(beep(2093, 0.16), Q["alert"] + 0.46, 0.12, -0.1)
 
 # ---------------- 6 driver + alert / 7 payoff: air brakes, hazards, door, footsteps ----------------
-for k in range(14):
+for k in range(0 if os.environ.get("BUS_NO_STEPS") else 14):  # evacuation footsteps (cinematic cut only)
     put(thud(120, 70, 0.1, 0.5), S("payoff") + 0.4 + k * 0.36, 0.1, (k % 2) * 0.4 - 0.2)
 put(norm(band(rng.standard_normal(int(1.0 * SR)), 1500, 8000)) * np.exp(-t_(1.0) * 3), S("payoff") + 0.9, 0.18)  # air brake psst
 for k in range(int((S("payoff") + 3.6 + 2 - S("payoff")) / 0.75)):

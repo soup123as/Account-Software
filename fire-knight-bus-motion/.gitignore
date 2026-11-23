@@ -1,0 +1,6 @@
+audio/*-raw.wav
+audio/*.wav
+frames/
+shots/
+*.mp4
+tools/patch1.py
