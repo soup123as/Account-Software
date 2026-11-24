@@ -1,0 +1,1020 @@
+{
+ "url": "https://thefireknight.in/product/the-sentinel",
+ "finalUrl": "https://thefireknight.in/product/the-sentinel",
+ "capturedAt": "2026-11-24T05:11:09.574Z",
+ "viewport": {
+  "w": 1920,
+  "h": 1080
+ },
+ "docHeight": 8335,
+ "name": "The Fire Knight",
+ "title": "Automatic Vehicle Fire Protection System India | The Sentinel | The Fire Knight",
+ "description": "The Sentinel provides intelligent vehicle fire detection and automatic suppression for cars, engine bays and electric vehicles across India. Get a quote today.",
+ "tagline": "The Sentinel Advanced Vehicle Fire Suppression Aid",
+ "lang": "en-US",
+ "themeColorMeta": null,
+ "colorSchemeMeta": null,
+ "manifest": null,
+ "copy": {
+  "h1": [
+   "The Sentinel Advanced Vehicle Fire Suppression Aid"
+  ],
+  "h2": [
+   "The Sentinel Advanced Vehicle & EV Fire Detection And Suppression System",
+   "Everything The Sentinel Delivers",
+   "From Detection To Response — Automatically",
+   "Built To Perform. Engineered To Last.",
+   "MODULES",
+   "UP TO 4 ZONES (ENGINE, CABIN, BATTERY)",
+   "MODULE DIMENSIONS",
+   "Ø150 × 98 MM (WITH BRACKETS)",
+   "CYLINDER",
+   "SS316; 880 × 169 MM; ~7.3L INTERNAL VOLUME",
+   "OPERATING PRESSURE",
+   "12–15 BAR; HYDROTEST 22.5 BAR (1.5× MAWP)"
+  ],
+  "h3": [
+   "IR Flame + Heat Detection",
+   "Multi-Zone Protection",
+   "120° Precision Nozzles",
+   "GSM/4G Connected",
+   "IP67 Electronics",
+   "Refillable Cylinder",
+   "Detect",
+   "Decide"
+  ],
+  "heroLine": "The Sentinel Advanced Vehicle Fire Suppression Aid",
+  "ctas": [
+   {
+    "text": "Get a Quote",
+    "bg": null,
+    "color": "#ffffff",
+    "border": null,
+    "radius": 10,
+    "filled": false,
+    "inHeader": true,
+    "inHero": true,
+    "top": 43,
+    "w": 142,
+    "h": 48
+   },
+   {
+    "text": "Request a Quote",
+    "bg": null,
+    "color": "#ffffff",
+    "border": null,
+    "radius": 10,
+    "filled": false,
+    "inHeader": false,
+    "inHero": true,
+    "top": 630,
+    "w": 176,
+    "h": 48
+   },
+   {
+    "text": "View Specifications",
+    "bg": null,
+    "color": "#ffffff",
+    "border": "#ffffff",
+    "radius": 10,
+    "filled": false,
+    "inHeader": false,
+    "inHero": true,
+    "top": 630,
+    "w": 180,
+    "h": 50
+   },
+   {
+    "text": "Become a Distributor",
+    "bg": null,
+    "color": "#ffffff",
+    "border": "#ffffff",
+    "radius": 10,
+    "filled": false,
+    "inHeader": true,
+    "inHero": true,
+    "top": 41,
+    "w": 192,
+    "h": 50
+   },
+   {
+    "text": "WhatsApp Us",
+    "bg": "#1a9e5f",
+    "color": "#ffffff",
+    "border": null,
+    "radius": 10,
+    "filled": true,
+    "inHeader": false,
+    "inHero": false,
+    "top": 1737,
+    "w": 154,
+    "h": 48
+   },
+   {
+    "text": "WhatsApp — Fastest Response",
+    "bg": "#d0d4dc",
+    "color": "#080808",
+    "border": null,
+    "radius": 10,
+    "filled": true,
+    "inHeader": false,
+    "inHero": false,
+    "top": 6443,
+    "w": 45,
+    "h": 45
+   },
+   {
+    "text": "+91 7908054311",
+    "bg": "#d0d4dc",
+    "color": "#080808",
+    "border": null,
+    "radius": 10,
+    "filled": true,
+    "inHeader": false,
+    "inHero": false,
+    "top": 6566,
+    "w": 45,
+    "h": 45
+   },
+   {
+    "text": "Submit Enquiry — No Obligation",
+    "bg": "#3c3c40",
+    "color": "#ffffff",
+    "border": null,
+    "radius": 10,
+    "filled": true,
+    "inHeader": false,
+    "inHero": false,
+    "top": 6675,
+    "w": 588,
+    "h": 46
+   },
+   {
+    "text": "Sales.india@thefireknight.com",
+    "bg": "#d0d4dc",
+    "color": "#080808",
+    "border": null,
+    "radius": 10,
+    "filled": true,
+    "inHeader": false,
+    "inHero": false,
+    "top": 6690,
+    "w": 45,
+    "h": 45
+   },
+   {
+    "text": "Explore Features",
+    "bg": null,
+    "color": "#ffffff",
+    "border": null,
+    "radius": 10,
+    "filled": false,
+    "inHeader": false,
+    "inHero": false,
+    "top": 1737,
+    "w": 177,
+    "h": 48
+   },
+   {
+    "text": "Download Spec Sheet",
+    "bg": null,
+    "color": "#ffffff",
+    "border": null,
+    "radius": 10,
+    "filled": false,
+    "inHeader": false,
+    "inHero": false,
+    "top": 4381,
+    "w": 216,
+    "h": 48
+   },
+   {
+    "text": "View Product",
+    "bg": null,
+    "color": "#3c3c40",
+    "border": null,
+    "radius": 10,
+    "filled": false,
+    "inHeader": false,
+    "inHero": false,
+    "top": 7574,
+    "w": 122,
+    "h": 16
+   }
+  ],
+  "nav": [
+   "HOME",
+   "ABOUT US",
+   "PRODUCTS",
+   "DISTRIBUTORS",
+   "INSIGHTS",
+   "CONTACT"
+  ],
+  "sentences": [
+   "Protected under International Patent Application No. PCT/AU2023/050224.",
+   "Dual-sensor approach: infrared flame detection aligned with rate-of-rise temperature monitoring in each zone — fast, accurate, reliable.",
+   "Up to four modules covering engine bay, cabin, and EV battery zones independently. Normal Mode or Race Mode activation for precise control.",
+   "SS316 nozzles with 120° full-cone spray pattern. Sensor field-of-view aligned with spray cones for synchronised detection and suppression.",
+   "Real-time alerts via app, SMS, and email. OTA firmware updates. API for fleet integration. Manage multiple vehicles from a single dashboard.",
+   "Conformal-coated PCB, automotive-grade connectors, and IP67-rated electronics — engineered to survive vehicle vibration, heat, and moisture.",
+   "SS316 pressure vessel. Refillable with approved water-based fluid — no re-certification required when refill procedure is followed. Annual inspection schedule.",
+   "IR flame and rate-of-rise temperature sensors in each zone continuously monitor for fire threats — from engine bays to EV battery compartments."
+  ]
+ },
+ "colors": {
+  "theme": "light",
+  "monochrome": false,
+  "ground": [
+   {
+    "hex": "#ffffff",
+    "share": 0.524,
+    "sources": [
+     "dom",
+     "pixels"
+    ]
+   },
+   {
+    "hex": "#090909",
+    "share": 0.392,
+    "sources": [
+     "pixels",
+     "dom"
+    ]
+   }
+  ],
+  "ink": {
+   "hex": "#111111",
+   "contrastOnGround": 18.88,
+   "source": "most used text colour (no heading colour found)"
+  },
+  "inkSoft": {
+   "hex": "#3c3c40",
+   "contrastOnGround": 10.98,
+   "note": "body copy"
+  },
+  "accentCandidates": {
+   "note": "saturated colours sampled from imagery (a CSS/DOM accent exists, these are extra)",
+   "items": [
+    {
+     "hex": "#199d5e",
+     "file": "screens/02.jpg",
+     "share": 0.00271,
+     "sharePct": 0.27
+    },
+    {
+     "hex": "#57b287",
+     "file": "screens/02.jpg",
+     "share": 0.00043,
+     "sharePct": 0.04
+    },
+    {
+     "hex": "#d81817",
+     "file": "screens/06.jpg",
+     "share": 0.00042,
+     "sharePct": 0.04
+    },
+    {
+     "hex": "#e66766",
+     "file": "screens/06.jpg",
+     "share": 0.00018,
+     "sharePct": 0.02
+    }
+   ]
+  },
+  "inkMuted": {
+   "hex": "#9c9ca4",
+   "contrastOnGround": 2.73
+  },
+  "accents": [
+   {
+    "hex": "#1a9e5f",
+    "role": "accent (primary)",
+    "score": 125,
+    "sources": [
+     "CTA background",
+     "button",
+     "background",
+     "screenshot pixels"
+    ]
+   },
+   {
+    "hex": "#cc3366",
+    "role": "accent 2",
+    "score": 45,
+    "sources": [
+     "link",
+     "text"
+    ]
+   }
+  ],
+  "ctaBg": "#1a9e5f",
+  "link": "#cc3366",
+  "palette": [
+   {
+    "hex": "#ffffff",
+    "role": "ground (light theme)",
+    "share": 0.524
+   },
+   {
+    "hex": "#090909",
+    "role": "surface/ground 2",
+    "share": 0.392
+   },
+   {
+    "hex": "#111111",
+    "role": "ink (main text)",
+    "contrast": 18.9
+   },
+   {
+    "hex": "#3c3c40",
+    "role": "ink-soft (body copy)",
+    "contrast": 11
+   },
+   {
+    "hex": "#9c9ca4",
+    "role": "ink muted",
+    "contrast": 2.7
+   },
+   {
+    "hex": "#1a9e5f",
+    "role": "accent (primary)",
+    "sources": [
+     "CTA background",
+     "button",
+     "background",
+     "screenshot pixels"
+    ]
+   },
+   {
+    "hex": "#cc3366",
+    "role": "accent 2",
+    "sources": [
+     "link",
+     "text"
+    ]
+   }
+  ],
+  "pixelPalette": [
+   {
+    "hex": "#090909",
+    "share": 0.471
+   },
+   {
+    "hex": "#fdfdfd",
+    "share": 0.41
+   },
+   {
+    "hex": "#222222",
+    "share": 0.035
+   },
+   {
+    "hex": "#c7c7c8",
+    "share": 0.019
+   },
+   {
+    "hex": "#e3e3e3",
+    "share": 0.017
+   },
+   {
+    "hex": "#3b3c3e",
+    "share": 0.013
+   },
+   {
+    "hex": "#515254",
+    "share": 0.008
+   },
+   {
+    "hex": "#818183",
+    "share": 0.008
+   },
+   {
+    "hex": "#a4a4a5",
+    "share": 0.007
+   },
+   {
+    "hex": "#696a6b",
+    "share": 0.005
+   }
+  ],
+  "domBackgrounds": [
+   {
+    "hex": "#ffffff",
+    "share": 0.637
+   },
+   {
+    "hex": "#080808",
+    "share": 0.242
+   },
+   {
+    "hex": "#111111",
+    "share": 0.062
+   },
+   {
+    "hex": "#f4f4f5",
+    "share": 0.047
+   },
+   {
+    "hex": "#000000",
+    "share": 0.009
+   },
+   {
+    "hex": "#3c3c40",
+    "share": 0.001
+   },
+   {
+    "hex": "#d0d4dc",
+    "share": 0.001
+   },
+   {
+    "hex": "#1a9e5f",
+    "share": 0
+   },
+   {
+    "hex": "#5a5e68",
+    "share": 0
+   }
+  ],
+  "textColors": [
+   {
+    "hex": "#3c3c40",
+    "share": 0.231
+   },
+   {
+    "hex": "#d0d4dc",
+    "share": 0.195
+   },
+   {
+    "hex": "#9c9ca4",
+    "share": 0.189
+   },
+   {
+    "hex": "#111111",
+    "share": 0.13
+   },
+   {
+    "hex": "#c8ccd6",
+    "share": 0.092
+   },
+   {
+    "hex": "#ffffff",
+    "share": 0.084
+   },
+   {
+    "hex": "#a8acb8",
+    "share": 0.039
+   },
+   {
+    "hex": "#080808",
+    "share": 0.034
+   }
+  ],
+  "cssVars": [
+   {
+    "name": "--wp--preset--color--black",
+    "value": "#000000",
+    "hex": "#000000"
+   },
+   {
+    "name": "--wp--preset--color--cyan-bluish-gray",
+    "value": "#abb8c3",
+    "hex": "#abb8c3"
+   },
+   {
+    "name": "--wp--preset--color--white",
+    "value": "#ffffff",
+    "hex": "#ffffff"
+   },
+   {
+    "name": "--wp--preset--color--pale-pink",
+    "value": "#f78da7",
+    "hex": "#f78da7"
+   },
+   {
+    "name": "--wp--preset--color--vivid-red",
+    "value": "#cf2e2e",
+    "hex": "#cf2e2e"
+   },
+   {
+    "name": "--wp--preset--color--luminous-vivid-orange",
+    "value": "#ff6900",
+    "hex": "#ff6900"
+   },
+   {
+    "name": "--wp--preset--color--luminous-vivid-amber",
+    "value": "#fcb900",
+    "hex": "#fcb900"
+   },
+   {
+    "name": "--wp--preset--color--light-green-cyan",
+    "value": "#7bdcb5",
+    "hex": "#7bdcb5"
+   },
+   {
+    "name": "--wp--preset--color--vivid-green-cyan",
+    "value": "#00d084",
+    "hex": "#00d084"
+   },
+   {
+    "name": "--wp--preset--color--pale-cyan-blue",
+    "value": "#8ed1fc",
+    "hex": "#8ed1fc"
+   },
+   {
+    "name": "--wp--preset--color--vivid-cyan-blue",
+    "value": "#0693e3",
+    "hex": "#0693e3"
+   },
+   {
+    "name": "--wp--preset--color--vivid-purple",
+    "value": "#9b51e0",
+    "hex": "#9b51e0"
+   },
+   {
+    "name": "--swiper-theme-color",
+    "value": "#007aff",
+    "hex": "#007aff"
+   }
+  ]
+ },
+ "fonts": {
+  "roles": {
+   "heading": {
+    "family": "\"Barlow Condensed\", sans-serif",
+    "weight": "800",
+    "size": "52px",
+    "style": "normal",
+    "letterSpacing": "2.6px",
+    "lineHeight": "52px",
+    "textTransform": "capitalize",
+    "color": "#ffffff",
+    "primaryFamily": "Barlow Condensed",
+    "file": "fonts/barlow-condensed-800.ttf",
+    "fileWeight": "800"
+   },
+   "body": {
+    "family": "\"DM Sans\", sans-serif",
+    "weight": "400",
+    "size": "16px",
+    "style": "normal",
+    "letterSpacing": "normal",
+    "lineHeight": "28px",
+    "textTransform": "none",
+    "color": "#3c3c40",
+    "primaryFamily": "DM Sans",
+    "file": "fonts/dm-sans-400.ttf",
+    "fileWeight": "400"
+   },
+   "button": {
+    "family": "\"DM Sans\", sans-serif",
+    "weight": "500",
+    "size": "16px",
+    "style": "normal",
+    "letterSpacing": "normal",
+    "lineHeight": "16px",
+    "textTransform": "none",
+    "color": "#ffffff",
+    "primaryFamily": "DM Sans",
+    "file": "fonts/dm-sans-500.ttf",
+    "fileWeight": "500"
+   },
+   "nav": {
+    "family": "\"DM Sans\", sans-serif",
+    "weight": "400",
+    "size": "16px",
+    "style": "normal",
+    "letterSpacing": "normal",
+    "lineHeight": "28px",
+    "textTransform": "none",
+    "color": "#cc3366",
+    "primaryFamily": "DM Sans",
+    "file": "fonts/dm-sans-400.ttf",
+    "fileWeight": "400"
+   }
+  },
+  "faces": [
+   {
+    "family": "Barlow Condensed",
+    "weight": "700",
+    "style": "italic",
+    "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxyL3I-JCGChYJ8VI-L6OO_au7B6xTrY3Tmu4kD.ttf",
+    "file": "fonts/barlow-condensed-700-italic.ttf",
+    "bytes": 55428,
+    "used": false,
+    "range": null
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "800",
+    "style": "italic",
+    "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxyL3I-JCGChYJ8VI-L6OO_au7B6xTrf3fmu4kD.ttf",
+    "file": "fonts/barlow-condensed-800-italic.ttf",
+    "bytes": 55696,
+    "used": false,
+    "range": null
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "700",
+    "style": "normal",
+    "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B46r2z3bWvA.ttf",
+    "file": "fonts/barlow-condensed-700.ttf",
+    "bytes": 53916,
+    "used": true,
+    "range": null
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "800",
+    "style": "normal",
+    "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B47b1z3bWvA.ttf",
+    "file": "fonts/barlow-condensed-800.ttf",
+    "bytes": 54156,
+    "used": true,
+    "range": null
+   },
+   {
+    "family": "DM Sans",
+    "weight": "400",
+    "style": "italic",
+    "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2rp2ywxg089UriCZaSExd86J3t9jz86Mvy4qCRAL19DksVat-JDV30TGI.ttf",
+    "file": "fonts/dm-sans-400-italic.ttf",
+    "bytes": 33332,
+    "used": false,
+    "range": null
+   },
+   {
+    "family": "DM Sans",
+    "weight": "500",
+    "style": "italic",
+    "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2rp2ywxg089UriCZaSExd86J3t9jz86Mvy4qCRAL19DksVat-7DV30TGI.ttf",
+    "file": "fonts/dm-sans-500-italic.ttf",
+    "bytes": 33448,
+    "used": false,
+    "range": null
+   },
+   {
+    "family": "DM Sans",
+    "weight": "400",
+    "style": "normal",
+    "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAopxRSW3z.ttf",
+    "file": "fonts/dm-sans-400.ttf",
+    "bytes": 33100,
+    "used": true,
+    "range": null
+   },
+   {
+    "family": "DM Sans",
+    "weight": "500",
+    "style": "normal",
+    "url": "https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAkJxRSW3z.ttf",
+    "file": "fonts/dm-sans-500.ttf",
+    "bytes": 33132,
+    "used": true,
+    "range": null
+   }
+  ],
+  "loadedByPage": [
+   {
+    "family": "swiper-icons",
+    "weight": "400",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "100",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "200",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "300",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "400",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "500",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "600",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "700",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "800",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "900",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "100",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "200",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "300",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "400",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "500",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "600",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "700",
+    "style": "normal",
+    "status": "loaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "800",
+    "style": "normal",
+    "status": "loaded"
+   },
+   {
+    "family": "Barlow Condensed",
+    "weight": "900",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "100",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "200",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "300",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "400",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "500",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "600",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "700",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "800",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "900",
+    "style": "italic",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "100",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "200",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "300",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "400",
+    "style": "normal",
+    "status": "loaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "500",
+    "style": "normal",
+    "status": "loaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "600",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "700",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "800",
+    "style": "normal",
+    "status": "unloaded"
+   },
+   {
+    "family": "DM Sans",
+    "weight": "900",
+    "style": "normal",
+    "status": "unloaded"
+   }
+  ],
+  "mostUsed": [
+   {
+    "key": "Barlow Condensed|700",
+    "weight": 55440
+   },
+   {
+    "key": "DM Sans|400",
+    "weight": 55168
+   },
+   {
+    "key": "Barlow Condensed|800",
+    "weight": 21138
+   },
+   {
+    "key": "DM Sans|500",
+    "weight": 4225
+   }
+  ],
+  "platformFonts": {
+   "h1": [
+    {
+     "family": "Barlow Condensed ExtraBold",
+     "custom": true,
+     "glyphs": 48
+    }
+   ],
+   "body": [
+    {
+     "family": "Barlow Condensed",
+     "custom": true,
+     "glyphs": 10
+    }
+   ]
+  }
+ },
+ "logo": {
+  "file": "logo/logo.png",
+  "kind": "raster",
+  "source": "screenshot of https://thefireknight.in/wp-content/uploads/2026/06/logo2-1.webp (download failed: fetch failed)",
+  "fills": [],
+  "onDark": null,
+  "favicon": null,
+  "appIcon": null,
+  "text": {
+   "text": "HOME",
+   "font": "\"DM Sans\", sans-serif",
+   "weight": "500",
+   "size": "15px",
+   "color": "#c8ccd6"
+  },
+  "candidates": [
+   {
+    "score": 16,
+    "why": [
+     "logo-attr",
+     "home-link",
+     "header",
+     "top"
+    ],
+    "members": [
+     "img 119x113 https://thefireknight.in/wp-content/uploads/2026/06/logo2-1.webp"
+    ],
+    "lockup": false
+   },
+   {
+    "score": 3,
+    "why": [
+     "logo-attr",
+     "home-link"
+    ],
+    "members": [
+     "img 149x141 https://thefireknight.in/wp-content/uploads/2026/06/logo2-1.webp"
+    ],
+    "lockup": false
+   }
+  ]
+ },
+ "ogImage": null,
+ "screens": [
+  {
+   "file": "screens/01.jpg",
+   "scrollY": 0
+  },
+  {
+   "file": "screens/02.jpg",
+   "scrollY": 1451
+  },
+  {
+   "file": "screens/03.jpg",
+   "scrollY": 2902
+  },
+  {
+   "file": "screens/04.jpg",
+   "scrollY": 4353
+  },
+  {
+   "file": "screens/05.jpg",
+   "scrollY": 5804
+  },
+  {
+   "file": "screens/06.jpg",
+   "scrollY": 7255
+  }
+ ],
+ "media": [
+  {
+   "file": "media/01.jpg",
+   "kind": "video",
+   "src": "https://thefireknight.in/wp-content/uploads/2026/06/VID-20251113-WA0022-1-1.mp4",
+   "alt": null,
+   "w": 672,
+   "h": 378
+  }
+ ],
+ "mediaDropped": [],
+ "warnings": [
+  "favicon fetch failed (https://thefireknight.in/wp-content/uploads/fbrfg/favicon.svg): fetch failed",
+  "app-icon fetch failed (https://thefireknight.in/wp-content/uploads/fbrfg/apple-touch-icon.png): fetch failed",
+  "og:image fetch failed: fetch failed"
+ ]
+}

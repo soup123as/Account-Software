@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Fire Knight — Nazar (Bus Owners × The Sentinel)</title>
+<meta name="viewport" content="width=1080, height=1920">
+<link rel="stylesheet" href="./runtime/fonts.css">
+<link rel="stylesheet" href="./runtime/native-ui/native-ui.css">
+<style>
+/*__FONTS__*/
+/* ACCENT = gold = the Sentinel acting (its name, its watch, its discharge). Red is only the real extinguisher, fire and alert. */
+:root { --ink: #FAFAFA; --accent: #F0B242; --font: "FK DM Sans", system-ui, sans-serif; --disp: "FK Anton", "FK DM Sans", sans-serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+#main { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: #040405; color: var(--ink); font-family: var(--font); font-weight: 600; }
+.scene, .cam { position: absolute; inset: 0; }
+.scene > .cam > svg, .art { position: absolute; left: 0; top: 0; overflow: visible; }
+#engArt { -webkit-mask-image: radial-gradient(64% 46% at 50% 62%, #000 52%, transparent 100%); mask-image: radial-gradient(64% 46% at 50% 62%, #000 52%, transparent 100%); }
+.dk { position: absolute; inset: -200px; background: #000; pointer-events: none; }
+.glow { position: absolute; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; }
+/* the light every shot shares: a sodium lamp passing outside */
+#sweep { position: absolute; top: -200px; left: 0; width: 520px; height: 2400px; transform: skewX(-14deg); pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(90deg, rgba(255,190,106,0) 0%, rgba(255,190,106,.17) 45%, rgba(255,210,150,.22) 55%, rgba(255,190,106,0) 100%); }
+#shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.94) 0, rgba(0,0,0,.86) 520px, rgba(0,0,0,0) 800px); }
+.cap { position: absolute; left: 0; width: 1080px; text-align: center; white-space: pre; font-size: 80px; line-height: 96px; letter-spacing: -.02em; }
+.cap.big { font-family: var(--disp); font-weight: 400; font-size: 176px; line-height: 190px; letter-spacing: .01em; text-transform: uppercase; }
+.gold { color: var(--accent); }
+/* mirror */
+#mirror { position: absolute; left: 90px; top: 640px; width: 900px; height: 440px; border-radius: 48px; overflow: hidden; background: #000; border: 12px solid #17191c; box-shadow: 0 40px 90px rgba(0,0,0,.8), inset 0 0 0 2px rgba(255,255,255,.08); }
+#mirror svg { position: absolute; left: -90px; top: -700px; }
+#mirror .sheen { position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,0) 70%, rgba(255,255,255,.05) 100%); }
+#stalk { position: absolute; left: 505px; top: -40px; width: 70px; height: 700px; background: linear-gradient(90deg, #0b0c0e, #1f2226 45%, #0b0c0e); border-radius: 0 0 30px 30px; }
+#gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+#render { position: absolute; left: 20px; top: 900px; width: 1040px; }
+#render img { width: 100%; display: block; filter: drop-shadow(0 40px 50px rgba(0,0,0,.9)); }
+.bw { position: absolute; left: 0; top: 0; width: 1px; height: 1px; transform-origin: 0 0; }
+.bw svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.zl { font-family: "FK DM Sans"; font-weight: 700; font-size: 19px; letter-spacing: 1.2px; }
+#ui { position: absolute; left: 265px; top: 600px; --s: 1.4; }
+#emblem { position: absolute; left: 370px; top: 600px; width: 340px; }
+#wordmark { position: absolute; left: 260px; top: 1030px; width: 560px; }
+</style>
+</head>
+<body>
+<div id="main">
+
+  <!-- 1 HOOK: the driver's mirror watches the passengers -->
+  <section id="s1" class="scene" style="background:radial-gradient(ellipse 900px 700px at 540px 1100px,#11161b 0%,#040506 75%)">
+    <div id="cam1" class="cam">
+      <svg id="pov" width="1080" height="1920" viewBox="0 0 1080 1920">__POV__</svg>
+      <svg class="art" width="1080" height="1920" viewBox="0 0 1080 1920"><g id="lane"></g></svg>
+      <div id="stalk"></div>
+      <div id="mirror"><svg id="mirSvg" width="1080" height="1920" viewBox="0 0 1080 1920">__AISLE_MIRROR__</svg><div class="sheen"></div></div>
+    </div>
+  </section>
+
+  <!-- 2, 4, 5a: the engine bay, in the dark -->
+  <section id="sEng" class="scene"><div id="camEng" class="cam">
+    <svg id="engArt" width="1080" height="1920" viewBox="0 0 1080 1920">__ENGINE__
+      <defs><filter id="lick" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence id="lickT" type="fractalNoise" baseFrequency="0.018 0.045" numOctaves="2" seed="1" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="18" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="6"/></filter></defs>
+      <path id="belt" d="M190 1180 A 120 120 0 0 1 410 1180 L 530 1380 A 70 70 0 0 1 410 1460 L 180 1260" stroke="#3a3d42" stroke-width="10" stroke-dasharray="16 26" fill="none"/>
+      <g id="fan" transform="translate(300 1220)"><path id="fanB" d="M0 -34 L8 0 L0 34 L-8 0Z M-34 0 L0 -8 L34 0 L0 8Z" fill="#b9c0c6" opacity=".55"/></g>
+      <g id="eFlameSide" filter="url(#lick)"></g>
+      <g id="eFlame" filter="url(#lick)"></g>
+    </svg>
+    <div id="engDark" class="dk"></div>
+    <div id="engGlow" class="glow" style="left:380px;top:860px;width:800px;height:800px;background:radial-gradient(circle,rgba(255,150,60,.85) 0%,rgba(255,106,26,.4) 30%,rgba(226,54,26,0) 68%)"></div>
+  </div></section>
+
+  <!-- 3: the red cylinder behind the driver's seat -->
+  <section id="s3" class="scene"><div id="cam3" class="cam">
+    <svg width="1080" height="1920" viewBox="0 0 1080 1920">__AISLE_EXT__</svg>
+    <div id="extGlow" class="glow" style="left:553px;top:869px;width:200px;height:200px;background:radial-gradient(circle,rgba(238,74,58,.75) 0%,rgba(198,31,26,0) 70%)"></div>
+  </div></section>
+
+  <!-- 5b: battery box -->
+  <section id="sBat" class="scene"><div id="camBat" class="cam">
+    <svg width="1080" height="1920" viewBox="0 0 1080 1920">__BATTERY__<g id="bSparks"></g></svg>
+    <div class="glow" style="left:670px;top:760px;width:400px;height:400px;background:radial-gradient(circle,rgba(255,170,80,.55) 0%,rgba(255,106,26,0) 70%)"></div>
+  </div></section>
+
+  <!-- 5c: cabin, haze among the passengers -->
+  <section id="sCab" class="scene"><div id="camCab" class="cam">
+    <svg width="1080" height="1920" viewBox="0 0 1080 1920">__AISLE_HAZE__
+      <defs><filter id="hzB" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="46"/></filter></defs>
+      <g id="haze" filter="url(#hzB)"><ellipse id="hz1" cx="300" cy="1350" rx="420" ry="130" fill="#77777c"/><ellipse id="hz2" cx="760" cy="1150" rx="460" ry="150" fill="#66666b"/><ellipse id="hz3" cx="520" cy="1600" rx="560" ry="150" fill="#808086"/></g>
+    </svg>
+  </div></section>
+
+  <!-- 6 HERO: the Sentinel's sensor module turns and looks (real 3D), then the real system render -->
+  <section id="s6" class="scene" style="background:radial-gradient(ellipse 760px 900px at 600px 1250px,#15110d 0%,#030303 70%)">
+    <div id="heroGlow" class="glow" style="left:500px;top:1250px;width:900px;height:900px;background:radial-gradient(circle,rgba(255,120,40,.5) 0%,rgba(226,54,26,0) 66%)"></div>
+    <canvas id="gl" width="1080" height="1920"></canvas>
+    <div id="render"><img src="assets/sentinel-system-cut.png" alt=""></div>
+  </section>
+
+  <!-- 7: only the zone with the fire discharges -->
+  <section id="s7" class="scene" style="background:linear-gradient(180deg,#020203 0%,#0b0e11 62%,#0c0d0e 100%)">
+    <div id="bw7" class="bw"><svg width="1" height="1">
+      <defs>
+        <radialGradient id="wHeat"><stop offset="0" stop-color="#FFB33A" stop-opacity=".95"/><stop offset=".4" stop-color="#FF6A1A" stop-opacity=".55"/><stop offset="1" stop-color="#E2361A" stop-opacity="0"/></radialGradient>
+        <linearGradient id="wCyl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f4f6"/><stop offset=".5" stop-color="#a9b0b6"/><stop offset="1" stop-color="#5d6368"/></linearGradient>
+        <filter id="wSoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+        <filter id="wHaze" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+      </defs>
+      <rect x="-5000" y="382" width="11200" height="3000" fill="#0c0d0e"/><rect x="-5000" y="382" width="11200" height="3" fill="#33363a"/>
+      <g id="dash7"></g>
+      __BUS_XRAY__
+      <g fill="none" stroke="#c3c9cf" stroke-width="2.6" stroke-linecap="round">
+        <path d="M520 300 C470 300 400 262 368 244"/><path d="M600 300 C800 300 1000 240 1096 228"/><path d="M548 290 C548 200 470 120 430 74"/><path d="M572 290 C600 200 720 120 760 74"/>
+      </g>
+      <g><rect x="490" y="288" width="140" height="24" rx="12" fill="url(#wCyl)"/><rect x="490" y="288" width="140" height="5" rx="2.5" fill="#fff" opacity=".6"/></g>
+      <g id="mods7"></g>
+      <ellipse id="heat7" cx="1098" cy="272" rx="170" ry="100" fill="url(#wHeat)" style="mix-blend-mode:screen"/>
+      <g id="flame7" filter="url(#wSoft)"></g>
+      <polygon id="mcone7" points="1090,228 1102,228 1176,322 1016,322" fill="#E9F3FA" filter="url(#wHaze)" opacity="0"/>
+      <g id="mist7"></g>
+      <rect id="zEng" x="998" y="206" width="200" height="124" rx="10" fill="rgba(227,40,28,.14)" stroke="#E3281C" stroke-width="3.4"/>
+      <rect id="zBat" x="314" y="222" width="108" height="104" rx="10" fill="none" stroke="#8d949a" stroke-width="2.2" stroke-dasharray="8 7"/>
+      <rect id="zCab" x="144" y="54" width="858" height="158" rx="10" fill="none" stroke="#8d949a" stroke-width="2.2" stroke-dasharray="8 7"/>
+    </svg></div>
+  </section>
+
+  <!-- 8a: the driver's button -->
+  <section id="s8" class="scene"><div id="cam8" class="cam">
+    <svg width="1080" height="1920" viewBox="0 0 1080 1920">__DASH__<circle id="ledRed" cx="850" cy="1070" r="14" fill="#E3281C"/><circle id="ledRedG" cx="850" cy="1070" r="46" fill="#E3281C" opacity=".4"/></svg>
+  </div></section>
+
+  <!-- 8b: the owner's phone -->
+  <section id="s8b" class="scene" style="background:radial-gradient(ellipse 800px 1000px at 540px 1200px,#1a1410 0%,#050505 72%)">
+    <div id="drift8" class="cam"><div id="cam8b" class="cam"><div id="ui" class="nu"></div></div></div>
+  </section>
+
+  <!-- 9, 10a: passengers first; pull back -->
+  <section id="s9" class="scene" style="background:linear-gradient(180deg,#020203 0%,#0b0e11 60%,#0c0d0e 100%)">
+    <div id="bw9" class="bw"><svg width="1" height="1">
+      <defs><linearGradient id="wDoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdca6" stop-opacity=".36"/><stop offset="1" stop-color="#ffdca6" stop-opacity="0"/></linearGradient>
+        <radialGradient id="wHaz"><stop offset="0" stop-color="#FFA41A" stop-opacity=".6"/><stop offset="1" stop-color="#FFA41A" stop-opacity="0"/></radialGradient></defs>
+      <rect x="-5000" y="382" width="11200" height="3000" fill="#0c0d0e"/><rect x="-5000" y="382" width="11200" height="3" fill="#33363a"/>
+      <g id="dash9"></g>
+      <g id="busDoor">__BUS_DOOR__</g>
+      <g id="busBody">__BUS_BODY__</g>
+      <polygon id="doorlight" points="92,330 148,330 250,430 -30,430" fill="url(#wDoor)"/>
+      <g id="hazard" style="mix-blend-mode:screen"><circle cx="14" cy="268" r="7" fill="#FFC460"/><circle cx="14" cy="268" r="60" fill="url(#wHaz)"/><circle cx="1194" cy="236" r="7" fill="#FFC460"/><circle cx="1194" cy="236" r="60" fill="url(#wHaz)"/></g>
+    </svg></div>
+  </section>
+
+  <!-- 10b: the name -->
+  <section id="sEnd" class="scene" style="background:radial-gradient(ellipse 700px 620px at 540px 900px,#15120c 0%,#030303 72%)">
+    <img id="emblem" src="assets/emblem.png" alt=""><img id="wordmark" src="assets/wordmark-light.png" alt="">
+  </section>
+
+  <div id="sweep"></div>
+  <div id="shade"></div>
+  <div id="caps"></div>
+</div>
+
+<script src="./runtime/vendor/gsap.min.js"></script>
+<script src="./runtime/motion.js"></script>
+<script src="./runtime/native-ui/native-ui.js"></script>
+<script>
+/* SEEK CONTRACT: everything visible is a pure function of t. Authored through Motion calls, or M.tl fromTo + immediateRender:false.
+   Procedural parts (flame, sparks, mist, hazards, haze) are drawn by ONE timeline-driven onUpdate from the frame number. */
+const DUR = 42, FPS = 30;
+const M = Motion.film({ fps: FPS, duration: DUR, width: 1080, height: 1920, clock: 'smooth' });
+const $ = (s) => document.querySelector(s), NS = 'http://www.w3.org/2000/svg';
+const mk = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+const rnd = (s) => { const x = Math.sin(s * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };   // setup + pure-of-frame only
+const noise = (t, s = 0) => { const i = Math.floor(t), f = t - i, a = rnd(i + s * 101) * 2 - 1, b = rnd(i + 1 + s * 101) * 2 - 1, u = f * f * (3 - 2 * f); return a + (b - a) * u; };
+
+/* ---------- frames (VO estimated at 2.6 w/s; re-time from real word timings later) ---------- */
+const F = { s2: 138, s3: 222, s4: 354, eng: 468, bat: 516, cab: 558, hero: 624, rend: 708, s7: 744, s8: 858, s8b: 906, s9: 978, s10: 1134, end: 1200, last: DUR * FPS };
+
+/* ---------- the shared light: a sodium lamp passes every 52 f ---------- */
+const SW = 52, swKeys = [];
+for (let f0 = 6; f0 < F.end; f0 += SW) { swKeys.push([f0, -820], [f0 + 24, 1380, 'cruise'], [f0 + 24, -820]); }
+swKeys.push([F.last, -820]);
+M.kf('#sweep', 'x', swKeys);
+M.hide('#sweep', F.end);
+const sweepPhase = (f) => { const k = ((f - 6) % SW + SW) % SW; return f >= 6 && k <= 24 ? k / 24 : null; };
+
+/* ---------- captions: centred, at speech rhythm, one position ---------- */
+const caps = $('#caps');
+function cap(text, top, at, out, o = {}) {
+  const e = document.createElement('div'); e.className = 'cap' + (o.big ? ' big' : '') + (o.gold ? ' gold' : ''); e.style.top = top + 'px'; e.textContent = text; caps.appendChild(e);
+  if (o.size) { e.style.fontSize = o.size + 'px'; e.style.lineHeight = Math.round(o.size * 1.1) + 'px'; }
+  M.words(e, { at, mech: 'rise', dist: o.big ? 120 : 64, frames: 12, ease: 'softLand', gaps: o.gaps ?? 7, smear: true });
+  if (out != null) M.hide(e, out);
+  return e;
+}
+
+/* ================= 1 HOOK (0-138): the mirror ================= */
+M.show('#s1', 0, F.s2);
+M.drift('#mirSvg', { prop: 'scale', from: 1.0, to: 1.12, start: 0, end: F.s2 });
+M.kf('#mirror', 'rotation', [[0, -1.2], [60, .6, 'softInOut'], [126, -.4, 'softInOut']]);
+M.kf('#cam1', 'y', [[0, 0], [122, 0], [138, -1500, 'gentleIn']]);            // the camera drops under the floor: cut lands mid-move
+cap('Passengers ka', 352, 8, F.s2);
+cap('poora khayal.', 448, 26, F.s2);
+
+/* ================= 2 (138-222): nobody is looking down here ================= */
+M.show('#sEng', F.s2, F.s3); M.show('#sEng', F.s4, F.bat);
+M.kf('#camEng', 'y', [[F.s2, 620], [F.s2 + 16, 0, 'softLand'], [F.s3, 0], [F.s4, 0]]);
+M.drift('#camEng', { prop: 'scale', from: 1.04, to: 1.16, start: F.s2, end: F.bat });
+M.kf('#engDark', 'opacity', [[0, .14], [F.s4 + 30, .14], [F.eng, .1, 'softInOut'], [F.eng + 30, .03, 'softInOut'], [F.bat, .02]]);
+M.kf('#engGlow', 'opacity', [[0, 0], [F.s4 + 34, 0], [F.eng, .5, 'gentleIn'], [F.eng + 30, 1, 'softInOut']]);
+cap('Par engine aur', 352, F.s2 + 12, F.s3);
+cap('battery ka kya?', 448, F.s2 + 30, F.s3);
+
+/* ================= 3 (222-354): the "answer" is one red cylinder ================= */
+M.show('#s3', F.s3, F.s4);
+M.camera('#cam3', [[F.s3, { scale: 1.02, y: 60 }], [F.s3 + 96, { scale: 1.9, y: 250 }, 'softInOut'], [F.s4, { scale: 2.05, y: 262 }]], { origin: '653px 969px' });
+M.kf('#extGlow', 'opacity', [[0, 0], [F.s3 + 84, 0], [F.s3 + 100, 1, 'softLand'], [F.s3 + 116, .7], [F.s4, 1]]);
+cap('Shayad jawab hai…', 352, F.s3 + 10, F.s4, { gaps: 9 });
+cap('ek laal cylinder.', 448, F.s3 + 88, F.s4);
+
+/* ================= 4 (354-468): fire starts where nobody looks  [the point] ================= */
+cap('Aag wahan lagti hai,', 352, F.s4 + 8, F.eng);
+cap('jahan koi', 448, F.s4 + 50, F.eng);
+cap('dekh nahi raha', 548, F.s4 + 64, F.eng, { big: true, size: 150, gaps: 6 });
+
+/* ================= 5 (468-624): three places it starts ================= */
+cap('Engine bay.', 352, F.eng + 2, F.bat);
+M.show('#sBat', F.bat, F.cab);
+M.drift('#camBat', { prop: 'scale', from: 1.06, to: 1.14, start: F.bat, end: F.cab });
+cap('Battery box.', 352, F.bat + 2, F.cab);
+M.show('#sCab', F.cab, F.hero);
+M.drift('#camCab', { prop: 'scale', from: 1.2, to: 1.3, start: F.cab, end: F.hero });
+M.kf('#haze', 'opacity', [[0, 0], [F.cab, .25], [F.cab + 40, .7, 'softInOut'], [F.hero, .8]]);
+cap('Cabin.', 352, F.cab + 2, F.hero);
+cap('Passengers ke beech.', 448, F.cab + 26, F.hero);
+
+/* ================= 6 HERO (624-744): the Sentinel looks back ================= */
+M.show('#s6', F.hero, F.s7);
+M.show('#gl', F.hero, F.rend);
+M.kf('#heroGlow', 'opacity', [[0, .0], [F.hero, .35], [F.hero + 40, .8, 'softInOut'], [F.rend, .8], [F.rend, .25]]);
+M.show('#render', F.rend, F.s7);
+M.enter('#render', { at: F.rend, frames: 14, ease: 'softLand', from: { scale: 1.5, y: 80 }, smear: { axis: 'y', px: 26, frames: 3 } });
+M.drift('#render', { prop: 'rotation', from: -3, to: 1.5, start: F.rend, end: F.s7 });
+cap('Sentinel', 330, F.hero + 36, F.s7, { big: true, gold: true });
+cap('Har zone par nazar.', 540, F.hero + 72, F.s7);
+
+/* ================= 7 (744-858): only that zone discharges ================= */
+M.show('#s7', F.s7, F.s8);
+const camB = (s, fx, fy, ay) => ({ scale: s, x: 540 - fx * s, y: ay - fy * s });
+const kfB = (id, keys) => { ['scale', 'x', 'y'].forEach((p) => M.kf(id, p, keys.map(([f, c, e]) => [f, c[p], e]))); };
+kfB('#bw7', [[0, camB(2.7, 1050, 250, 1380)], [F.s7, camB(2.7, 1050, 250, 1380)], [F.s7 + 56, camB(2.9, 1060, 252, 1380), 'cruise'], [F.s7 + 92, camB(1.66, 640, 215, 1300), 'softInOut'], [F.s8, camB(1.72, 600, 215, 1300), 'cruise']]);
+M.kf('#heat7', 'opacity', [[0, .85], [F.s7 + 50, .85], [F.s7 + 90, 0, 'softInOut']]);
+M.kf('#zBat', 'opacity', [[0, .0], [F.s7 + 60, 0], [F.s7 + 76, .9, 'softLand']]);
+M.kf('#zCab', 'opacity', [[0, .0], [F.s7 + 64, 0], [F.s7 + 80, .9, 'softLand']]);
+cap('Aag jis zone mein,', 352, F.s7 + 6, F.s8);
+cap('discharge', 448, F.s7 + 40, F.s8, { gold: true });
+cap('sirf usi zone mein.', 544, F.s7 + 54, F.s8);
+
+/* ================= 8 (858-978): the driver's button, the owner's phone ================= */
+M.show('#s8', F.s8, F.s8b);
+M.camera('#cam8', [[F.s8, { scale: 1.05 }], [F.s8b, { scale: 1.2 }, 'cruise']], { origin: '700px 1220px' });
+M.tl.fromTo('#hand', { attr: { transform: 'translate(1260 1570)' } }, { attr: { transform: 'translate(700 1250)' }, duration: M.f(16), ease: M.ease.softLand, immediateRender: false }, M.f(F.s8 + 6));
+M.tl.fromTo('#hand', { attr: { transform: 'translate(700 1250)' } }, { attr: { transform: 'translate(696 1262)' }, duration: M.f(3), ease: 'none', immediateRender: false }, M.f(F.s8 + 26));
+M.tl.fromTo('#cap', { attr: { r: 110 } }, { attr: { r: 103 }, duration: M.f(2), ease: 'none', immediateRender: false }, M.f(F.s8 + 27));
+M.show('#ledRed', F.s8 + 28); M.show('#ledRedG', F.s8 + 28);
+M.mark(F.s8 + 27, 'press', 'dashboard button');
+cap('Driver ke paas:', 352, F.s8 + 4, F.s8b);
+cap('dashboard button.', 448, F.s8 + 16, F.s8b);
+cap('Aapke phone par alert.', 352, F.s8b + 4, F.s9);
+
+M.show('#s8b', F.s8b, F.s9);
+const fkIcon = NativeUI.appIcon({ bg: 'linear-gradient(180deg,#1a1a1a,#000)', glyph: '<svg viewBox="0 0 38 38"><path d="M19 6l10 4v8c0 7-4.500 11.500-10 14-5.500-2.500-10-7-10-14v-8z" fill="none" stroke="#F0B242" stroke-width="2.2"/><path d="M19 13c3 3 4.500 5.200 4.500 8a4.500 4.500 0 0 1-9 0c0-1.600.8-2.800 1.800-3.800.3 1.200 1 1.900 1.700 2.100-.2-2.300.2-4.300 1-6.300z" fill="#F0B242"/></svg>' });
+const waIcon = NativeUI.appIcon({ bg: 'linear-gradient(180deg,#5ee27a,#25c44e)', glyph: '<svg viewBox="0 0 38 38"><path d="M19 9c5.600 0 10 3.500 10 8s-4.400 8-10 8c-1 0-1.900-.1-2.800-.3L12 27l1-3.600C11 22 9 19.800 9 17c0-4.500 4.400-8 10-8z" fill="#fff"/></svg>' });
+$('#ui').innerHTML = NativeUI.phone(NativeUI.lockScreen({ time: '11:42', date: 'Tuesday 24 November',
+  wallpaper: 'radial-gradient(120% 70% at 20% 10%, #3b2a16 0%, rgba(59,42,22,0) 58%), linear-gradient(172deg,#17130f,#050505)',
+  notifs: [
+    { icon: waIcon, title: 'Depot Indore', time: '1h ago', body: 'Bus 07 nikal gayi. 41 passengers, Bhopal 5:10 tak.' },
+    { icon: fkIcon, title: 'Sentinel · Bus 07', time: 'now', body: 'Engine zone: fire detected. Discharged in that zone only.' } ] }), { time: '11:42' });
+const older = '#ui .nu-notif:nth-child(1)', newest = '#ui .nu-notif:nth-child(2)';
+NativeUI.arrive(M, newest, { at: F.s8b + 10, dir: 'up', frames: 14, push: [older] });
+NativeUI.macro(M, newest, { at: F.s8b + 26, frames: 22, world: '#cam8b', fill: .9 });
+M.drift('#drift8', { prop: 'scale', from: 1, to: 1.05, start: F.s8b, end: F.s9 });
+
+/* ================= 9 (978-1134): passengers first.  10a (1134-1200): pull back, the question ================= */
+M.show('#s9', F.s9, F.end);
+kfB('#bw9', [[0, camB(1.7, 520, 215, 1320)], [F.s9, camB(1.7, 520, 215, 1320)], [F.s9 + 46, camB(2.45, 180, 230, 1320), 'softLand'], [F.s10, camB(2.66, 170, 232, 1320), 'cruise'], [F.s10 + 44, camB(.86, 600, 191, 1480), 'softInOut'], [F.end, camB(.9, 600, 191, 1480), 'cruise']]);
+M.kf('#busBody', 'opacity', [[0, 1], [F.s9 + 40, 1], [F.s9 + 60, 0, 'softInOut']]);
+M.kf('#doorlight', 'opacity', [[0, 0], [F.s9 + 46, 0], [F.s9 + 70, 1, 'softLand']]);
+cap('Driver ka pehla kaam:', 352, F.s9 + 12, F.s10, { gaps: 8 });
+cap('passengers ko utaarna.', 448, F.s9 + 58, F.s10);
+cap('Cylinder dhoondhna nahi.', 544, F.s9 + 104, F.s10);
+cap('Aapki bus mein kitne', 352, F.s10 + 6, F.end);
+cap('zone covered hain?', 448, F.s10 + 22, F.end);
+
+/* ================= 10b (1200-1260): the name arrives from oversize, then holds ================= */
+M.show('#sEnd', F.end);
+M.hide('#shade', F.end);
+M.enter('#emblem', { at: F.end, frames: 20, ease: 'snapSettle', from: { scale: 3.5, blur: 12 } });
+M.enter('#wordmark', { at: F.end + 8, frames: 12, ease: 'softLand', from: { y: 46 }, smear: { axis: 'y', px: 24, frames: 3 } });
+cap('Comment kijiye.', 1130, F.end + 14, null);
+
+/* ================= procedural parts: pure functions of the frame ================= */
+const eFl = [1, .82, .58, .32].map((k, i) => mk('path', { fill: ['#E2361A', '#FF6A1A', '#FFB33A', '#FFF4DC'][i], opacity: [.85, .95, 1, 1][i] }, $('#eFlame')));
+const eFlL = [0, 1, 2].map((i) => mk('path', { fill: ['#E2361A', '#FF6A1A', '#FFB33A'][i], opacity: [.8, .95, 1][i] }, $('#eFlameSide')));
+const eFlR = [0, 1, 2].map((i) => mk('path', { fill: ['#E2361A', '#FF6A1A', '#FFB33A'][i], opacity: [.8, .95, 1][i] }, $('#eFlameSide')));
+const bSp = [...Array(12)].map(() => mk('circle', { r: 3, fill: '#ffd27a' }, $('#bSparks')));
+[[1096, 220], [368, 236], [430, 66], [760, 66]].forEach(([x, y]) => { const g = mk('g', {}, $('#mods7')); mk('rect', { x: x - 11, y: y - 6, width: 22, height: 14, rx: 6, fill: '#cfd5da' }, g); mk('circle', { cx: x, cy: y + 1, r: 3.6, fill: '#0b0b0b' }, g); });
+const fl7 = [1, .82, .58, .32].map((k, i) => mk('path', { fill: ['#E2361A', '#FF6A1A', '#FFB33A', '#FFF4DC'][i], opacity: [.85, .95, 1, 1][i] }, $('#flame7')));
+const mi7 = [...Array(120)].map(() => mk('circle', { fill: '#E9F3FA' }, $('#mist7')));
+['#dash7', '#dash9'].forEach((id) => { for (let i = 0; i < 50; i++) mk('rect', { x: -5000 + i * 220, y: 502, width: 110, height: 8, fill: '#d9d9d9', opacity: .32 }, $(id)); });
+const key = (f, ks) => { if (f <= ks[0][0]) return ks[0][1]; for (let i = 1; i < ks.length; i++) if (f <= ks[i][0]) { const [a, va] = ks[i - 1], [b, vb] = ks[i]; return va + (vb - va) * ((f - a) / (b - a)); } return ks[ks.length - 1][1]; };
+const tongue = (p, x, y, h, w, k, t, i) => { const hh = h * k * (.85 + .25 * noise(t * 10 + i * 3, i)), ww = h * w * k, lean = noise(t * 7 + i, i + 4) * ww * .5;
+  p.setAttribute('d', h < 1 ? '' : `M${x - ww} ${y} C${x - ww} ${y - hh * .45} ${x - ww * .2 + lean} ${y - hh * .6} ${x + lean} ${y - hh} C${x + ww * .25 + lean} ${y - hh * .6} ${x + ww} ${y - hh * .42} ${x + ww} ${y}Z`); };
+function proc(f) {
+  const t = f / FPS;
+  /* engine bay flame: born small in beat 4, grows through 5a */
+  const eh = key(f, [[F.s4 + 60, 0], [F.eng, 60], [F.eng + 34, 380], [F.bat, 420]]);
+  eFl.forEach((p, i) => tongue(p, 760, 1368, eh, .42, [1, .82, .58, .32][i], t, i));
+  eFlL.forEach((p, i) => tongue(p, 672, 1372, eh * .56, .46, [1, .8, .55][i], t + 3.1, i + 5));
+  eFlR.forEach((p, i) => tongue(p, 848, 1372, eh * .7, .44, [1, .8, .55][i], t + 7.7, i + 9));
+  $('#lickT').setAttribute('seed', String(1 + Math.floor(f / 2) % 50));
+  $('#belt').setAttribute('stroke-dashoffset', String(-(f * 7) % 42));
+  $('#fanB').setAttribute('transform', `rotate(${(f * 23) % 360})`);
+  lane.forEach((r, i) => { const z = (((i * 7 - f * .9) % 42) + 42) % 42 + 2, k = 340 / z; r.setAttribute('x', 540 - Math.max(2, .9 * k) / 2); r.setAttribute('y', 820 + 8.4 * k); r.setAttribute('width', Math.max(2, .9 * k)); r.setAttribute('height', Math.max(2, 3.6 * k)); r.setAttribute('opacity', Math.min(.7, 1.2 - z / 42)); });
+  const sh = f < F.s8b ? 1 : 0, vx = noise(f * .9, 11) * 2.2 * sh, vy = noise(f * 1.1, 13) * 2.6 * sh;
+  DRIVE.forEach((e) => { e.style.translate = `${vx.toFixed(2)}px ${vy.toFixed(2)}px`; });
+  bSp.forEach((c, i) => { const a = (t * 1.5 + rnd(i)) % 1; c.setAttribute('cx', 870 + (rnd(i + 3) - .5) * 90 + a * (rnd(i + 5) - .5) * 220); c.setAttribute('cy', 940 - a * 300); c.setAttribute('opacity', (1 - a) * (rnd(i + 9) > .3 ? 1 : 0)); });
+  $('#hz1').setAttribute('cx', 300 + Math.sin(t * .6) * 80); $('#hz2').setAttribute('cx', 760 + Math.sin(t * .5 + 1) * 90); $('#hz3').setAttribute('cx', 520 + Math.sin(t * .45 + 2) * 70);
+  /* beat 7: fire in the engine zone, then mist only there */
+  const h7 = key(f, [[F.s7, 62], [F.s7 + 52, 62], [F.s7 + 92, 0]]), m7 = key(f, [[F.s7 + 40, 0], [F.s7 + 54, 1], [F.s7 + 98, 1], [F.s8, .7]]);
+  fl7.forEach((p, i) => tongue(p, 1080, 318, h7, .45, [1, .82, .58, .32][i], t, i));
+  mi7.forEach((c, i) => { const sp = .6 + rnd(i) * .6, a = (t * 1.05 * sp + rnd(i + 1)) % 1, d = (rnd(i + 2) - .5) * 2;
+    c.setAttribute('cx', 1096 + d * 80 * a); c.setAttribute('cy', 228 + a * 94 * Math.min(1, m7 * 1.3)); c.setAttribute('r', 1.1 + rnd(i + 3) * 1.7); c.setAttribute('opacity', .6 * (1 - a * .6) * Math.min(1, m7 * 1.5)); });
+  $('#mcone7').setAttribute('opacity', .3 * m7);
+  $('#dash7').setAttribute('transform', `translate(${-((f * 9) % 220)} 0)`);
+  /* beat 9: the bus is stopped; hazards blink */
+  $('#hazard').style.opacity = f >= F.s9 ? (Math.sin(t * 5.2) > 0 ? 1 : .08) : 0;
+}
+const lane = [...Array(6)].map(() => mk('rect', { fill: '#e6e6e6' }, $('#lane')));
+const DRIVE = ['#s1', '#sEng', '#s3', '#sBat', '#sCab', '#s6', '#s7', '#s8'].map($);
+const P = { f: 0 };
+M.tl.fromTo(P, { f: 0 }, { f: F.last, duration: DUR, ease: 'none', immediateRender: false, onUpdate: () => proc(P.f) }, 0);
+proc(0);
+
+/* ================= the hero object: the real sensor module rebuilt in 3D (brushed SS316, one IR lens) ================= */
+const T0 = F.hero / FPS;
+M.hero3d('#gl', {
+  width: 1080, height: 1920, envMap: 'studio', toneMapping: 'neutral', ground: false,
+  key: { position: [-5, 6, 6], intensity: .5 }, rim: { position: [5, 2, -5], intensity: 3.2, color: '#ffb36a' },
+  sweep: { width: .5, intensity: 6, color: '#ffc98a', from: [-7, 1, 10], to: [7, 1, 10], tilt: .35 },
+  camera: { fov: 30, position: [0, 1.5, 11.2], target: [0, 1.42, 0] },
+  build: (THREE) => {
+    const g = new THREE.Group();
+    const cv = document.createElement('canvas'); cv.width = cv.height = 512; const cx = cv.getContext('2d');
+    cx.fillStyle = '#8c8c8c'; cx.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 2600; i++) { const y = rnd(i) * 512, x = rnd(i + 7) * 512, w = 60 + rnd(i + 3) * 380, v = 90 + Math.floor(rnd(i + 5) * 120); cx.fillStyle = `rgba(${v},${v},${v},.5)`; cx.fillRect(x, y, w, 1); cx.fillRect(x - 512, y, w, 1); }
+    const brushed = new THREE.CanvasTexture(cv); brushed.wrapS = brushed.wrapT = THREE.RepeatWrapping; brushed.repeat.set(.7, .7);
+    const gl2 = document.createElement('canvas'); gl2.width = gl2.height = 128; const g2 = gl2.getContext('2d'); const gr = g2.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.35, 'rgba(255,255,255,.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g2.fillStyle = gr; g2.fillRect(0, 0, 128, 128);
+    const soft = new THREE.CanvasTexture(gl2);
+    const sh = new THREE.Shape(); sh.moveTo(-1, -.62); sh.lineTo(-1, .62); sh.absarc(0, .62, 1, Math.PI, 0, true); sh.lineTo(1, -.62); sh.absarc(0, -.62, 1, 0, Math.PI, true);
+    const plate = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: .26, bevelEnabled: true, bevelThickness: .05, bevelSize: .05, bevelSegments: 4, curveSegments: 48 }),
+      new THREE.MeshStandardMaterial({ color: 0xd2d6da, metalness: 1, roughness: .62, roughnessMap: brushed, bumpMap: brushed, bumpScale: .6 }));
+    plate.position.z = -.13; g.add(plate);
+    const bezel = new THREE.Mesh(new THREE.TorusGeometry(.46, .045, 16, 64), new THREE.MeshStandardMaterial({ color: 0x8d949a, metalness: 1, roughness: .25 })); bezel.position.set(0, .56, .19); g.add(bezel);
+    const lens = new THREE.Mesh(new THREE.CylinderGeometry(.44, .44, .08, 64), new THREE.MeshPhysicalMaterial({ color: 0x030303, metalness: .3, roughness: .04, clearcoat: 1, clearcoatRoughness: .03 }));
+    lens.rotation.x = Math.PI / 2; lens.position.set(0, .56, .16); g.add(lens);
+    const refl = (c, w, h, x, y, z) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, map: soft, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); m.position.set(x, y, z); g.add(m); return m; };
+    g.userData.fire = refl(0xff5a14, .5, .62, .12, .47, .21); g.userData.core = refl(0xffd27a, .2, .3, .12, .43, .212); g.userData.spec = refl(0xffffff, .16, .1, -.16, .74, .213);
+    const btn = new THREE.Mesh(new THREE.CylinderGeometry(.13, .13, .07, 6), new THREE.MeshStandardMaterial({ color: 0xd9dee2, metalness: 1, roughness: .2 })); btn.rotation.x = Math.PI / 2; btn.position.set(0, -.78, .17); g.add(btn);
+    const dot = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, .08, 24), new THREE.MeshStandardMaterial({ color: 0x151515, metalness: .4, roughness: .3 })); dot.rotation.x = Math.PI / 2; dot.position.set(0, -.78, .18); g.add(dot);
+    const hose = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0, 1.5, -.3), new THREE.Vector3(.1, 2.6, -.5), new THREE.Vector3(1.2, 3.8, -.9), new THREE.Vector3(3.2, 4.6, -1.4)]), 40, .15, 12),
+      new THREE.MeshStandardMaterial({ color: 0x9aa1a7, metalness: 1, roughness: .55 })); g.add(hose);
+    const brk = new THREE.Mesh(new THREE.BoxGeometry(1.5, .5, .12), new THREE.MeshStandardMaterial({ color: 0xaab0b5, metalness: 1, roughness: .45 })); brk.position.set(0, 1.55, -.32); g.add(brk);
+    return { mod: g };
+  },
+  state: (t, objs, { key: k, f }) => {
+    const u = t - T0;
+    const ry = k(u, [[0, 1.42], [.5, 1.3], [1.5, .16, 'snapSettle'], [2.8, -.1, 'cruise']]);
+    const look = Math.max(0, Math.min(1, (u - 1.0) / .6));
+    const m = objs.mod; m.rotation.set(.04, ry, 0);
+    const fl = .78 + .22 * noise(t * 9, 3);
+    m.userData.fire.material.opacity = .9 * look * fl; m.userData.fire.scale.set(1, .85 + .25 * fl, 1);
+    m.userData.core.material.opacity = look * (.7 + .3 * noise(t * 13, 5)); m.userData.spec.material.opacity = .5;
+    return { sweep: sweepPhase(f), keyIntensity: .6 + .5 * look, rimIntensity: 2.4 + 1.4 * look };
+  },
+});
+
+/* the 3D layer is only on screen in the hero beat: skip its draw elsewhere (software GL is slow). Not installed under ?selftest,
+   where the runtime manages the same flag itself. Pure function of t, so any seek gives the same picture. */
+if (!/selftest/.test(location.search)) { const seek0 = window.__seek; window.__seek = (t) => { window.__mdSnap = t >= (F.hero - 2) / FPS && t <= (F.rend + 2) / FPS; return seek0(t); }; }
+window.__ready = Motion.loaded().then(() => {
+  /* captions always fit the frame: shrink a line that would be wider than 980 px (measured once, fonts loaded) */
+  if (/selftest/.test(location.search)) Motion.selfTest(M, { samples: 24 });
+});
+</script>
+</body>
+</html>
