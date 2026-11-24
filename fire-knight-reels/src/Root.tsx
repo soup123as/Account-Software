@@ -20,6 +20,9 @@ import { ShopThumbnail } from "./shop/ShopThumbnail";
 import { BusOwners, busDefaults } from "./bus/BusOwners";
 import { B_TOTAL } from "./bus/timing";
 import { BusThumbnail } from "./bus/BusThumbnail";
+import { ServerAlarm, serverDefaults } from "./server/ServerAlarm";
+import { V_TOTAL } from "./server/timing";
+import { ServerThumbnail } from "./server/ServerThumbnail";
 import { FPS, H, SCENES, TOTAL, W } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
@@ -72,6 +75,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="BusOwners" component={BusOwners} durationInFrames={B_TOTAL} fps={FPS} width={W} height={H} defaultProps={busDefaults} />
     <Still id="BusThumbnail" component={BusThumbnail} width={W} height={H} />
     <Still id="ShopThumbnail" component={ShopThumbnail} width={W} height={H} />
+    <Composition id="ServerAlarm" component={ServerAlarm} durationInFrames={V_TOTAL} fps={FPS} width={W} height={H} defaultProps={serverDefaults} />
+    <Still id="ServerThumbnail" component={ServerThumbnail} width={W} height={H} />
     <Folder name="TruckOwners-Scenes">
       <Composition id="T1-Hook" component={t1} durationInFrames={110} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
     </Folder>
