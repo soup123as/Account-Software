@@ -26,6 +26,7 @@ import { ServerThumbnail } from "./server/ServerThumbnail";
 import { NightCall, callDefaults } from "./call/NightCall";
 import { N_TOTAL } from "./call/timing";
 import { CallThumbnail } from "./call/CallThumbnail";
+import { NightCallCards, cardsDefaults } from "./cards/NightCallCards";
 import { FPS, H, SCENES, TOTAL, W } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
@@ -82,6 +83,7 @@ export const RemotionRoot: React.FC = () => (
     <Still id="ServerThumbnail" component={ServerThumbnail} width={W} height={H} />
     <Composition id="NightCall" component={NightCall} durationInFrames={N_TOTAL} fps={FPS} width={W} height={H} defaultProps={callDefaults} />
     <Still id="CallThumbnail" component={CallThumbnail} width={W} height={H} />
+    <Composition id="NightCallCards" component={NightCallCards} durationInFrames={N_TOTAL} fps={FPS} width={W} height={H} defaultProps={cardsDefaults} />
     <Folder name="TruckOwners-Scenes">
       <Composition id="T1-Hook" component={t1} durationInFrames={110} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
     </Folder>
