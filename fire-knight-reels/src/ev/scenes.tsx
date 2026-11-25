@@ -13,12 +13,6 @@ import { E_LEN, at } from "./timing";
 
 const WIDE: Cam = { z: 0.95, cx: 540, cy: 1130, ay: 1300 };
 
-const Note: React.FC<{ o?: number; children: React.ReactNode }> = ({ o = 1, children }) => (
-  <div style={{ position: "absolute", left: SAFE.x0, top: 1400, opacity: 0.85 * o, background: "rgba(0,0,0,0.62)", borderRadius: 8, padding: "8px 14px" }}>
-    <Label style={{ fontSize: 20 }}>{children}</Label>
-  </div>
-);
-
 /* ------------------------------------------------------------------ */
 /* 1 HOOK - "EV owner ho? Toh yeh 30 seconds shayad aapke liye zyada important hain than you think." */
 /* ------------------------------------------------------------------ */
@@ -82,7 +76,6 @@ export const E2Dash: React.FC = () => {
         <TypeOn words={["Gaadi", "kaafi", "kuch"]} at={bt} color={C.fa} />
         <Display words={[{ w: "BATA", c: C.gold }, "DETI", "HAI."]} at={bt + 16} />
       </Stack>
-      <Note o={prog(f, 4, 18)}>Illustrative display</Note>
     </AbsoluteFill>
   );
 };
@@ -121,7 +114,6 @@ export const E3Heat: React.FC = () => {
         <TypeOn words={["Battery", "ya", "electrical", "system", "mein"]} at={ar} perLetter={0.7} color={C.fa} />
         <Display words={[{ w: "UNUSUAL", c: C.gold }, "HEAT?"]} at={un} />
       </Stack>
-      <Note o={xray}>Conceptual illustration</Note>
     </AbsoluteFill>
   );
 };
@@ -260,8 +252,8 @@ export const E6Real: React.FC = () => {
   const cam: Cam = { z: 1.12 + prog(f, 0, E_LEN.real) * 0.08, cx: 560, cy: 1130, ay: 1210 };
   const heat = ip(f, [ri - 10, vs, E_LEN.real], [0.1, 0.7, 1]);
   const line = prog(f, ri + 6, vs, E.inOut);
-  const X0 = 250;
-  const X1 = 830;
+  const X0 = 220;
+  const X1 = 740;
   const Y = 1392;
   return (
     <AbsoluteFill style={{ background: C.black }}>
@@ -308,9 +300,9 @@ export const E7Product: React.FC = () => {
   const p = prog(f, 0, 20, E.out);
   const sweep = ip(f, [sn - 2, sn + 32], [-30, 130], E.inOut);
   const CW = 840;
-  const CH = 580;
-  const CT = 860;
-  const W = 800;
+  const CH = 540;
+  const CT = 800;
+  const W = 760;
   const Hh = (W * 568) / 800;
   return (
     <AbsoluteFill style={{ background: C.black }}>
@@ -405,7 +397,6 @@ export const E8System: React.FC = () => {
         <Display words={["SUPPRESSION"]} at={ta + 8} />
         <TypeOn words={["automatically", "trigger", "kar", "sakta", "hai."]} at={au} perLetter={0.7} weight={500} color={C.fa} />
       </Stack>
-      <Note>Conceptual illustration</Note>
     </AbsoluteFill>
   );
 };
@@ -445,7 +436,6 @@ export const E9Wait: React.FC = () => {
         <TypeOn words={["jahan", "aap", "normally"]} at={ja} color={C.fa} />
         <Display words={["DEKH", { w: "NAHI", c: C.gold }, "SAKTE."]} at={dw} size={108} />
       </Stack>
-      <Note o={xray}>Conceptual illustration</Note>
     </AbsoluteFill>
   );
 };
@@ -516,7 +506,7 @@ export const E10Ending: React.FC = () => {
   const top = 400;
   const tagTop = top + EMBLEM_H + 40 + WORD_H + 40;
   const X = SAFE.x0;
-  const Y = 770;
+  const Y = 730;
   const tp = (a: number) => prog(f, a, a + 12, E.out);
   const ps = prog(f, fk, fk + 18, E.out) * (1 - out2);
   return (
