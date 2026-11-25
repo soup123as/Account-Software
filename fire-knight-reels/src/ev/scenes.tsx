@@ -9,7 +9,7 @@ import { Chips, lerpCam } from "../server/scenes";
 import { Car, HOT, PACK, ZONES } from "./Car";
 import { Dash } from "./Dash";
 import { CCTV, Parking, Place } from "./Parking";
-import { at } from "./timing";
+import { E_LEN, at } from "./timing";
 
 const WIDE: Cam = { z: 0.95, cx: 540, cy: 1130, ay: 1300 };
 
@@ -28,18 +28,17 @@ export const E1Hook: React.FC = () => {
   const zy = at("hook", "zyada");
   const th = at("hook", "than");
   const UNDER: Cam = { z: 1.5, cx: 560, cy: 1190, ay: 1290 };
-  const cam = lerpCam(WIDE, UNDER, prog(f, ye, 192, E.cam));
+  const cam = lerpCam(WIDE, UNDER, prog(f, ye, E_LEN.hook, E.cam));
   cam.sx = noise1(f * 0.05, 3) * 2.5;
   return (
     <AbsoluteFill style={{ background: C.black }}>
       <CamView cam={cam}>
         <Parking place="basement" t={f + 30}>
-          <Car t={f + 30} charging={1} lights={0.25} glow={ip(f, [0, 192], [0.55, 1])} />
+          <Car t={f + 30} charging={1} lights={0.25} glow={ip(f, [0, E_LEN.hook], [0.55, 1])} />
         </Parking>
       </CamView>
       <TopFade to={880} />
       <Stack top={380}>
-        <TypeOn words={["Aap"]} at={-40} out={ye - 6} color={C.fa} />
         <Display words={[{ w: "EV", c: C.gold }, "OWNER", "HO?"]} at={-40} out={ye - 6} />
       </Stack>
       <Stack top={380}>
@@ -62,7 +61,7 @@ export const E2Dash: React.FC = () => {
   const ch = at("dash", "charging");
   const bt = at("dash", "bata");
   const hl = f < ba - 2 ? -1 : f < ra - 3 ? 0 : f < ch - 3 ? 1 : f < bt - 4 ? 2 : -1;
-  const cam: Cam = { z: 1.0 + prog(f, 0, 213) * 0.06, cx: 540, cy: 1040, ay: 1240 };
+  const cam: Cam = { z: 1.0 + prog(f, 0, E_LEN.dash) * 0.06, cx: 540, cy: 1040, ay: 1240 };
   const chip = (n: string, a: string, b: string, t0: number, out: number) => (
     <Stack top={380}>
       <TypeOn words={[{ w: n, c: C.gold }]} at={t0} out={out} size={40} />
@@ -77,7 +76,7 @@ export const E2Dash: React.FC = () => {
       </CamView>
       <TopFade to={860} />
       {chip("01", "Battery", "PERCENTAGE.", ba, ra - 5)}
-      {chip("02", "Kitni door?", "RANGE.", ra, ch - 5)}
+      {chip("02", "Range", "DEKHTE HO.", ra, ch - 5)}
       {chip("03", "Charging", "STATUS.", ch, bt - 6)}
       <Stack top={380}>
         <TypeOn words={["Gaadi", "kaafi", "kuch"]} at={bt} color={C.fa} />
@@ -100,9 +99,9 @@ export const E3Heat: React.FC = () => {
   const un = at("heat", "unusual");
   const UNDER: Cam = { z: 1.75, cx: HOT.x - 60, cy: 1190, ay: 1300 };
   const cam = lerpCam(WIDE, UNDER, prog(f, nd, ar + 30, E.cam));
-  cam.z += prog(f, ar, 225) * 0.1;
+  cam.z += prog(f, ar, E_LEN.heat) * 0.1;
   const xray = prog(f, nd - 6, nd + 18, E.out);
-  const heat = ip(f, [ar, un, 225], [0, 0.45, 1], E.inOut);
+  const heat = ip(f, [ar, un, E_LEN.heat], [0, 0.45, 1], E.inOut);
   const h = toScreen(cam, HOT.x, HOT.y);
   const rp = prog(f, un + 6, un + 20, E.out);
   return (
@@ -197,12 +196,14 @@ export const E5Gap: React.FC = () => {
   const cc = at("gap", "cctv");
   const se = at("gap", "security");
   const vi = at("gap", "visible");
+  const vw = at("gap", "visW");
+  const LEN = E_LEN.gap;
   const CAMC: Cam = { z: 2.3, cx: CCTV.x - 20, cy: CCTV.y + 40, ay: 1180 };
   let cam = lerpCam({ ...WIDE, z: 1.0 }, { ...WIDE, z: 1.1 }, prog(f, 0, cc, E.cam));
   cam = lerpCam(cam, CAMC, prog(f, cc - 8, cc + 8, E.cam));
   const sw1 = prog(f, se - 5, se + 3);
   const sw2 = prog(f, vi - 5, vi + 3);
-  const SMOKE: Cam = { z: 1.05 + prog(f, vi, 198) * 0.08, cx: 560, cy: 1140, ay: 1300 };
+  const SMOKE: Cam = { z: 1.05 + prog(f, vi, LEN) * 0.08, cx: 560, cy: 1140, ay: 1300 };
   return (
     <AbsoluteFill style={{ background: C.black }}>
       <AbsoluteFill style={{ opacity: 1 - sw1 }}>
@@ -222,7 +223,7 @@ export const E5Gap: React.FC = () => {
       <AbsoluteFill style={{ opacity: sw2 }}>
         <CamView cam={SMOKE}>
           <Parking place="basement" t={f + 1100}>
-            <Car t={f + 1100} lights={0.2} glow={1} smoke={ip(f, [vi, 198], [0.3, 0.95])} />
+            <Car t={f + 1100} lights={0.2} glow={1} smoke={ip(f, [vi, LEN], [0.3, 0.95])} />
           </Parking>
         </CamView>
       </AbsoluteFill>
@@ -242,7 +243,7 @@ export const E5Gap: React.FC = () => {
       </Stack>
       <Stack top={380}>
         <TypeOn words={["Ya", "tab,", "jab", "problem"]} at={vi} color={C.fa} />
-        <Display words={[{ w: "VISIBLE", c: C.gold }, "HO?"]} at={vi + 12} />
+        <Display words={[{ w: "VISIBLE", c: C.gold }, "HO?"]} at={vw - 6} />
       </Stack>
     </AbsoluteFill>
   );
@@ -256,8 +257,8 @@ export const E6Real: React.FC = () => {
   const rg = at("real", "realGap");
   const ri = at("real", "risk");
   const vs = at("real", "vis");
-  const cam: Cam = { z: 1.12 + prog(f, 0, 168) * 0.08, cx: 560, cy: 1130, ay: 1210 };
-  const heat = ip(f, [ri - 10, vs, 168], [0.1, 0.7, 1]);
+  const cam: Cam = { z: 1.12 + prog(f, 0, E_LEN.real) * 0.08, cx: 560, cy: 1130, ay: 1210 };
+  const heat = ip(f, [ri - 10, vs, E_LEN.real], [0.1, 0.7, 1]);
   const line = prog(f, ri + 6, vs, E.inOut);
   const X0 = 250;
   const X1 = 830;
@@ -266,7 +267,7 @@ export const E6Real: React.FC = () => {
     <AbsoluteFill style={{ background: C.black }}>
       <CamView cam={cam}>
         <Parking place="basement" t={f + 1400}>
-          <Car t={f + 1400} xray={0.85} heat={heat} lights={0.15} smoke={ip(f, [vs - 4, 168], [0, 0.8])} />
+          <Car t={f + 1400} xray={0.85} heat={heat} lights={0.15} smoke={ip(f, [vs - 4, E_LEN.real], [0, 0.8])} />
         </Parking>
       </CamView>
       <TopFade to={860} />
@@ -330,7 +331,7 @@ export const E7Product: React.FC = () => {
           filter: p < 1 ? `blur(${(1 - p) * 12}px)` : undefined,
         }}
       >
-        <Img src={staticFile("product/sentinel-system.png")} style={{ position: "absolute", left: (CW - W) / 2, top: (CH - Hh) / 2, width: W, height: Hh, scale: `${1 + prog(f, 0, 120) * 0.04}` }} />
+        <Img src={staticFile("product/sentinel-system.png")} style={{ position: "absolute", left: (CW - W) / 2, top: (CH - Hh) / 2, width: W, height: Hh, scale: `${1 + prog(f, 0, E_LEN.product) * 0.04}` }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, #e2e2e2 0%, #d2d2d2 60%, #bcbcbc 100%)", mixBlendMode: "multiply" }} />
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(110deg, rgba(255,255,255,0) ${sweep - 10}%, rgba(255,255,255,0.3) ${sweep}%, rgba(255,255,255,0) ${sweep + 10}%)`, mixBlendMode: "screen" }} />
       </div>

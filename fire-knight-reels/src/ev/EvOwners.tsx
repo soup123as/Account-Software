@@ -9,7 +9,7 @@ import { E_LEN } from "./timing";
 import { E10Ending, E1Hook, E2Dash, E3Heat, E4Places, E5Gap, E6Real, E7Product, E8System, E9Wait } from "./scenes";
 
 export type EvProps = { showSafe: boolean; audio: string | null };
-export const evDefaults: EvProps = { showSafe: false, audio: "audio/ev-mix.wav" };
+export const evDefaults: EvProps = { showSafe: false, audio: "audio/ev-mix-vo.wav" };
 
 /** "EV Owners" reel - full-screen illustrated night scenes in the shutter-reel style; product: the Sentinel. */
 export const EvOwners: React.FC<EvProps> = ({ showSafe, audio }) => {
