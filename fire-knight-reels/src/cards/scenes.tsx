@@ -5,7 +5,11 @@ import { Label } from "../fk/ui";
 import { CityMap } from "../call/CityMap";
 import { Handset } from "../call/Handset";
 import { at } from "../call/timing";
-import { Card, Chip, Fx, Head, IcoComodo, IcoDetector, IcoDoor, IcoKey, IcoPhone, Mark, RED, RoomDiagram, Row, Stamp, Tag } from "./kit";
+import { Corridor } from "../server/Corridor";
+import { COMODO, DET, Room } from "../server/Room";
+import { Rings } from "../server/scenes";
+import { Cam, CamView } from "../shop/fx";
+import { Card, Chip, Fx, Head, IcoComodo, IcoKey, IcoPhone, Mark, RED, Row, Stamp, Tag } from "./kit";
 
 const X = SAFE.x0;
 const W = SAFE.x1 - SAFE.x0;
@@ -19,6 +23,33 @@ export const Shot: React.FC<{ len: number; first?: boolean; children: React.Reac
   const o = Math.min(a, 1 - b);
   return <AbsoluteFill style={{ opacity: o, filter: o < 1 ? `blur(${(1 - o) * 16}px)` : undefined, scale: `${1 + 0.02 * prog(f, 0, len)}` }}>{children}</AbsoluteFill>;
 };
+
+/** A card that is a window onto one of the illustrated sets (server room, corridor): the realistic picture inside the card grammar. */
+const View: React.FC<{ w: number; h: number; cam: Cam; gold?: boolean; red?: boolean; tag?: string; dim?: number; children: React.ReactNode; over?: React.ReactNode }> = ({ w, h, cam, gold, red, tag, dim = 0, children, over }) => (
+  <div
+    style={{
+      position: "relative",
+      width: w,
+      height: h,
+      boxSizing: "border-box",
+      borderRadius: 26,
+      overflow: "hidden",
+      background: "#050506",
+      border: `1.5px solid ${gold ? C.gold : red ? "rgba(227,40,28,0.8)" : "rgba(250,250,250,0.1)"}`,
+      boxShadow: gold ? "0 0 34px rgba(240,178,66,0.18), 0 24px 60px rgba(0,0,0,0.6)" : "0 24px 60px rgba(0,0,0,0.6)",
+    }}
+  >
+    <CamView cam={{ ...cam, ax: w / 2, ay: h / 2 }}>{children}</CamView>
+    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,0) 62%, rgba(0,0,0,0.72) 100%)" }} />
+    {dim > 0 && <div style={{ position: "absolute", inset: 0, background: "#000", opacity: dim }} />}
+    {tag && (
+      <div style={{ position: "absolute", left: 22, top: 18 }}>
+        <Tag color="rgba(250,250,250,0.85)">{tag}</Tag>
+      </div>
+    )}
+    {over}
+  </div>
+);
 
 const Contact: React.FC<{ initial: string; name: string; sub: string; status: string; f: number }> = ({ initial, name, sub, status, f }) => (
   <Card w={W} h={150} style={{ display: "flex", alignItems: "center", gap: 22 }}>
@@ -51,35 +82,40 @@ export const K1Hook: React.FC = () => {
       <Head small="Raat 2 baje" lines={[["ALARM", "BAJA."], [gold("PHIR"), gold("PHONE.")]]} at={-40} ats={[-40, ph]} out={ak - 5} />
       <Head small="Ab aap" lines={[[gold("KYA"), "KARENGE?"]]} at={ak} ats={[ky]} />
       <Fx at={-40} kind="slide" style={{ left: X, top: 770 }}>
-        <Card w={398} h={340} red>
-          <Tag>Server room</Tag>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 14 }}>
-            <IcoDetector t={f + 40} size={250} />
-          </div>
-          <div style={{ position: "absolute", left: 22, bottom: 20, display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 30, fontWeight: 700 }}>Smoke alarm</div>
-          </div>
-          <div style={{ position: "absolute", right: 20, bottom: 20 }}>
-            <Chip color={RED} fill size={17}>
-              Ringing
-            </Chip>
-          </div>
-        </Card>
+        <View
+          w={398}
+          h={350}
+          red
+          tag="Server room"
+          cam={{ z: 1.9 + prog(f, 0, 214) * 0.12, cx: DET.x, cy: DET.y + 36 }}
+          over={
+            <>
+              <div style={{ position: "absolute", left: 22, bottom: 20, fontFamily: FONT.sans, fontSize: 30, fontWeight: 700, color: C.fa }}>Smoke alarm</div>
+              <div style={{ position: "absolute", right: 20, bottom: 20 }}>
+                <Chip color={RED} fill size={17}>
+                  Ringing
+                </Chip>
+              </div>
+            </>
+          }
+        >
+          <Room t={f + 40} alarm={1} heat={0.8} flame={0.14} smoke={0.25} />
+          <Rings t={f + 40} o={1} />
+        </View>
       </Fx>
       <Fx at={ph} kind="slide" dx={60} dy={0} style={{ left: X + 422, top: 770 }}>
-        <Card w={398} h={340} gold>
-          <Tag>Aapka phone</Tag>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 6 }}>
-            <IcoPhone t={f} ring={1} size={206} />
+        <Card w={398} h={350} gold pad={0}>
+          <div style={{ position: "absolute", left: 22, top: 18, zIndex: 2 }}>
+            <Tag>Aapka phone</Tag>
           </div>
-          <div style={{ position: "absolute", left: 22, bottom: 20 }}>
-            <div style={{ fontSize: 30, fontWeight: 700 }}>Security Desk</div>
+          <div style={{ position: "absolute", left: 76, top: 52, scale: "0.65", transformOrigin: "0 0" }}>
+            <Handset screen="incoming" t={f} name="Security Desk" sub="Office · 2:01 AM" />
           </div>
-          <div style={{ position: "absolute", right: 20, bottom: 24, fontSize: 22, opacity: 0.6 }}>2:01 AM</div>
+          <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 70, background: "linear-gradient(180deg, rgba(17,19,22,0) 0%, #111316 100%)" }} />
         </Card>
       </Fx>
       {["Guard?", "IT team?", "Khud jaayein?"].map((t, i) => (
-        <Fx key={t} at={ky + 4 + i * 7} kind="pop" style={{ left: X + [0, 196, 450][i], top: 1146 }}>
+        <Fx key={t} at={ky + 4 + i * 7} kind="pop" style={{ left: X + [0, 196, 450][i], top: 1150 }}>
           <Card w={[176, 234, 370][i]} h={84} pad={0} style={{ borderRadius: 20, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 700 }}>
             {t}
           </Card>
@@ -104,27 +140,41 @@ export const K2Call1: React.FC = () => {
         <Contact initial="G" name="Guard" sub="Office · night shift" status={f < cb ? "Calling" : "On site"} f={f} />
       </Fx>
       <Fx at={cb} kind="slide" style={{ left: X, top: 944 }}>
-        <Card w={398} h={350}>
-          <Tag>Server room door</Tag>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
-            <IcoDoor t={f} size={250} />
-          </div>
-          <div style={{ position: "absolute", right: 20, bottom: 20 }}>
-            <Chip color={RED} size={17}>
-              Locked
-            </Chip>
-          </div>
-        </Card>
+        <View
+          w={W}
+          h={350}
+          red={f >= nw}
+          tag="Server room door"
+          cam={{ z: 0.86 + prog(f, cb, 157) * 0.08, cx: 640, cy: 1200 }}
+          over={
+            <>
+              <div style={{ position: "absolute", left: 22, bottom: 18 }}>
+                <Chip color={RED} size={17}>
+                  Locked
+                </Chip>
+              </div>
+              <Fx at={cb + 12} kind="pop" style={{ right: 20, top: 18 }}>
+                <Card w={120} h={120} pad={0} red={f >= nw} style={{ borderRadius: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <IcoKey size={104} cross={prog(f, nw, nw + 8)} />
+                </Card>
+              </Fx>
+            </>
+          }
+        >
+          <defs>
+            <radialGradient id="kTorch">
+              <stop offset="0" stopColor="#FFF3D6" stopOpacity="0.62" />
+              <stop offset="0.55" stopColor="#FFF3D6" stopOpacity="0.2" />
+              <stop offset="1" stopColor="#FFF3D6" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <Corridor t={f + 500} glow={0.9} alarm={0.4} leak={0.4} />
+          <g style={{ mixBlendMode: "screen" }}>
+            <ellipse cx={660 + Math.sin(f * 0.11) * 14} cy={1215 + Math.cos(f * 0.09) * 9} rx={190} ry={175} fill="url(#kTorch)" />
+          </g>
+        </View>
       </Fx>
-      <Fx at={cb + 10} kind="slide" dx={60} dy={0} style={{ left: X + 422, top: 944 }}>
-        <Card w={398} h={350} red={f >= nw}>
-          <Tag>Chaabi</Tag>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
-            <IcoKey size={230} cross={prog(f, nw, nw + 8)} />
-          </div>
-        </Card>
-      </Fx>
-      <Stamp at={nw + 6} x={X + 470} y={1210} rot={-7}>
+      <Stamp at={nw + 6} x={X + 430} y={1196} rot={-7}>
         Chaabi nahi
       </Stamp>
     </AbsoluteFill>
@@ -147,16 +197,11 @@ export const K3Call2: React.FC = () => {
       <Fx at={si} kind="slide" style={{ left: X, top: 944 }}>
         <Card w={W} h={350} red={f >= si + 22}>
           <Tag>Unka phone</Tag>
-          {/* a small lock screen, asleep */}
-          <div style={{ position: "absolute", left: 30, top: 66, width: 150, height: 258, borderRadius: 26, background: "#0a0b0d", border: "3px solid #c9ced3" }}>
-            <div style={{ position: "absolute", top: 34, width: "100%", textAlign: "center", fontSize: 46, fontWeight: 500, letterSpacing: "-0.03em", opacity: 0.85 }}>2:06</div>
-            <div style={{ position: "absolute", top: 104, left: 37, width: 70, height: 70 }}>
-              <svg width={70} height={70} viewBox="0 0 24 24">
-                <path d="M6 17h12l-1.5-2V11a4.5 4.5 0 0 0-9 0v4L6 17zM10 20h4" fill="none" stroke="#c9ced3" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M4 4l16 16" stroke={RED} strokeWidth={2.2} strokeLinecap="round" />
-              </svg>
-            </div>
+          {/* the other phone: asleep, on silent */}
+          <div style={{ position: "absolute", left: 26, top: 58, scale: "0.44", transformOrigin: "0 0" }}>
+            <Handset screen="lock" t={f} time="2:06" silent dim={ip(f, [si, si + 10, 137], [0.7, 0.1, 0.2])} notes={[]} />
           </div>
+          <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 60, background: "linear-gradient(180deg, rgba(17,19,22,0) 0%, #111316 100%)" }} />
           {[0, 1].map((i) => (
             <Fx key={i} at={si + 10 + i * 12} kind="drop" style={{ left: 214, top: 80 + i * 96 }}>
               <Card w={576} h={82} pad={0} style={{ borderRadius: 18, display: "flex", alignItems: "center", padding: "0 20px", gap: 14 }}>
@@ -231,24 +276,29 @@ export const K5Inside: React.FC = () => {
       <Head small="Alarm ne" lines={[["KAAM", "KAR", "DIYA."]]} at={ka - 6} ats={[kw - 10]} out={an - 5} />
       <Head small="Room ke andar" lines={[["KISI", "NE", "KUCH"], [gold("NAHI"), "KIYA."]]} at={an} ats={[ki - 6, kiy - 4]} />
       <Fx at={2} kind="slide" style={{ left: X, top: 770 }}>
-        <Card w={W} h={270} red>
-          <RoomDiagram t={f + 60} ring={1} fire={fire} dark={dark} />
-          <div style={{ position: "absolute", left: 22, bottom: 18 }}>
-            <Tag>Server room · conceptual</Tag>
-          </div>
-          <Fx at={kw - 4} kind="pop" style={{ left: 210, top: 22 }}>
-            <Chip color={C.fa} fill size={17}>
-              <Mark ok size={18} /> Alarm on
-            </Chip>
-          </Fx>
-        </Card>
+        <View
+          w={W}
+          h={300}
+          red
+          tag="Server room · conceptual"
+          cam={{ z: 0.6 + prog(f, 0, 176) * 0.05, cx: 560, cy: 1200 }}
+          over={
+            <Fx at={kw - 4} kind="pop" style={{ right: 20, top: 16 }}>
+              <Chip color={C.fa} fill size={17}>
+                <Mark ok size={18} /> Alarm on
+              </Chip>
+            </Fx>
+          }
+        >
+          <Room t={f + 1200} alarm={1} heat={1} flame={fire * 0.8} smoke={ip(f, [0, 176], [0.5, 0.9])} ok={[1 - dark[0], 1 - dark[1], 1 - dark[2]]} />
+        </View>
       </Fx>
       {[
         ["Guard", "chaabi nahi"],
         ["IT team", "phone silent"],
         ["Aap", "raaste mein"],
       ].map(([n, note], i) => (
-        <Fx key={n} at={an + 2 + i * 9} kind="slide" dy={30} style={{ left: X, top: 1058 + i * 84 }}>
+        <Fx key={n} at={an + 2 + i * 9} kind="slide" dy={30} style={{ left: X, top: 1086 + i * 82 }}>
           <Row w={W} name={n} note={note} flip={ki - 4 + i * 8} after="Kuch nahi" />
         </Fx>
       ))}
@@ -264,14 +314,11 @@ export const K6Turn: React.FC = () => {
     <AbsoluteFill>
       <Head small="Ek aur" lines={[[gold("TAREEKA"), "HAI."]]} at={ta - 6} ats={[ta + 8]} />
       <Fx at={0} kind="blur" style={{ left: X, top: 770 }}>
-        <Card w={W} h={270} gold={f > ta + 12}>
-          <RoomDiagram t={f + 300} ring={1} fire={0.9} dark={[0.6, 0.6, 1]} slot={prog(f, ta + 10, ta + 20, E.out)} />
-          <div style={{ position: "absolute", left: 22, bottom: 18 }}>
-            <Tag>Wahi room</Tag>
-          </div>
-        </Card>
+        <View w={W} h={400} gold={f > ta + 12} tag="Wahi room" cam={{ z: 1.2 + prog(f, 0, 65) * 0.08, cx: COMODO.x - 150, cy: COMODO.y + 150 }}>
+          <Room t={f + 2000} outline={prog(f, ta + 10, ta + 20, E.out)} />
+        </View>
       </Fx>
-      <Fx at={ta + 16} kind="pop" style={{ left: X + 520, top: 1066 }}>
+      <Fx at={ta + 16} kind="pop" style={{ left: X + 560, top: 1196 }}>
         <Chip color={C.gold} size={22}>
           Deewar par?
         </Chip>
@@ -346,22 +393,37 @@ export const K8System: React.FC = () => {
     <AbsoluteFill>
       <Head small="Aur khud" lines={[[gold("ACTIVATE.")]]} at={ac - 4} ats={[aw - 8]} out={nc - 5} />
       <Head small="Na chaabi chahiye," lines={[["NA", gold("CALL.")]]} at={nc} ats={[ncw - 6]} />
-      <Fx at={0} kind="blur" style={{ left: X, top: 770 }}>
-        <Card w={W} h={270} gold>
-          <RoomDiagram t={f + 600} fire={fire} unit={1} sense={f < aw ? 1 : 0} mist={prog(f, aw, aw + 14, E.out) * (1 - prog(f, nc + 20, nc + 40))} />
-          <div style={{ position: "absolute", left: 22, bottom: 18 }}>
-            <Tag>Server room · conceptual</Tag>
-          </div>
-        </Card>
+      <Fx at={0} kind="blur" out={nc - 5} style={{ left: X, top: 770 }}>
+        <View w={W} h={300} gold tag="Server room · conceptual" cam={{ z: 1.02 + prog(f, 0, nc) * 0.1, cx: 730, cy: 1075, sx: 0 }}>
+          <Room t={f + 2600} heat={1} flame={fire * 0.5} comodo={1} sense={f < aw ? 1 : 0} mist={prog(f, aw, aw + 14, E.out)} smoke={0.2} />
+        </View>
       </Fx>
-      <Fx at={2} kind="slide" dy={30} out={nc - 5} style={{ left: X, top: 1058 }}>
+      <Fx at={nc} kind="blur" style={{ left: X, top: 770 }}>
+        <View
+          w={W}
+          h={270}
+          gold
+          tag="Darwaza ab bhi band"
+          cam={{ z: 0.82 + prog(f, nc, 140) * 0.06, cx: 640, cy: 1200 }}
+          over={
+            <div style={{ position: "absolute", left: 22, bottom: 18 }}>
+              <Chip color={C.gold} size={17}>
+                Andar: response ho chuka
+              </Chip>
+            </div>
+          }
+        >
+          <Corridor t={f + 3000} glow={1} haze={0.65} />
+        </View>
+      </Fx>
+      <Fx at={2} kind="slide" dy={30} out={nc - 5} style={{ left: X, top: 1088 }}>
         <Card w={W} h={76} pad={0} style={{ borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "space-around" }}>
           {led("Armed", true, "#3BEA6A")}
           {led("Sensed", f >= ac, RED)}
           {led("Active", f >= aw, C.gold)}
         </Card>
       </Fx>
-      <Stamp at={aw + 10} x={X + 430} y={1160} color={C.gold} rot={-5}>
+      <Stamp at={aw + 10} x={X + 430} y={1184} color={C.gold} rot={-5}>
         Automatic ✓
       </Stamp>
       <Fx at={nc} kind="slide" dy={30} style={{ left: X, top: 1058 }}>
@@ -512,37 +574,48 @@ export const K10Punch: React.FC = () => {
         </div>
       )}
       <Fx at={0} kind="slide" style={{ left: X, top: 800 }}>
-        <Card w={398} h={420}>
-          <Tag>Alarm</Tag>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 26 }}>
-            <IcoDetector t={f} ring={f >= aww - 6 ? 1 : 0} size={270} />
-          </div>
-          <div style={{ position: "absolute", left: 22, bottom: 24, display: "flex", gap: 10 }}>
-            <Fx at={za + 8} kind="pop" style={{ position: "relative" }}>
-              <Chip color={C.fa} fill size={18}>
-                <Mark ok size={18} /> Zaroori
-              </Chip>
-            </Fx>
-          </div>
-          <Fx at={aww} kind="pop" style={{ right: 22, bottom: 24 }}>
-            <Chip color={C.fa} size={18}>
-              Sirf awaaz
-            </Chip>
-          </Fx>
-        </Card>
+        <View
+          w={398}
+          h={420}
+          tag="Alarm"
+          cam={{ z: 2.0, cx: DET.x, cy: DET.y + 40 }}
+          over={
+            <>
+              <Fx at={za + 8} kind="pop" style={{ left: 22, bottom: 22 }}>
+                <Chip color={C.fa} fill size={18}>
+                  <Mark ok size={18} /> Zaroori
+                </Chip>
+              </Fx>
+              <Fx at={aww} kind="pop" style={{ right: 20, bottom: 22 }}>
+                <Chip color={C.fa} size={18}>
+                  Sirf awaaz
+                </Chip>
+              </Fx>
+            </>
+          }
+        >
+          <Room t={f + 3400} alarm={f >= aww - 6 && f < ja ? 0.7 : 0} comodo={1} />
+          <Rings t={f} o={f >= aww - 6 ? 1 : 0} />
+        </View>
       </Fx>
       <Fx at={aww + 10} kind="slide" dx={60} dy={0} style={{ left: X + 422, top: 800 }}>
-        <Card w={398} h={420} gold={f >= ja}>
-          <Tag color={f >= ja ? C.gold : undefined}>Unit</Tag>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 56, opacity: f >= ja ? 1 : 0.45 }}>
-            <IcoComodo w={300} />
-          </div>
-          <Fx at={ja + 6} kind="pop" style={{ right: 22, bottom: 24 }}>
-            <Chip color={C.gold} fill size={18}>
-              <Mark ok size={18} /> Jawaab
-            </Chip>
-          </Fx>
-        </Card>
+        <View
+          w={398}
+          h={420}
+          gold={f >= ja}
+          tag="Unit"
+          dim={f >= ja ? 0 : 0.45}
+          cam={{ z: 1.5 + prog(f, aww, 209) * 0.1, cx: COMODO.x - 4, cy: COMODO.y + 16 }}
+          over={
+            <Fx at={ja + 6} kind="pop" style={{ right: 20, bottom: 22 }}>
+              <Chip color={C.gold} fill size={18}>
+                <Mark ok size={18} /> Jawaab
+              </Chip>
+            </Fx>
+          }
+        >
+          <Room t={f + 3400} comodo={1} />
+        </View>
       </Fx>
     </AbsoluteFill>
   );

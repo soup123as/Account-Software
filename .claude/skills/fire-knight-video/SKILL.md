@@ -172,6 +172,7 @@ Machines available: `Dumper.tsx` (100-t haul truck, mine setting) and `Truck.tsx
 - The meter counts something the story moves (here JAWAAB 0/3, then UNIT · JAWAAB ✓). Never a percentage of protection.
 - Red is only a warning colour (alarm, failure tags and stamps). The one inverted moment is the punch: a gold card with black type.
 - Frame 0 must be a finished poster: do not fade the first scene in.
+- The client asked for "visuals like the previous reel" inside this cut: cards that show a place are `View` windows (in `cards/scenes.tsx`) onto the illustrated sets (`Room`, `Corridor`) through a `CamView`, and phones are the real `Handset` cropped by the card. Keep flat icons only for small UI glyphs (key, struck-out call).
 - Something changes about once a second; a scene is one headline plus two or three cards.
 
 **Captions always fit:** `TypeOn` and `Display` measure their line from the fonts' own glyph advances (`src/fk/metrics.ts`, extracted with fontTools) and shrink only that line's font size when it would pass the 820 px safe width. Never let a caption clip or run past x 950. Never use DOM `measureText` for this: render tabs that measure before the font loads cache a different width, and the caption size flickers frame to frame.
