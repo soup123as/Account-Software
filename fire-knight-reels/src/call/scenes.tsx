@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { C, E, FONT, SAFE, TYPE, ip, noise1, prog } from "../fk/theme";
-import { Display, Label, Stack, TypeOn } from "../fk/ui";
+import { Display, Label, Stack as UiStack, TypeOn } from "../fk/ui";
 import { Cam, CamView, toScreen } from "../shop/fx";
 import { TopFade } from "../shop/scenes1";
 import { Corridor } from "../server/Corridor";
@@ -14,6 +14,13 @@ import { at } from "./timing";
 const PHONE_X = 540 - 190;
 const PHONE_Y = 880;
 
+/**
+ * Bare mode: the same scenes with their caption stacks hidden and the phone a little smaller, so another
+ * cut (src/full) can lay its own headlines and bottom captions over the full-screen pictures.
+ */
+export const Bare = React.createContext(false);
+const Stack: React.FC<React.ComponentProps<typeof UiStack>> = (props) => (React.useContext(Bare) ? null : <UiStack {...props} />);
+
 /** A phone floating over a soft, dark version of the server room. */
 const Behind: React.FC<{ t: number; alarm?: number; flame?: number; comodo?: number; o?: number }> = ({ t, alarm = 0, flame = 0, comodo = 0, o = 0.5 }) => (
   <AbsoluteFill style={{ filter: "blur(10px)", opacity: o }}>
@@ -23,9 +30,26 @@ const Behind: React.FC<{ t: number; alarm?: number; flame?: number; comodo?: num
   </AbsoluteFill>
 );
 
-const PhoneWrap: React.FC<{ p: number; o?: number; rot?: number; x?: number; children: React.ReactNode }> = ({ p, o = 1, rot = 0, x = 0, children }) => (
-  <div style={{ position: "absolute", left: PHONE_X + x, top: PHONE_Y, opacity: p * o, translate: `0 ${(1 - p) * 60}px`, rotate: `${rot}deg`, filter: p < 1 ? `blur(${(1 - p) * 8}px)` : undefined }}>{children}</div>
-);
+const PhoneWrap: React.FC<{ p: number; o?: number; rot?: number; x?: number; y?: number; children: React.ReactNode }> = ({ p, o = 1, rot = 0, x = 0, y = 0, children }) => {
+  const bare = React.useContext(Bare);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: PHONE_X + x,
+        top: PHONE_Y + (bare ? y : 0),
+        opacity: p * o,
+        translate: `0 ${(1 - p) * 60}px`,
+        rotate: `${rot}deg`,
+        scale: bare ? "0.72" : undefined,
+        transformOrigin: "50% 0",
+        filter: p < 1 ? `blur(${(1 - p) * 8}px)` : undefined,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 /* ------------------------------------------------------------------ */
 /* 1 HOOK - the alarm, then your phone.                                */
@@ -285,9 +309,10 @@ export const N7Product: React.FC = () => {
   const p = prog(f, 0, 20, E.out);
   const sweep = ip(f, [uw - 2, uw + 32], [-30, 130], E.inOut);
   const CW = 840;
-  const CH = 600;
-  const CT = 850;
-  const W = 800;
+  const bare = React.useContext(Bare);
+  const CH = bare ? 490 : 600;
+  const CT = bare ? 800 : 850;
+  const W = bare ? 620 : 800;
   const Hh = (W * 1122) / 1402;
   return (
     <AbsoluteFill style={{ background: C.black }}>
@@ -490,7 +515,7 @@ export const N11Hero: React.FC = () => {
       </AbsoluteFill>
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.97) 0px, rgba(0,0,0,0.9) 1000px, rgba(0,0,0,0.3) 1400px)", opacity: out }} />
       <TopFade to={860} o={1 - out} />
-      <PhoneWrap p={prog(f, 0, 14, E.out)} o={1 - out}>
+      <PhoneWrap p={prog(f, 0, 14, E.out)} o={1 - out} y={-130}>
         <Handset screen="incoming" t={f} name="Security Desk" sub="Office · 2:01 AM" />
       </PhoneWrap>
       <Stack top={380}>
