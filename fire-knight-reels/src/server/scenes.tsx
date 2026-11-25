@@ -8,7 +8,7 @@ import { CHAIR, Corridor } from "./Corridor";
 import { COMODO, DET, HOT, RACK, RACKS, Room } from "./Room";
 import { at } from "./timing";
 
-const lerpCam = (a: Cam, b: Cam, p: number): Cam => ({
+export const lerpCam = (a: Cam, b: Cam, p: number): Cam => ({
   z: ip(p, [0, 1], [a.z, b.z]),
   cx: ip(p, [0, 1], [a.cx, b.cx]),
   cy: ip(p, [0, 1], [a.cy, b.cy]),
@@ -16,16 +16,16 @@ const lerpCam = (a: Cam, b: Cam, p: number): Cam => ({
   ay: ip(p, [0, 1], [a.ay ?? 960, b.ay ?? 960]),
 });
 
-const ROOM: Cam = { z: 0.95, cx: 540, cy: 1160, ay: 1310 };
+export const ROOM: Cam = { z: 0.95, cx: 540, cy: 1160, ay: 1310 };
 
-const Concept: React.FC<{ o?: number }> = ({ o = 1 }) => (
+export const Concept: React.FC<{ o?: number }> = ({ o = 1 }) => (
   <div style={{ position: "absolute", left: SAFE.x0, top: 1400, opacity: 0.85 * o, background: "rgba(0,0,0,0.62)", borderRadius: 8, padding: "8px 14px" }}>
     <Label style={{ fontSize: 20 }}>Conceptual illustration</Label>
   </div>
 );
 
 /** Sound rings around the detector (a UI graphic, so it is white, not coloured). */
-const Rings: React.FC<{ t: number; o: number }> = ({ t, o }) => (
+export const Rings: React.FC<{ t: number; o: number }> = ({ t, o }) => (
   <g>
     {[0, 1, 2].map((i) => {
       const ph = (t * 0.035 + i / 3) % 1;
@@ -327,7 +327,7 @@ export const V6Product: React.FC = () => {
 /* "Yeh flame aur heat detect karta hai aur automatically activate hokar fire protection provide karta hai. */
 /*  Taaki server room mein danger detect hone ke baad protection ke liye sirf kisi ke pahunchne ka intezaar na karna pade." */
 /* ------------------------------------------------------------------ */
-const Chips: React.FC<{ names: string[]; on: number[]; f: number; out: number }> = ({ names, on, f, out }) => {
+export const Chips: React.FC<{ names: string[]; on: number[]; f: number; out: number }> = ({ names, on, f, out }) => {
   const o = prog(f, out, out + 7, E.in);
   if (f < on[0] - 1 || o >= 1) return null;
   return (
@@ -426,7 +426,7 @@ export const V7System: React.FC = () => {
 /* 8 CTA - monitored, or protected too?                                */
 /* "Aapke office ka server room sirf monitored hai, ya protected bhi?"  */
 /* ------------------------------------------------------------------ */
-const Callout: React.FC<{ x: number; y: number; w: number; h: number; p: number; color: string; text: string; lx: number; ly: number }> = ({ x, y, w, h, p, color, text, lx, ly }) => (
+export const Callout: React.FC<{ x: number; y: number; w: number; h: number; p: number; color: string; text: string; lx: number; ly: number }> = ({ x, y, w, h, p, color, text, lx, ly }) => (
   <>
     <Reticle x={x} y={y} w={w} h={h} p={p} color={color} len={30} thick={3} />
     <div style={{ position: "absolute", left: lx, top: ly, opacity: ip(p, [0.4, 1], [0, 1]), translate: `${(1 - p) * 14}px 0` }}>
