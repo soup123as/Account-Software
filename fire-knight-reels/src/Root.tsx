@@ -28,6 +28,9 @@ import { N_TOTAL } from "./call/timing";
 import { CallThumbnail } from "./call/CallThumbnail";
 import { NightCallCards, cardsDefaults } from "./cards/NightCallCards";
 import { NightCallFull, fullDefaults } from "./full/NightCallFull";
+import { EvOwners, evDefaults } from "./ev/EvOwners";
+import { E_TOTAL } from "./ev/timing";
+import { EvThumbnail } from "./ev/EvThumbnail";
 import { FPS, H, SCENES, TOTAL, W } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
@@ -86,6 +89,8 @@ export const RemotionRoot: React.FC = () => (
     <Still id="CallThumbnail" component={CallThumbnail} width={W} height={H} />
     <Composition id="NightCallCards" component={NightCallCards} durationInFrames={N_TOTAL} fps={FPS} width={W} height={H} defaultProps={cardsDefaults} />
     <Composition id="NightCallFull" component={NightCallFull} durationInFrames={N_TOTAL} fps={FPS} width={W} height={H} defaultProps={fullDefaults} />
+    <Composition id="EvOwners" component={EvOwners} durationInFrames={E_TOTAL} fps={FPS} width={W} height={H} defaultProps={evDefaults} />
+    <Still id="EvThumbnail" component={EvThumbnail} width={W} height={H} />
     <Folder name="TruckOwners-Scenes">
       <Composition id="T1-Hook" component={t1} durationInFrames={110} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
     </Folder>
