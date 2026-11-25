@@ -346,8 +346,10 @@ et = t_(DUR - Q["logo"])
 tone = (np.sin(2 * np.pi * 73.4 * et) + 0.5 * np.sin(2 * np.pi * 110 * et) + 0.25 * np.sin(2 * np.pi * 146.8 * et)) * adsr(len(et), 0.4, 1.6)
 if not SFX_ONLY:
     put(norm(tone), Q["logo"], 0.28)
-put(beep(1568, 0.08), Q["logo"] + 1.0, 0.07, 0.2)
-put(beep(2093, 0.12), Q["logo"] + 1.09, 0.07, 0.2)
+put(thud(58, 36, 0.5), Q["consult"], 0.3)
+put(beep(1568, 0.08), Q["dm"], 0.07, 0.2)
+put(beep(2093, 0.12), Q["dm"] + 0.09, 0.07, 0.2)
+put(thud(54, 34, 0.7, 0.1), Q["dm"], 0.4)
 
 # ---------------- out ----------------
 mix = np.stack([L, R], axis=1)

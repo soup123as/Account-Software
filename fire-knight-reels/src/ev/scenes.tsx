@@ -495,13 +495,17 @@ export const E10Ending: React.FC = () => {
   const ow = at("ending", "optW");
   const fk = at("ending", "fk");
   const lg = at("ending", "logo");
+  const cs = at("ending", "consult");
+  const dm = at("ending", "dm");
   const gone = prog(f, fk - 8, fk);
   const out2 = prog(f, lg - 8, lg);
   const em = prog(f, lg, lg + 16, E.out);
   const sheen = ip(f, [lg + 12, lg + 40], [-30, 130], E.inOut);
-  const wm = prog(f, lg + 12, lg + 26, E.out);
+  const wm = prog(f, lg + 8, lg + 22, E.out);
   const tag = prog(f, lg + 22, lg + 34, E.out);
-  const cta = prog(f, lg + 30, lg + 44, E.out);
+  const cta = prog(f, cs, cs + 14, E.out);
+  const hit = prog(f, dm, dm + 8, E.out);
+  const num = prog(f, dm + 6, dm + 18, E.out);
   const emblemSrc = staticFile("brand/emblem.png");
   const top = 400;
   const tagTop = top + EMBLEM_H + 40 + WORD_H + 40;
@@ -613,13 +617,29 @@ export const E10Ending: React.FC = () => {
         Because every <span style={{ color: C.gold }}>second</span> matters.
       </div>
       <div style={{ position: "absolute", left: SAFE.x0, width: SAFE.x1 - SAFE.x0, top: tagTop + 84, display: "flex", flexDirection: "column", alignItems: "center", gap: 18, opacity: cta, translate: `0 ${(1 - cta) * 24}px` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 34px", borderRadius: 999, border: `2px solid ${C.gold}`, background: "rgba(240,178,66,0.12)", fontFamily: FONT.sans, whiteSpace: "nowrap" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            padding: "16px 34px",
+            borderRadius: 999,
+            border: `2px solid ${C.gold}`,
+            background: `rgba(240,178,66,${0.12 + 0.16 * hit})`,
+            boxShadow: `0 0 ${34 * hit}px rgba(240,178,66,0.4)`,
+            scale: `${1 + 0.06 * Math.sin(Math.min(1, prog(f, dm, dm + 12)) * Math.PI)}`,
+            fontFamily: FONT.sans,
+            whiteSpace: "nowrap",
+          }}
+        >
           <span style={{ fontWeight: 600, fontSize: 34, color: C.fa }}>
             <span style={{ color: C.gold }}>DM us</span> for a free consultation
           </span>
         </div>
-        <Label style={{ fontSize: 22 }}>WhatsApp {WHATSAPP}</Label>
-        <Label style={{ fontSize: 20, marginTop: -6 }}>thefireknight.in</Label>
+        <div style={{ opacity: num, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+          <Label style={{ fontSize: 22 }}>WhatsApp {WHATSAPP}</Label>
+          <Label style={{ fontSize: 20 }}>thefireknight.in</Label>
+        </div>
       </div>
     </AbsoluteFill>
   );
