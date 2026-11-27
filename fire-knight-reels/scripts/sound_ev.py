@@ -230,8 +230,8 @@ pad = norm(band(pad, 40, 1800))
 tt = np.arange(N) / SR
 pad_g = np.interp(
     tt,
-    [0, 1.5, S("dash"), S("heat"), S("places"), S("gap"), Q["visible"] + 0.6, S("real"), Q["vis"] + 1.2, S("product") - 0.1, S("product") + 0.8, S("system"), S("wait"), S("ending"), Q["logo"], DUR],
-    [0.1, 0.3, 0.42, 0.3, 0.42, 0.3, 0.12, 0.3, 0.0, 0.0, 0.5, 0.42, 0.55, 0.5, 0.7, 0],
+    [0, 1.5, S("dash"), S("heat"), S("places"), S("gap"), Q["visible"] + 0.6, S("real"), Q["vis"] + 1.2, S("product") - 0.1, S("product") + 0.8, S("system"), S("ending"), Q["logo"], DUR],
+    [0.1, 0.3, 0.42, 0.3, 0.42, 0.3, 0.12, 0.3, 0.0, 0.0, 0.5, 0.42, 0.5, 0.7, 0],
 )
 if not SFX_ONLY:
     L += pad * pad_g * 0.32
@@ -265,7 +265,6 @@ for k in ("battery", "range", "charging"):
     put(tick(2400, 0.035), Q[k], 0.09)
     put(beep(1320, 0.06), Q[k] + 0.06, 0.06, 0.2)
     put(thud(58, 36, 0.45), Q[k] + 0.27, 0.34)
-put(thud(54, 34, 0.7), Q["bata"] + 0.53, 0.42)
 
 # ---------------- 3 heat: what it does not ----------------
 put(whoosh(1.4, 100, 3000, 0.6), Q["nahiD"] - 0.4, 0.28)
@@ -317,16 +316,12 @@ put(beep(1320), Q["detect"] + 0.15, 0.12)
 put(thud(58, 36, 0.5), Q["detect"], 0.36)
 put(crackle(Q["targeted"] + 0.8 - Q["heat2"], 30), Q["heat2"], 0.06)
 put(thud(56, 34, 0.5), Q["threat"] + 0.4, 0.34)
-put(hiss(S("wait") - 0.4 - Q["targeted"]), Q["targeted"] + 0.13, 0.2)
+put(hiss(S("ending") - 0.4 - Q["targeted"]), Q["targeted"] + 0.13, 0.2)
 put(thud(50, 32, 0.8, 0.0), Q["targeted"], 0.42)
 put(thud(56, 34, 0.5), Q["auto"], 0.34)
 
 # ---------------- 9 wait ----------------
-put(whoosh(1.0, 120, 3000, 0.5), S("wait") - 0.2, 0.2)
-put(thud(56, 34, 0.6), Q["waitW"], 0.42)
-put(thud(56, 34, 0.5), Q["monitor2"], 0.36)
-put(beep(1568, 0.06), Q["monitor2"] + 0.3, 0.05, 0.2)
-put(thud(52, 32, 0.8), Q["dekhW"], 0.44)
+put(whoosh(1.0, 120, 3000, 0.5), S("ending") - 0.2, 0.2)
 
 # ---------------- 10 ending ----------------
 for k in ("insurance", "servicing", "dashcam"):

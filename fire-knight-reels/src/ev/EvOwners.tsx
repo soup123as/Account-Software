@@ -6,7 +6,7 @@ import { C } from "../fk/theme";
 import { Grain, SafeGuide, Vignette } from "../fk/ui";
 import { Bloom, Dip, HeatFlash, MistWash } from "../OperatorAkela";
 import { E_LEN } from "./timing";
-import { E10Ending, E1Hook, E2Dash, E3Heat, E4Places, E5Gap, E6Real, E7Product, E8System, E9Wait } from "./scenes";
+import { E10Ending, E1Hook, E2Dash, E3Heat, E4Places, E5Gap, E6Real, E7Product, E8System } from "./scenes";
 
 export type EvProps = { showSafe: boolean; audio: string | null };
 export const evDefaults: EvProps = { showSafe: false, audio: "audio/ev-mix-vo.wav" };
@@ -62,12 +62,6 @@ export const EvOwners: React.FC<EvProps> = ({ showSafe, audio }) => {
         </O>
         <S name="8 System" durationInFrames={E_LEN.system}>
           <E8System />
-        </S>
-        <O durationInFrames={16}>
-          <Dip />
-        </O>
-        <S name="9 Wait" durationInFrames={E_LEN.wait}>
-          <E9Wait />
         </S>
         <O durationInFrames={16}>
           <Dip />

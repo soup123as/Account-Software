@@ -53,7 +53,7 @@ export const E2Dash: React.FC = () => {
   const ba = at("dash", "battery");
   const ra = at("dash", "range");
   const ch = at("dash", "charging");
-  const bt = at("dash", "bata");
+  const bt = E_LEN.dash + 10;
   const hl = f < ba - 2 ? -1 : f < ra - 3 ? 0 : f < ch - 3 ? 1 : f < bt - 4 ? 2 : -1;
   const cam: Cam = { z: 1.0 + prog(f, 0, E_LEN.dash) * 0.06, cx: 540, cy: 1040, ay: 1240 };
   const chip = (n: string, a: string, b: string, t0: number, out: number) => (
@@ -72,10 +72,6 @@ export const E2Dash: React.FC = () => {
       {chip("01", "Battery", "PERCENTAGE.", ba, ra - 5)}
       {chip("02", "Range", "DEKHTE HO.", ra, ch - 5)}
       {chip("03", "Charging", "STATUS.", ch, bt - 6)}
-      <Stack top={380}>
-        <TypeOn words={["Gaadi", "kaafi", "kuch"]} at={bt} color={C.fa} />
-        <Display words={[{ w: "BATA", c: C.gold }, "DETI", "HAI."]} at={bt + 16} />
-      </Stack>
     </AbsoluteFill>
   );
 };
@@ -183,7 +179,6 @@ export const E4Places: React.FC = () => {
 /* ------------------------------------------------------------------ */
 export const E5Gap: React.FC = () => {
   const f = useCurrentFrame();
-  const ag = at("gap", "agar");
   const ks = at("gap", "kaise");
   const cc = at("gap", "cctv");
   const se = at("gap", "security");
@@ -221,9 +216,6 @@ export const E5Gap: React.FC = () => {
       </AbsoluteFill>
       <TopFade to={860} />
       <Stack top={380}>
-        <TypeOn words={["Toh", "agar", "kuch", "unusual", "start", "ho..."]} at={ag} out={ks - 6} perLetter={0.7} color={C.fa} />
-      </Stack>
-      <Stack top={380}>
         <TypeOn words={["aapko", "pehle"]} at={ks} out={cc - 5} color={C.fa} />
         <Display words={[{ w: "KAISE", c: C.gold }, "PATA", "CHALEGA?"]} at={ks + 10} out={cc - 5} size={104} />
       </Stack>
@@ -246,7 +238,6 @@ export const E5Gap: React.FC = () => {
 /* ------------------------------------------------------------------ */
 export const E6Real: React.FC = () => {
   const f = useCurrentFrame();
-  const rg = at("real", "realGap");
   const ri = at("real", "risk");
   const vs = at("real", "vis");
   const cam: Cam = { z: 1.12 + prog(f, 0, E_LEN.real) * 0.08, cx: 560, cy: 1130, ay: 1210 };
@@ -279,9 +270,6 @@ export const E6Real: React.FC = () => {
       <div style={{ position: "absolute", left: (X0 + X1) / 2 - 110, top: Y - 56, width: 220, textAlign: "center", opacity: prog(f, vs + 6, vs + 18) }}>
         <Label style={{ color: C.fa, fontSize: 22 }}>The gap</Label>
       </div>
-      <Stack top={380}>
-        <TypeOn words={["The", "real", "gap", "is", "simple:"]} at={rg} out={ri - 6} perLetter={0.8} color={C.fa} />
-      </Stack>
       <Stack top={380}>
         <Display words={[{ w: "RISK", c: C.gold }, "PEHLE."]} at={ri} />
         <Display words={["VISIBILITY", "BAAD", "MEIN."]} at={vs} size={104} />
@@ -396,45 +384,6 @@ export const E8System: React.FC = () => {
         <Display words={[{ w: "TARGETED", c: C.gold }]} at={ta} />
         <Display words={["SUPPRESSION"]} at={ta + 8} />
         <TypeOn words={["automatically", "trigger", "kar", "sakta", "hai."]} at={au} perLetter={0.7} weight={500} color={C.fa} />
-      </Stack>
-    </AbsoluteFill>
-  );
-};
-
-/* ------------------------------------------------------------------ */
-/* 9 WAIT - "Matlab aapko smoke ya visible problem ka wait nahi karna. System already us area ko monitor */
-/*           kar raha hota hai jahan aap normally dekh hi nahi sakte."   */
-/* ------------------------------------------------------------------ */
-export const E9Wait: React.FC = () => {
-  const f = useCurrentFrame();
-  const ma = at("wait", "matlab");
-  const ww = at("wait", "waitW");
-  const al = at("wait", "already");
-  const m2 = at("wait", "monitor2");
-  const ja = at("wait", "jahan");
-  const dw = at("wait", "dekhW");
-  const UNDER: Cam = { z: 1.5, cx: 560, cy: 1185, ay: 1295 };
-  const cam = lerpCam({ ...WIDE, z: 0.98 }, UNDER, prog(f, al - 10, ja + 30, E.cam));
-  const xray = prog(f, al, al + 26, E.out) * 0.85;
-  return (
-    <AbsoluteFill style={{ background: C.black }}>
-      <CamView cam={cam}>
-        <Parking place="basement" t={f + 2400}>
-          <Car t={f + 2400} xray={xray} lights={0.2} sentinel={1} sense={xray > 0.3 ? 1 : 0} accent={1} />
-        </Parking>
-      </CamView>
-      <TopFade to={860} />
-      <Stack top={380}>
-        <TypeOn words={["Smoke", "ya", "visible", "problem", "ka"]} at={ma} out={al - 6} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "WAIT", c: C.gold }, "NAHI."]} at={ww} out={al - 6} />
-      </Stack>
-      <Stack top={380}>
-        <TypeOn words={["System", "already", "us", "area", "ko"]} at={al} out={ja - 6} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "MONITOR", c: C.gold }, "KAR", "RAHA", "HAI"]} at={m2} out={ja - 6} size={100} />
-      </Stack>
-      <Stack top={380}>
-        <TypeOn words={["jahan", "aap", "normally"]} at={ja} color={C.fa} />
-        <Display words={["DEKH", { w: "NAHI", c: C.gold }, "SAKTE."]} at={dw} size={108} />
       </Stack>
     </AbsoluteFill>
   );
