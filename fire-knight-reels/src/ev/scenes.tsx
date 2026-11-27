@@ -8,7 +8,7 @@ import { Corridor, CHAIR } from "../server/Corridor";
 import { Chips, lerpCam } from "../server/scenes";
 import { Car, HOT, PACK, ZONES } from "./Car";
 import { Dash } from "./Dash";
-import { CCTV, Parking, Place } from "./Parking";
+import { CCTV, Parking } from "./Parking";
 import { E_LEN, at } from "./timing";
 
 const WIDE: Cam = { z: 0.95, cx: 540, cy: 1130, ay: 1300 };
@@ -51,10 +51,9 @@ export const E1Hook: React.FC = () => {
 export const E2Dash: React.FC = () => {
   const f = useCurrentFrame();
   const ba = at("dash", "battery");
-  const ra = at("dash", "range");
   const ch = at("dash", "charging");
   const bt = E_LEN.dash + 10;
-  const hl = f < ba - 2 ? -1 : f < ra - 3 ? 0 : f < ch - 3 ? 1 : f < bt - 4 ? 2 : -1;
+  const hl = f < ba - 2 ? -1 : f < ch - 3 ? 0 : f < bt - 4 ? 2 : -1;
   const cam: Cam = { z: 1.0 + prog(f, 0, E_LEN.dash) * 0.06, cx: 540, cy: 1040, ay: 1240 };
   const chip = (n: string, a: string, b: string, t0: number, out: number) => (
     <Stack top={380}>
@@ -69,9 +68,8 @@ export const E2Dash: React.FC = () => {
         <Dash t={f} hl={hl} on={prog(f, 0, 14, E.out)} />
       </CamView>
       <TopFade to={860} />
-      {chip("01", "Battery", "PERCENTAGE.", ba, ra - 5)}
-      {chip("02", "Range", "DEKHTE HO.", ra, ch - 5)}
-      {chip("03", "Charging", "STATUS.", ch, bt - 6)}
+      {chip("01", "Battery", "PERCENTAGE.", ba, ch - 5)}
+      {chip("02", "Charging", "STATUS.", ch, bt - 6)}
     </AbsoluteFill>
   );
 };
@@ -115,65 +113,6 @@ export const E3Heat: React.FC = () => {
 };
 
 /* ------------------------------------------------------------------ */
-/* 4 PLACES - "Aur daily use mein car kahan-kahan hoti hai? Office parking. Mall basement. */
-/*             Charging station. Society parking. Mostly, aapki direct nazar se bahar." */
-/* ------------------------------------------------------------------ */
-export const E4Places: React.FC = () => {
-  const f = useCurrentFrame();
-  const ka = at("places", "kahan");
-  const cues = [at("places", "office"), at("places", "mall"), at("places", "charger"), at("places", "society")];
-  const nz = at("places", "nazar");
-  const bw = at("places", "baharW");
-  const places: Place[] = ["office", "basement", "charger", "society"];
-  const names: [string, string][] = [
-    ["Office", "PARKING."],
-    ["Mall", "BASEMENT."],
-    ["Charging", "STATION."],
-    ["Society", "PARKING."],
-  ];
-  return (
-    <AbsoluteFill style={{ background: C.black }}>
-      {places.map((p, i) => {
-        const a = i === 0 ? -100 : cues[i] - 3;
-        const b = i < 3 ? cues[i + 1] - 3 : 1e6;
-        if (f < a - 4 || f > b + 6) return null;
-        const o = Math.min(prog(f, a - 3, a + 3), 1 - prog(f, b, b + 6));
-        const local = f - Math.max(0, a);
-        const cam: Cam = { z: 0.92 + Math.min(1, local / 90) * 0.07, cx: 540, cy: 1120, ay: 1300, sx: noise1(f * 0.05, i) * 2 };
-        return (
-          <AbsoluteFill key={p} style={{ opacity: o }}>
-            <CamView cam={cam}>
-              <Parking place={p} t={f + i * 200}>
-                <Car t={f + i * 200} lights={0.25} charging={p === "charger" ? 1 : 0} />
-              </Parking>
-            </CamView>
-          </AbsoluteFill>
-        );
-      })}
-      <TopFade to={860} />
-      <Stack top={380}>
-        <TypeOn words={["Aur", "daily", "use", "mein", "car"]} at={ka} out={cues[0] - 5} perLetter={0.8} color={C.fa} />
-        <Display words={[{ w: "KAHAN-KAHAN?", c: C.gold }]} at={ka + 26} out={cues[0] - 5} />
-      </Stack>
-      {names.map(([a, b], i) => {
-        const out = i < 3 ? cues[i + 1] - 4 : nz - 4;
-        return (
-          <Stack key={b + i} top={380}>
-            <TypeOn words={[{ w: `0${i + 1}`, c: C.gold }]} at={cues[i]} out={out} size={40} />
-            <TypeOn words={[a]} at={cues[i] + 1} out={out} perLetter={0.6} color={C.fa} />
-            <Display words={[b]} at={cues[i] + 4} out={out} />
-          </Stack>
-        );
-      })}
-      <Stack top={380}>
-        <TypeOn words={["Mostly,", "aapki", "direct"]} at={nz} color={C.fa} />
-        <Display words={["NAZAR", "SE", { w: "BAHAR.", c: C.gold }]} at={bw} size={112} />
-      </Stack>
-    </AbsoluteFill>
-  );
-};
-
-/* ------------------------------------------------------------------ */
 /* 5 GAP - "Toh agar kuch unusual start ho... aapko pehle kaise pata chalega? CCTV? Security? */
 /*          Ya tab, jab problem visible ho?"                             */
 /* ------------------------------------------------------------------ */
@@ -182,15 +121,11 @@ export const E5Gap: React.FC = () => {
   const ks = at("gap", "kaise");
   const cc = at("gap", "cctv");
   const se = at("gap", "security");
-  const vi = at("gap", "visible");
-  const vw = at("gap", "visW");
   const LEN = E_LEN.gap;
   const CAMC: Cam = { z: 2.3, cx: CCTV.x - 20, cy: CCTV.y + 40, ay: 1180 };
   let cam = lerpCam({ ...WIDE, z: 1.0 }, { ...WIDE, z: 1.1 }, prog(f, 0, cc, E.cam));
   cam = lerpCam(cam, CAMC, prog(f, cc - 8, cc + 8, E.cam));
   const sw1 = prog(f, se - 5, se + 3);
-  const sw2 = prog(f, vi - 5, vi + 3);
-  const SMOKE: Cam = { z: 1.05 + prog(f, vi, LEN) * 0.08, cx: 560, cy: 1140, ay: 1300 };
   return (
     <AbsoluteFill style={{ background: C.black }}>
       <AbsoluteFill style={{ opacity: 1 - sw1 }}>
@@ -201,17 +136,9 @@ export const E5Gap: React.FC = () => {
         </CamView>
       </AbsoluteFill>
       {/* the security desk: nobody at it */}
-      <AbsoluteFill style={{ opacity: sw1 * (1 - sw2) }}>
-        <CamView cam={{ z: 1.45 + prog(f, se, vi) * 0.08, cx: CHAIR.x - 30, cy: 1300, ay: 1340 }}>
+      <AbsoluteFill style={{ opacity: sw1 }}>
+        <CamView cam={{ z: 1.45 + prog(f, se, LEN) * 0.08, cx: CHAIR.x - 30, cy: 1300, ay: 1340 }}>
           <Corridor t={f + 900} glow={0.3} desk={1} />
-        </CamView>
-      </AbsoluteFill>
-      {/* by the time it shows, it is already smoke */}
-      <AbsoluteFill style={{ opacity: sw2 }}>
-        <CamView cam={SMOKE}>
-          <Parking place="basement" t={f + 1100}>
-            <Car t={f + 1100} lights={0.2} glow={1} smoke={ip(f, [vi, LEN], [0.3, 0.95])} />
-          </Parking>
         </CamView>
       </AbsoluteFill>
       <TopFade to={860} />
@@ -223,11 +150,7 @@ export const E5Gap: React.FC = () => {
         <Display words={["CCTV?"]} at={cc} out={se - 4} />
       </Stack>
       <Stack top={380}>
-        <Display words={["SECURITY?"]} at={se} out={vi - 5} />
-      </Stack>
-      <Stack top={380}>
-        <TypeOn words={["Ya", "tab,", "jab", "problem"]} at={vi} color={C.fa} />
-        <Display words={[{ w: "VISIBLE", c: C.gold }, "HO?"]} at={vw - 6} />
+        <Display words={["SECURITY?"]} at={se} />
       </Stack>
     </AbsoluteFill>
   );
@@ -439,7 +362,6 @@ export const E10Ending: React.FC = () => {
   const ins = at("ending", "insurance");
   const srv = at("ending", "servicing");
   const dc = at("ending", "dashcam");
-  const be = at("ending", "because");
   const op = at("ending", "optional");
   const ow = at("ending", "optW");
   const fk = at("ending", "fk");
@@ -452,7 +374,7 @@ export const E10Ending: React.FC = () => {
   const sheen = ip(f, [lg + 12, lg + 40], [-30, 130], E.inOut);
   const wm = prog(f, lg + 8, lg + 22, E.out);
   const tag = prog(f, lg + 22, lg + 34, E.out);
-  const cta = prog(f, cs, cs + 14, E.out);
+  const cta = prog(f, cs - 8, cs + 6, E.out);
   const hit = prog(f, dm, dm + 8, E.out);
   const num = prog(f, dm + 6, dm + 18, E.out);
   const emblemSrc = staticFile("brand/emblem.png");
@@ -522,13 +444,9 @@ export const E10Ending: React.FC = () => {
           </div>
         )}
         <Stack top={380}>
-          <TypeOn words={["Insurance", "lete", "ho."]} at={ins} out={be - 6} color={C.fa} />
-          <TypeOn words={["Servicing", "karvate", "ho."]} at={srv} out={be - 6} color={C.fa} />
-          <TypeOn words={["Dashcam", "lagvate", "ho."]} at={dc} out={be - 6} color={C.fa} />
-        </Stack>
-        <Stack top={380}>
-          <TypeOn words={["Because"]} at={be} out={op - 6} color={C.fa} />
-          <Display words={["THE", "CAR", { w: "MATTERS.", c: C.gold }]} at={be + 8} out={op - 6} size={112} />
+          <TypeOn words={["Insurance", "lete", "ho."]} at={ins} out={op - 6} color={C.fa} />
+          <TypeOn words={["Servicing", "karvate", "ho."]} at={srv} out={op - 6} color={C.fa} />
+          <TypeOn words={["Dashcam", "lagvate", "ho."]} at={dc} out={op - 6} color={C.fa} />
         </Stack>
         <Stack top={380}>
           <TypeOn words={["Toh", "fire", "protection", "ko"]} at={op} color={C.fa} />

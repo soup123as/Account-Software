@@ -16,10 +16,10 @@ LEAD = 0.12
 
 # phrase index (in order of the recording) -> label; a leading "-" drops the phrase
 PHRASES = [
-    "ev", "yeh", "battery", "range", "charging", "-bata", "but", "batArea", "kahan", "office", "mall", "charger", "society",
-    "nazar", "-agar", "kaise", "cctv", "security", "yaTab", "visible", "-realGap", "risk", "vis", "yahin", "zones", "flame",
-    "threat", "targeted", "-matlab", "-already", "-jahan", "insurance", "servicing", "dashcam", "because", "optional", "fk",
-    "byFk", "consult", "dm",
+    "ev", "yeh", "battery", "-range", "charging", "-bata", "but", "batArea", "-kahan", "-office", "-mall", "-charger", "-society",
+    "-nazar", "-agar", "kaise", "cctv", "security", "-yaTab", "-visible", "-realGap", "risk", "vis", "yahin", "zones", "flame",
+    "threat", "targeted", "-matlab", "-already", "-jahan", "insurance", "servicing", "dashcam", "-because", "optional", "fk",
+    "byFk", "-consult", "dm",
 ]
 
 tmp = OUT + ".src.wav"

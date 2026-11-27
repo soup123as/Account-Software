@@ -1,25 +1,27 @@
 /**
- * "EV Owners" reel (the Sentinel) - VO cue sheet in SECONDS for the SHORT cut. The voiceover is the client's
- * second ElevenLabs take with six phrases removed at their pauses and the gaps tightened to 0.34 s
- * (scripts/vo_ev_cut.py -> public/audio/vo-ev-short.wav, 64.77 s; the full take is vo-ev-full.mp3, 81.87 s).
- * Removed: "Basically, gaadi kaafi kuch bata deti hai." / "Toh agar kuch unusual start ho..." /
- * "The real gap is simple." / "Matlab aapko smoke ya visible problem ka wait nahi karna." /
- * "System already us area ko monitor kar raha hota hai..." / "jahan aap normally dekh hi nahi sakte."
+ * "EV Owners" reel (the Sentinel) - VO cue sheet in SECONDS for the 50-SECOND cut. The voiceover is the
+ * client's second ElevenLabs take with 17 of its 40 phrases removed at their pauses and the gaps tightened
+ * to 0.34 s (scripts/vo_ev_cut.py -> public/audio/vo-ev-short.wav, 48.09 s; full take: vo-ev-full.mp3, 81.87 s).
  * Phrase starts are exact (printed by the cut script); word cues inside a phrase are estimated.
  *
  *  0.12-0.89 EV owner ho? | 1.23-5.14 Toh yeh thirty seconds shayad aapke liye zyada important hain... than you think.
- *  5.48-7.13 Aap battery percentage check karte ho. | 7.46-8.30 Range dekhte ho. | 8.54-9.65 Charging status dekhte ho.
- *  9.99-12.35 But ek cheez usually screen par nahi dikhti... | 12.69-17.10 battery area ya electrical system mein unusual heat build-up ho raha ho toh?
- *  17.44-19.41 Aur daily use mein car kahan-kahan hoti hai? | 19.75 Office parking. | 20.71 Mall basement.
- *  21.73 Charging station. | 22.71 Society parking. | 23.85-26.08 Mostly, aapki direct nazar se bahar.
- *  26.42-27.83 Aapko pehle kaise pata chalega? | 28.17 CCTV? | 29.13 Security? | 30.05 Ya tab... | 30.80-31.90 jab problem visible ho?
- *  32.24-33.65 Risk pehle start hota hai. | 33.99-35.43 Visibility baad mein aati hai.
- *  35.77-38.01 Yahin The Sentinel ka role start hota hai.
- *  38.35-41.61 Yeh vehicle ke critical zones ko continuously monitor karta hai... | 41.88-44.61 flame aur rapidly rising heat detect karne ke liye.
- *  44.95-46.30 Aur threat detect hote hi, | 46.52-50.06 system targeted suppression response automatically trigger kar sakta hai.
- *  50.40 Aap insurance lete ho. | 51.70 Regular servicing karvate ho. | 53.23 Dashcam lagvate ho.
- *  54.58-56.13 Because the car matters. | 56.47-58.72 Toh fire protection ko optional kyun treat karein?
- *  59.06-59.73 The Sentinel... | 60.05-60.99 by The Fire Knight. | 61.33-63.48 Apni EV ke liye free consultation chahiye? | 63.82-64.67 Humein DM kijiye.
+ *  5.48-7.13 Aap battery percentage check karte ho. | 7.42-8.53 Charging status dekhte ho.
+ *  8.87-11.23 But ek cheez usually screen par nahi dikhti... | 11.57-15.97 battery area ya electrical system mein unusual heat build-up ho raha ho toh?
+ *  16.31-17.72 Aapko pehle kaise pata chalega? | 18.06 CCTV? | 19.02 Security?
+ *  19.95-21.36 Risk pehle start hota hai. | 21.70-23.14 Visibility baad mein aati hai.
+ *  23.48-25.72 Yahin The Sentinel ka role start hota hai.
+ *  26.06-29.32 Yeh vehicle ke critical zones ko continuously monitor karta hai... | 29.59-32.32 flame aur rapidly rising heat detect karne ke liye.
+ *  32.66-34.01 Aur threat detect hote hi, | 34.23-37.77 system targeted suppression response automatically trigger kar sakta hai.
+ *  38.11 Aap insurance lete ho. | 39.40 Regular servicing karvate ho. | 40.94 Dashcam lagvate ho.
+ *  42.29-44.54 Toh fire protection ko optional kyun treat karein?
+ *  44.88-45.55 The Sentinel... | 45.86-46.81 by The Fire Knight. | 47.15-48.00 Humein DM kijiye.
+ *
+ * Removed from the full take: "Range dekhte ho." / "Basically, gaadi kaafi kuch bata deti hai." /
+ * "Aur daily use mein car kahan-kahan hoti hai? Office parking. Mall basement. Charging station. Society
+ * parking. Mostly, aapki direct nazar se bahar." / "Toh agar kuch unusual start ho..." / "Ya tab... jab
+ * problem visible ho?" / "The real gap is simple." / "Matlab aapko smoke ya visible problem ka wait nahi
+ * karna. System already us area ko monitor kar raha hota hai... jahan aap normally dekh hi nahi sakte." /
+ * "Because the car matters." / "Apni EV ke liye free consultation chahiye?"
  */
 export const CUE = {
   ev: 0.0,
@@ -27,65 +29,53 @@ export const CUE = {
   zyada: 3.33,
   than: 4.24,
   battery: 5.48,
-  range: 7.46,
-  charging: 8.54,
-  but: 9.99,
-  nahiD: 11.48,
-  batArea: 12.69,
-  unusual: 14.72,
-  kahan: 17.44,
-  office: 19.75,
-  mall: 20.71,
-  charger: 21.73,
-  society: 22.71,
-  nazar: 23.85,
-  baharW: 25.38,
-  kaise: 26.42,
-  cctv: 28.17,
-  security: 29.13,
-  visible: 30.05,
-  visW: 31.24,
-  risk: 32.24,
-  vis: 33.99,
-  yahin: 35.77,
-  sentinel: 36.09,
-  zones: 38.35,
-  monitorW: 40.63,
-  flame: 41.88,
-  heat2: 42.42,
-  detect: 43.62,
-  threat: 44.95,
-  targeted: 46.91,
-  auto: 48.09,
-  insurance: 50.4,
-  servicing: 51.7,
-  dashcam: 53.23,
-  because: 54.58,
-  optional: 56.47,
-  optW: 57.59,
-  fk: 59.06,
-  logo: 60.05,
-  consult: 61.33,
-  dm: 63.82,
-  end: 66.6,
+  charging: 7.42,
+  but: 8.87,
+  nahiD: 10.36,
+  batArea: 11.57,
+  unusual: 13.6,
+  kaise: 16.31,
+  cctv: 18.06,
+  security: 19.02,
+  risk: 19.95,
+  vis: 21.7,
+  yahin: 23.48,
+  sentinel: 23.8,
+  zones: 26.06,
+  monitorW: 28.34,
+  flame: 29.59,
+  heat2: 30.13,
+  detect: 31.33,
+  threat: 32.66,
+  targeted: 34.62,
+  auto: 35.8,
+  insurance: 38.11,
+  servicing: 39.4,
+  dashcam: 40.94,
+  optional: 42.29,
+  optW: 43.41,
+  fk: 44.88,
+  logo: 45.86,
+  consult: 47.0,
+  dm: 47.15,
+  end: 50.0,
 } as const;
 
-/** Scene cut points (seconds), each inside a VO pause. Reel = VO + 1.8 s logo hold. */
+/** Scene cut points (seconds), each inside a VO pause. Reel = VO + 1.9 s logo hold. */
 const CUTS = {
   hook: 0.0,
   dash: 5.31,
-  heat: 9.82,
-  places: 17.27,
-  gap: 26.25,
-  real: 32.07,
-  product: 35.6,
-  system: 38.18,
-  ending: 50.23,
-  end: 66.6,
+  heat: 8.7,
+  gap: 16.14,
+  real: 19.78,
+  product: 23.31,
+  system: 25.89,
+  ending: 37.94,
+  end: 50.0,
 } as const;
 
 type K = Exclude<keyof typeof CUTS, "end">;
-const ORDER: K[] = ["hook", "dash", "heat", "places", "gap", "real", "product", "system", "ending"];
+const ORDER: K[] = ["hook", "dash", "heat", "gap", "real", "product", "system", "ending"];
 const fr = (s: number) => Math.round(s * 30);
 
 export const E_START = Object.fromEntries(ORDER.map((k) => [k, fr(CUTS[k])])) as Record<K, number>;

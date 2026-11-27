@@ -230,8 +230,8 @@ pad = norm(band(pad, 40, 1800))
 tt = np.arange(N) / SR
 pad_g = np.interp(
     tt,
-    [0, 1.5, S("dash"), S("heat"), S("places"), S("gap"), Q["visible"] + 0.6, S("real"), Q["vis"] + 1.2, S("product") - 0.1, S("product") + 0.8, S("system"), S("ending"), Q["logo"], DUR],
-    [0.1, 0.3, 0.42, 0.3, 0.42, 0.3, 0.12, 0.3, 0.0, 0.0, 0.5, 0.42, 0.5, 0.7, 0],
+    [0, 1.5, S("dash"), S("heat"), S("gap"), S("real"), Q["vis"] + 1.2, S("product") - 0.1, S("product") + 0.8, S("system"), S("ending"), Q["logo"], DUR],
+    [0.1, 0.3, 0.42, 0.3, 0.3, 0.3, 0.0, 0.0, 0.5, 0.42, 0.5, 0.7, 0],
 )
 if not SFX_ONLY:
     L += pad * pad_g * 0.32
@@ -246,9 +246,8 @@ if not SFX_ONLY:
 # heartbeat through the problem half
 hb = S("heat") + 0.3
 while hb < S("product") - 0.6:
-    if not (S("places") <= hb < S("gap")):
-        put(thud(50, 32, 0.3, 0.0), hb, 0.28)
-        put(thud(44, 30, 0.3, 0.0), hb + 0.17, 0.17)
+    put(thud(50, 32, 0.3, 0.0), hb, 0.28)
+    put(thud(44, 30, 0.3, 0.0), hb + 0.17, 0.17)
     hb += 0.75 if hb < S("gap") else 0.6
 
 # ---------------- 1 hook: a car on charge in a quiet basement ----------------
@@ -261,7 +260,7 @@ put(thud(60, 36, 0.6), Q["zyada"] + 0.33, 0.42)
 
 # ---------------- 2 dash: what the car tells you ----------------
 put(whoosh(0.7, 200, 4000, 0.6), S("dash") - 0.3, 0.24)
-for k in ("battery", "range", "charging"):
+for k in ("battery", "charging"):
     put(tick(2400, 0.035), Q[k], 0.09)
     put(beep(1320, 0.06), Q[k] + 0.06, 0.06, 0.2)
     put(thud(58, 36, 0.45), Q[k] + 0.27, 0.34)
@@ -269,28 +268,17 @@ for k in ("battery", "range", "charging"):
 # ---------------- 3 heat: what it does not ----------------
 put(whoosh(1.4, 100, 3000, 0.6), Q["nahiD"] - 0.4, 0.28)
 put(thud(52, 32, 0.8), Q["nahiD"], 0.44)
-put(crackle(S("places") - Q["batArea"], 26), Q["batArea"], 0.06)
+put(crackle(S("gap") - Q["batArea"], 26), Q["batArea"], 0.06)
 put(riser(1.6), Q["unusual"] - 1.6, 0.12)
 put(boom(1.4), Q["unusual"], 0.5)
 put(beep(880, 0.07), Q["unusual"] + 0.25, 0.07)
 put(beep(880, 0.07), Q["unusual"] + 0.45, 0.07)
-
-# ---------------- 4 places ----------------
-put(thud(58, 36, 0.5), Q["kahan"] + 0.87, 0.36)
-for k in ("office", "mall", "charger", "society"):
-    put(whoosh(0.5, 200, 4000, 0.6), Q[k] - 0.25, 0.2)
-    put(tick(2400, 0.035), Q[k], 0.09)
-    put(thud(58, 36, 0.4), Q[k] + 0.13, 0.36)
-put(thud(52, 32, 0.8), Q["baharW"], 0.45)
 
 # ---------------- 5 gap ----------------
 put(thud(58, 36, 0.5), Q["kaise"] + 0.33, 0.38)
 put(click(2600, 0.04), Q["cctv"] - 0.05, 0.3)
 put(thud(60, 36, 0.4), Q["cctv"], 0.4)
 put(thud(60, 36, 0.4), Q["security"], 0.4)
-put(riser(1.0), Q["visible"] - 0.6, 0.1)
-put(crackle(S("real") - Q["visible"], 40), Q["visible"], 0.09)
-put(boom(1.6), Q["visible"] + 0.4, 0.5)
 
 # ---------------- 6 the real gap ----------------
 put(tick(2000, 0.04), Q["risk"], 0.1)
@@ -329,7 +317,6 @@ for k in ("insurance", "servicing", "dashcam"):
     put(thud(60, 36, 0.35), Q[k] + 0.05, 0.3)
     put(tick(2600, 0.03), Q[k] + 0.55, 0.1)
     put(beep(1760, 0.05), Q[k] + 0.6, 0.05, 0.2)
-put(thud(56, 34, 0.6), Q["because"] + 0.27, 0.42)
 put(riser(1.0), Q["optW"] - 1.0, 0.1)
 put(boom(1.6), Q["optW"], 0.52)
 put(whoosh(1.2, 120, 3000, 0.5), Q["fk"] - 0.4, 0.26)
