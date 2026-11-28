@@ -31,6 +31,8 @@ import { NightCallFull, fullDefaults } from "./full/NightCallFull";
 import { EvOwners, evDefaults } from "./ev/EvOwners";
 import { E_TOTAL } from "./ev/timing";
 import { EvThumbnail } from "./ev/EvThumbnail";
+import { PillowCharge, pillowDefaults } from "./bed/PillowCharge";
+import { P_TOTAL } from "./bed/timing";
 import { FPS, H, SCENES, TOTAL, W } from "./fk/theme";
 import { Grain, SafeGuide, Vignette } from "./fk/ui";
 
@@ -91,6 +93,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="NightCallFull" component={NightCallFull} durationInFrames={N_TOTAL} fps={FPS} width={W} height={H} defaultProps={fullDefaults} />
     <Composition id="EvOwners" component={EvOwners} durationInFrames={E_TOTAL} fps={FPS} width={W} height={H} defaultProps={evDefaults} />
     <Still id="EvThumbnail" component={EvThumbnail} width={W} height={H} />
+    <Composition id="PillowCharge" component={PillowCharge} durationInFrames={P_TOTAL} fps={FPS} width={W} height={H} defaultProps={pillowDefaults} />
     <Folder name="TruckOwners-Scenes">
       <Composition id="T1-Hook" component={t1} durationInFrames={110} fps={FPS} width={W} height={H} defaultProps={{ showSafe: false }} />
     </Folder>
